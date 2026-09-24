@@ -6,7 +6,7 @@
   (text, stats, question, figure, gallery, steps, decisions). Adding a case is
   writing one content file; no new components.
 - Page: hero (frame no., title, line, role, duration, period, skills & tools,
-  tags, "see it live") → cover (16:9, 4:3 on phones) → sticky index that
+  tags, "see it live") → sticky index that
   follows the reading (desktop) → numbered sections → previous / next frame.
 - Figures are prints: the print lift on hover, the "look" cursor, numbered
   captions (FIG. 01) that run through the whole case, and a lightbox

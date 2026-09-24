@@ -1,9 +1,8 @@
 ---
-// A full case study. Hero (facts) → cover → numbered sections, with a
+// A full case study. Hero (facts) → numbered sections, with a
 // sticky index on wide screens that follows the reading. Content comes
 // from src/content/cases/<slug>.ts; blocks render in components/case.
 import Base from '../layouts/Base.astro';
-import ProjectCover from '../components/ProjectCover.astro';
 import CaseNav from '../components/CaseNav.astro';
 import CaseBlocks from '../components/case/CaseBlocks.astro';
 import Pill from '../components/ui/Pill.astro';
@@ -56,13 +55,6 @@ const sections = study.sections.map((s) => {
       </div>
     </header>
 
-    <div class="case-cover container">
-      <div class="case-cover__frame">
-        <ProjectCover cover={project.cover} media={project.media} label={project.title[locale]} locale={locale} sizes="(max-width: 84rem) 100vw, 84rem" />
-      </div>
-      <p class="case-cover__edge" aria-hidden="true">▸ {project.frame}&ensp;{project.frame}A</p>
-    </div>
-
     <div class="case-body container">
       <nav class="case-index" aria-label={c.contents[locale]} data-case-index>
         <p class="t-label case-index__title">{c.contents[locale]}</p>
@@ -114,10 +106,6 @@ const sections = study.sections.map((s) => {
   .case-hero__meta dd { color: var(--color-ink); }
   .case-hero__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
   .case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-
-  .case-cover__frame { --cover-ratio: 16 / 9; border: var(--rule-ink); }
-  .case-cover__edge { margin-top: var(--space-2); font-family: var(--font-system); font-size: 0.6875rem; letter-spacing: 0.2em; color: var(--color-graphite-soft); }
-  @media (max-width: 40rem) { .case-cover__frame { --cover-ratio: 4 / 3; } }
 
   /* Body: index on the left (sticky), sections on the right. */
   .case-body {

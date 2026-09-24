@@ -89,7 +89,7 @@ media: {
 A case is content only: `src/content/cases/<slug>.ts` exports a `CaseStudy`
 (types in `src/content/cases/types.ts`) and is listed in
 `src/content/cases/index.ts`. The page (`views/CaseView.astro`) renders a hero
-with the project's facts, the cover, a sticky index, and numbered sections.
+with the project's facts, a sticky index, and numbered sections.
 Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`:
 
 | Block | Use |
