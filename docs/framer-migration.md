@@ -8,7 +8,7 @@ kept as code components.
 
 | Code | Framer |
 |---|---|
-| `--color-*` (paper theme) + `[data-theme='darkroom']` overrides | Color styles with light/dark modes (paper = light, darkroom = dark) |
+| `--color-*` (paper theme) | Color styles (light only) |
 | `--type-*` roles (`display`, `heading.xl` … `code`) | Text styles, one per role, with Desktop / Tablet / Phone sizes taken from the clamp() ends |
 | `--space-*` | Number variables for gaps and padding in stacks |
 | `--layout-max`, `--layout-gutter`, 12/6/4 columns | Breakpoint frames (1440 / 1024 / 390), max-width 1344, gutters 48/32/16 |
@@ -33,7 +33,7 @@ kept as code components.
 | Spec mode | Measures the live DOM and computes contrast, so it has to be code. |
 | Easter-egg registry, `?` sheet, frame counter | Global state in localStorage. One code component ("EggHost") mounted in the layout. |
 | "frames" word, doodles (look / shy / sleepy) | Small code components; the SVGs themselves import into Framer as vectors. |
-| Theme + motion toggles | Framer handles dark mode by OS setting. A manual toggle needs a small code override. |
+| Motion | Respect reduced motion; there is no theme toggle (light only). |
 
 ## Stays custom / needs rebuilding
 

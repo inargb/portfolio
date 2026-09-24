@@ -1,6 +1,5 @@
 ---
 import LanguageSwitch from './LanguageSwitch.astro';
-import LightsToggle from './LightsToggle.astro';
 import { href, type Locale, type RouteId } from '../i18n/config';
 import { ui } from '../i18n/ui';
 import { site } from '../content/site';
@@ -41,7 +40,6 @@ const links = [
 
     <div class="nav__tools">
       <LanguageSwitch locale={locale} altHref={altHref} />
-      <LightsToggle locale={locale} />
     </div>
   </div>
 </header>
@@ -109,7 +107,7 @@ const links = [
       inset: auto 0 0 0;
       z-index: 45;
       background: var(--color-paper);
-      border-top: var(--rule-ink);
+      border-top: var(--rule-hair);
       padding-bottom: env(safe-area-inset-bottom);
     }
     .nav__links ul { justify-content: space-around; }

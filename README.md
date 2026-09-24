@@ -25,13 +25,13 @@ src/
   i18n/config.ts           locales, routes, base-path helpers
   i18n/ui.ts               interface strings (EN / PT)
   content/*.ts             page content, bilingual, typed (projects, home, about, photos)
-  components/              Nav, Footer, Cursor, LanguageSwitch, LightsToggle, Doodle,
+  components/              Nav, Footer, Cursor, LanguageSwitch, Doodle,
                            ProjectGrid, ProjectCover + covers/, Shelf, KindWordsDrawer,
                            FilmStrip, CaseNav, FramesWord
   components/ui/           Button, Pill, SectionLabel
   views/                   one view per page, rendered by thin EN/PT page files
   pages/                   routes: /, /about, /playground, /works/[slug] (+ /pt-br/…)
-  scripts/                 prefs (theme/motion), motion (reveals), cursor, shelf
+  scripts/                 prefs (motion), motion (reveals), cursor, shelf
   scripts/eggs/            easter-egg system: catalog.ts + one module per egg
 public/covers/             uploaded project covers (see "Covers" below)
 docs/                      audit, phase notes, Framer migration notes
@@ -42,7 +42,7 @@ docs/                      audit, phase notes, Framer migration notes
 - Components use tokens only: no raw hex, no one-off sizes.
 - Every text pairing is WCAG AA. The playground computes it live.
 - Motion is always on, except when the visitor's system asks for reduced motion.
-  Anything that moves by itself for more than 5s has its own pause (the film strip).
+  The film strip stops on hover, focus and drag, and stays still with reduced motion.
 - The custom cursor and the easter eggs are a layer on top. Nothing depends on them.
 - Content lives in `src/content`, one object per string with `en` and `pt`.
 - Protected case-study sources never go into the repo in plain text (`private/` is ignored).

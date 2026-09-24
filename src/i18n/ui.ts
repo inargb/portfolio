@@ -23,9 +23,6 @@ export const ui = {
 
   controls: {
     group: { en: 'Display settings', pt: 'Preferências de exibição' },
-    lightsOff: { en: 'Turn off the lights', pt: 'Apagar as luzes' },
-    lightsOn: { en: 'Turn the lights back on', pt: 'Acender as luzes' },
-    lightsHint: { en: 'dark theme', pt: 'tema escuro' },
     spec: { en: 'Spec mode', pt: 'Modo spec' },
     specHint: { en: 'show the redlines', pt: 'mostrar as medidas' },
   },
@@ -36,6 +33,7 @@ export const ui = {
     secret: { en: 'a little secret', pt: 'um segredinho' },
     drag: { en: 'drag', pt: 'arraste' },
     open: { en: 'open', pt: 'abrir' },
+    close: { en: 'close', pt: 'fechar' },
     look: { en: 'look', pt: 'olhar' },
   },
 

@@ -43,17 +43,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="alternate" hreflang={locale === 'en' ? 'pt-BR' : 'en'} href={new URL(altHref, Astro.site)} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
-    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#161412" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fbfbfd" />
+    <meta name="color-scheme" content="light" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <!-- Apply the saved theme before first paint, so nothing flashes. -->
     <script is:inline>
       (function () {
         var d = document.documentElement;
-        try {
-          var th = localStorage.getItem('ina:theme');
-          if (th) d.dataset.theme = th;
-        } catch (e) {}
+        // Light only: forget a theme saved by an earlier version.
+        try { localStorage.removeItem('ina:theme'); } catch (e) {}
         d.classList.add('js');
         if ('IntersectionObserver' in window) d.classList.add('js-reveal');
       })();

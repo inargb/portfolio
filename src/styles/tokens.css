@@ -118,49 +118,6 @@
   --cursor-lag: 0.22;           /* 0..1 follow factor per frame            */
 }
 
-/* ---- Color: darkroom theme ------------------------------------------------
-   Not an inverted page: a warm dark room with one blue light on. */
-:root[data-theme='darkroom'] {
-  --color-paper: #161412;
-  --color-paper-shade: #211e1a;
-  --color-paper-deep: #2c2823;
-  --color-ink: #efe7da;
-  --color-graphite: #c3b9aa;
-  --color-graphite-soft: #a0968a;
-  --color-rule: #3d3731;
-  --color-highlight: #f3cf1c;
-  --color-on-highlight: #1c1a17;
-  --color-accent: #8ea6ff;         /* 7.9:1 on the darkroom paper           */
-  --color-accent-hover: #bcc9ff;
-  --color-accent-tint: #1d2340;
-  --color-on-accent: #161412;
-  --color-focus: var(--color-accent);
-  --color-shadow: var(--color-accent);
-  --color-scrim: rgb(0 0 0 / 0.6);
-  color-scheme: dark;
-}
-
-/* Follow the OS until the visitor chooses. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='paper']):not([data-theme='darkroom']) {
-    --color-paper: #161412;
-    --color-paper-shade: #211e1a;
-    --color-paper-deep: #2c2823;
-    --color-ink: #efe7da;
-    --color-graphite: #c3b9aa;
-    --color-graphite-soft: #a0968a;
-    --color-rule: #3d3731;
-    --color-accent: #8ea6ff;
-    --color-accent-hover: #bcc9ff;
-    --color-accent-tint: #1d2340;
-    --color-on-accent: #161412;
-    --color-focus: var(--color-accent);
-    --color-shadow: var(--color-accent);
-    --color-scrim: rgb(0 0 0 / 0.6);
-    color-scheme: dark;
-  }
-}
-
 /* ---- Motion off: only when the visitor's system asks for it -------------- */
 @media (prefers-reduced-motion: reduce) {
   :root {

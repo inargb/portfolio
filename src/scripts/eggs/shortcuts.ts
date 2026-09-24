@@ -1,9 +1,8 @@
-// "?" opens the keyboard sheet; L is a real shortcut for the lights toggle.
+// "?" opens the keyboard sheet.
 // Secrets are listed, but only named once found.
 import { ctx, foundEggs } from './registry';
 import { catalog } from './catalog';
 import { onKey } from './keys';
-import { isDark, setTheme } from '../prefs';
 
 const dialog = document.querySelector<HTMLDialogElement>('[data-shortcuts]');
 
@@ -35,7 +34,6 @@ function open() {
 }
 
 onKey('?', open);
-onKey('l', () => setTheme(!isDark()));
 
 document.addEventListener('click', (e) => {
   const t = e.target as Element;

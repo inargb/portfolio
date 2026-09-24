@@ -1,6 +1,6 @@
 ---
 // The kit: a living reference for the design system. Everything reads the
-// real tokens at runtime, so it stays true in both themes and after edits.
+// real tokens at runtime, so it stays true after edits.
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Pill from '../components/ui/Pill.astro';
@@ -9,7 +9,6 @@ import SectionLabel from '../components/ui/SectionLabel.astro';
 import Doodle from '../components/Doodle.astro';
 import ProjectCover from '../components/ProjectCover.astro';
 import LanguageSwitch from '../components/LanguageSwitch.astro';
-import LightsToggle from '../components/LightsToggle.astro';
 import { href, type Locale } from '../i18n/config';
 import { projects } from '../content/projects';
 import { catalog } from '../scripts/eggs/catalog';
@@ -72,8 +71,8 @@ const cursors = [
 const t = {
   title: { en: 'The kit.', pt: 'O kit.' },
   intro: {
-    en: 'The design system behind this portfolio, running live. Every value on this page is read from the real tokens, so it changes with the theme. Try L (lights) and S (spec mode).',
-    pt: 'O design system por trás deste portfólio, rodando ao vivo. Cada valor aqui é lido dos tokens reais, então muda com o tema. Teste L (luzes) e S (modo spec).',
+    en: 'The design system behind this portfolio, running live. Every value on this page is read from the real tokens. Try S (spec mode).',
+    pt: 'O design system por trás deste portfólio, rodando ao vivo. Cada valor aqui é lido dos tokens reais. Teste S (modo spec).',
   },
   color: { en: 'color', pt: 'cor' },
   pairs: { en: 'Text pairings, checked live against WCAG.', pt: 'Pares de texto, checados ao vivo contra a WCAG.' },
@@ -219,7 +218,7 @@ const t = {
       <div class="comp"><p class="t-label">Pill</p><div class="comp__row"><Pill>outline</Pill><Pill glyph="◐">with glyph</Pill><Pill tone="filled">filled</Pill><Pill tone="mark">mark</Pill></div></div>
       <div class="comp"><p class="t-label">Keycap</p><div class="comp__row"><kbd class="keycap">S</kbd><kbd class="keycap">L</kbd><kbd class="keycap">M</kbd><kbd class="keycap">?</kbd><kbd class="keycap">Fi</kbd></div></div>
       <div class="comp"><p class="t-label">SectionLabel</p><div class="comp__row"><SectionLabel text="works" /><SectionLabel text="overview" frame="01" /></div></div>
-      <div class="comp"><p class="t-label">LanguageSwitch · LightsToggle</p><div class="comp__row"><LanguageSwitch locale={locale} altHref={href('playground', other)} /><LightsToggle locale={locale} /></div></div>
+      <div class="comp"><p class="t-label">LanguageSwitch</p><div class="comp__row"><LanguageSwitch locale={locale} altHref={href('playground', other)} /></div></div>
       <div class="comp"><p class="t-label">Link · Mark</p><p class="t-body"><a class="link" href="#pg-components">a quiet link</a> and a <span class="mark">highlighted phrase</span>.</p></div>
       <div class="comp"><p class="t-label">Doodle</p><div class="comp__row"><div class="comp__doodle"><Doodle locale={locale} variant="happy" /></div><div class="comp__doodle"><Doodle locale={locale} variant="wonder" /></div></div></div>
     </div>

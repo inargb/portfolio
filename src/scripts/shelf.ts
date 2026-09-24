@@ -216,17 +216,22 @@ function init(root: HTMLElement) {
     btn.addEventListener('mouseleave', () => { if (document.activeElement !== btn) hideNote(); });
   });
 
+  // Tidy puts everything in its own place (data-home), including things
+  // already put away somewhere else, then settles them one by one.
   tidyBtn.addEventListener('click', () => {
-    const rest = items.filter((i) => state.get(i)!.kind !== 'slot');
-    rest.forEach((it, i) => {
+    const moving = items.filter((it) => {
+      const w = state.get(it)!;
+      return !(w.kind === 'slot' && w.slot === Number(it.dataset.home));
+    });
+    moving.forEach((it) => state.set(it, { kind: 'slot', slot: Number(it.dataset.home) }));
+    moving.forEach((it, i) => {
       window.setTimeout(() => {
-        const taken = occupied(it);
-        const free = slots.findIndex((_, k) => !taken.has(k));
-        state.set(it, { kind: 'slot', slot: free });
         place(it);
-        const last = i === rest.length - 1;
-        refresh(undefined, false);
-        if (last) { ctx.say(s.lazy); messBtn.focus(); }
+        if (i === moving.length - 1) {
+          refresh(undefined, false);
+          ctx.say(s.lazy);
+          messBtn.focus();
+        }
       }, ctx.motion() ? i * 140 : 0);
     });
   });
