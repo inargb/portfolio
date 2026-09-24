@@ -44,6 +44,10 @@ docs/                      audit, phase notes, Framer migration notes
 - Motion is always on, except when the visitor's system asks for reduced motion.
   The film strip stops on hover, focus and drag, and stays still with reduced motion.
 - The custom cursor and the easter eggs are a layer on top. Nothing depends on them.
+- Images that open something use the **print lift** hover (`class="lift crop"` in
+  `styles/components.css`): the print lifts up-left, tilts a hair, casts a hard offset
+  shadow and shows its crop marks, with the cursor's frame state on top. The project
+  reel uses it, and case-study images should too.
 - Content lives in `src/content`, one object per string with `en` and `pt`.
 - Protected case-study sources never go into the repo in plain text (`private/` is ignored).
 
