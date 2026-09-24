@@ -28,7 +28,7 @@
 |---|---|---|---|
 | 1 | Systems Portal | built | inasilva.com case (EN + PT), images from it |
 | 2 | Responsive Specs & Accessibility Generator | built | inasilva.com case (EN + PT), images from it |
-| 3 | Bandoneón Initiative | next | inasilva.com case |
+| 3 | Bandoneón Initiative | built | inasilva.com case (EN + PT), images from it |
 | 4 | Bar Tabs System | needs the password gate | protected: never committed in plain text |
 | 5 | Menu Management | needs the password gate | the uploaded brief (kept out of the repo) |
 
@@ -50,3 +50,17 @@
   after), extra hero facts (Type), and icons for its four decision cards. No
   Nielsen tags here: the live case has none.
 - The three "tool in action" images share one caption and one height.
+
+## Bandoneón: notes
+
+- Written in a new voice, after the reference Inaiá shared (rachelchen.tech):
+  first person, every headline states what happened or what was learned,
+  outcomes up front (overview), "key finding" / "what I learned" callouts,
+  and a closing reflection. Facts, numbers, personas and quotes are hers.
+- "AI" in the live case's process (personas → AI → wireframes) is read as
+  IA, "arquitetura da informação": written out as information architecture.
+- New blocks: `groups` (the four SMART requirement dimensions, typography and
+  components), `swatches` (the palette), a custom label for callouts, and a
+  person icon for persona cards.
+- If this voice works, Systems Portal and Specs Generator can be rewritten
+  the same way.

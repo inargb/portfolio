@@ -34,7 +34,7 @@ Marked in the code as DRAFT, or written new:
 
 ## Decisions made on your behalf
 
-- **Project order:** Specs Generator first (the brief calls it the strongest piece), then the two protected Volanté cases, Systems Portal, Bandoneón, then the two coming-soon projects.
+- **Project order (set by Inaiá):** Systems Portal, Bar Tabs, Menu Management, Specs Generator, Bandoneón, then Sabi and Pocabin (coming soon). Frame numbers follow this order.
 - **Case URLs** keep today's `/works/<slug>` paths, including `bandoneon-iniciative`, so existing links keep working.
 - **Astro 7** (latest). Astro 5 had open security advisories.
 

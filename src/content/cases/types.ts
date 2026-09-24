@@ -28,8 +28,13 @@ export type CaseBlock =
   | { type: 'text'; body: L10n[] }
   /** Big numbers with a short label. */
   | { type: 'stats'; items: { value: L10n; label: L10n }[] }
-  /** The "how might we" of the case, set apart. */
-  | { type: 'question'; text: L10n }
+  /** Set apart in the shaded panel: the "how might we" by default, or any
+      short callout with its own label ("key finding", "what I learned"). */
+  | { type: 'question'; text: L10n; label?: L10n }
+  /** Cards that each hold a short list (e.g. requirements by dimension). */
+  | { type: 'groups'; intro?: L10n; items: { title: L10n; points: L10n[] }[] }
+  /** Colour swatches with their hex values. */
+  | { type: 'swatches'; label: L10n; colors: string[] }
   /** One image, full column width; opens larger on click. */
   | { type: 'figure'; image: CaseImage; caption?: L10n }
   /** Several images in a row (a contact strip); each opens larger. */
@@ -47,4 +52,4 @@ export type CaseBlock =
 export interface CompareSide { label: L10n; rows: { key: L10n; value: L10n }[] }
 
 /** Line icons for decision cards (drawn in components/case/CaseBlocks.astro). */
-export type CaseIcon = 'layout' | 'search' | 'star' | 'frame' | 'contrast' | 'ruler' | 'doc';
+export type CaseIcon = 'layout' | 'search' | 'star' | 'frame' | 'contrast' | 'ruler' | 'doc' | 'person';

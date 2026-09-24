@@ -96,10 +96,12 @@ Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`
 |---|---|
 | `text` | paragraphs |
 | `stats` | big numbers with a short label |
-| `question` | the "how might we", framed |
+| `question` | the "how might we" (or any callout with its own label), framed |
 | `figure` | one image + numbered caption (FIG. 01); lifts on hover, opens in the lightbox |
 | `gallery` | several images in a row, sized to their shape so they share one height; each opens larger |
 | `list` | a plain numbered list (e.g. an old manual workflow) |
+| `groups` | cards that each hold a short list |
+| `swatches` | colour swatches with hex values |
 | `compare` | before / after cards with the same rows |
 | `steps` | process steps as cards: big number → title → text |
 | `decisions` | design decisions as cards: icon → title → text (+ quieter note) → principle |
