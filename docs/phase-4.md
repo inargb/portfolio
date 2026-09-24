@@ -5,8 +5,7 @@
 - Content model: `src/content/cases/types.ts`. A case is sections → blocks
   (text, stats, question, figure, gallery, steps, decisions). Adding a case is
   writing one content file; no new components.
-- Page: hero (frame no., title, line, role, duration, period, skills & tools,
-  tags, "see it live") → sticky index that
+- Page: hero → sticky index that
   follows the reading (desktop) → numbered sections → previous / next frame.
 - Figures are prints: the print lift on hover, the "look" cursor, numbered
   captions (FIG. 01) that run through the whole case, and a lightbox
@@ -22,13 +21,20 @@
   the lightbox (← → through every image in the case). The "how might we" is a
   shaded panel with crop marks. Paragraphs stay as running text.
 
+- Header, after the reference portfolios (Rachel Chen, Emmi Wu, Eem Monroy):
+  the section index is a left sidebar from the top of the page, with
+  "← all work" above it; the header sits in the content column. Eyebrow
+  (frame · context · type/method) → title → one sentence → facts in four
+  equal columns (Role, Timeline, Focus, Skills & tools), one value per line,
+  labels in small blue caps → "see it live". Two columns on phones.
+
 ## Cases
 
 | # | Case | Status | Source |
 |---|---|---|---|
 | 1 | Systems Portal | built | inasilva.com case (EN + PT), images from it |
 | 2 | Responsive Specs & Accessibility Generator | built | inasilva.com case (EN + PT), images from it |
-| 3 | Bandoneón Initiative | next | inasilva.com case |
+| 3 | Bandoneón Initiative | built | inasilva.com case (EN + PT), images from it |
 | 4 | Bar Tabs System | needs the password gate | protected: never committed in plain text |
 | 5 | Menu Management | needs the password gate | the uploaded brief (kept out of the repo) |
 
@@ -50,3 +56,17 @@
   after), extra hero facts (Type), and icons for its four decision cards. No
   Nielsen tags here: the live case has none.
 - The three "tool in action" images share one caption and one height.
+
+## Bandoneón: notes
+
+- Written in a new voice, after the reference Inaiá shared (rachelchen.tech):
+  first person, every headline states what happened or what was learned,
+  outcomes up front (overview), "key finding" / "what I learned" callouts,
+  and a closing reflection. Facts, numbers, personas and quotes are hers.
+- "AI" in the live case's process (personas → AI → wireframes) is read as
+  IA, "arquitetura da informação": written out as information architecture.
+- New blocks: `groups` (the four SMART requirement dimensions, typography and
+  components), `swatches` (the palette), a custom label for callouts, and a
+  person icon for persona cards.
+- If this voice works, Systems Portal and Specs Generator can be rewritten
+  the same way.

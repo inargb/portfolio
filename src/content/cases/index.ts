@@ -3,8 +3,10 @@
 import type { CaseStudy } from './types';
 import { systemsPortal } from './systems-portal';
 import { specsGenerator } from './specs-generator';
+import { bandoneon } from './bandoneon';
 
 export const cases: Record<string, CaseStudy> = {
   [systemsPortal.slug]: systemsPortal,
   [specsGenerator.slug]: specsGenerator,
+  [bandoneon.slug]: bandoneon,
 };
