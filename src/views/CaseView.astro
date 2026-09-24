@@ -42,7 +42,29 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
 ---
 
 <Base locale={locale} altHref={caseHref(project.slug, other)} pageId={project.slug} title={project.title[locale]} description={project.line[locale]}>
-  <article class="case">
+  <!-- Protected: the whole page is the gate. The case (and its way on)
+       appears only once the password opens it. -->
+  {sealed && (
+    <section class="gate" data-gate data-payload={payload} aria-labelledby="gate-title">
+      <script is:inline>try{if(sessionStorage.getItem('ina:gate'))document.currentScript.parentElement.classList.add('is-resuming')}catch(e){}</script>
+      <div class="gate__top container"><a class="gate__back t-label" href={`${home}${home.endsWith('/') ? '' : '/'}#work`}>← {p.back[locale]}</a></div>
+      <div class="gate__card paper-card">
+        <p class="gate__lock" aria-hidden="true"><i></i></p>
+        <p class="t-label gate__label">{g.label[locale]} · {project.title[locale]}</p>
+        <h1 id="gate-title" class="t-heading-l">{g.title[locale]}</h1>
+        <p class="gate__body">{g.body[locale]} <a class="link" href={site.links.linkedin} target="_blank" rel="noopener">{g.ask[locale]} ↗</a></p>
+        <form class="gate__form" data-gate-form>
+          <label class="visually-hidden" for="gate-pw">{g.field[locale]}</label>
+          <input id="gate-pw" class="gate__input" type="password" name="password" autocomplete="current-password" placeholder={g.field[locale]} required data-gate-input />
+          <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
+        </form>
+        <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
+        <p class="gate__note t-caption">{g.note[locale]}</p>
+      </div>
+    </section>
+  )}
+
+  <article class="case" hidden={sealed ? true : undefined} data-case>
     <!-- Layout after the reference portfolios (Rachel Chen, Emmi Wu): the
          index is a left sidebar from the very top, with the way back above
          it; the header sits in the same column as the content. -->
@@ -74,21 +96,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
 
         {sealed ? (
           <>
-            <section class="gate" data-gate data-payload={payload} aria-labelledby="gate-title">
-              <div class="gate__card paper-card">
-                <p class="gate__lock" aria-hidden="true"><i></i></p>
-                <p class="t-label gate__label">{g.label[locale]}</p>
-                <h2 id="gate-title" class="t-heading-l">{g.title[locale]}</h2>
-                <p class="gate__body">{g.body[locale]} <a class="link" href={site.links.linkedin} target="_blank" rel="noopener">{g.ask[locale]} ↗</a></p>
-                <form class="gate__form" data-gate-form>
-                  <label class="visually-hidden" for="gate-pw">{g.field[locale]}</label>
-                  <input id="gate-pw" class="gate__input" type="password" name="password" autocomplete="current-password" placeholder={g.field[locale]} required data-gate-input />
-                  <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
-                </form>
-                <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
-                <p class="gate__note t-caption">{g.note[locale]}</p>
-              </div>
-            </section>
             <div class="case-sealed" data-sealed-sections></div>
             <div hidden><CaseBlocks blocks={[]} locale={locale} figStart={0} /></div>
           </>
@@ -99,7 +106,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
     </div>
   </article>
 
-  <CaseNav locale={locale} slug={project.slug} />
+  <div hidden={sealed ? true : undefined} data-case><CaseNav locale={locale} slug={project.slug} /></div>
 
   <dialog class="lightbox" data-lightbox-dialog aria-label={c.enlarge[locale]}>
     <button class="lightbox__close t-nav" type="button" data-lightbox-close>{c.close[locale]} ✕</button>
@@ -236,8 +243,22 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   }
 
   /* The gate: a paper card with a lock, where the case would be. */
-  .gate { padding-block: var(--space-4) var(--space-16); }
-  .gate__card { display: grid; justify-items: start; gap: var(--space-4); max-width: 36rem; padding: var(--space-12) var(--space-8); --tilt: -0.4deg; }
+  /* The gate: a full page, one paper card with a lock in the middle. */
+  .gate {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: calc(100svh - var(--nav-height));
+    padding: var(--space-16) var(--space-4);
+  }
+  .gate__top { position: absolute; top: var(--space-6); left: 0; right: 0; }
+  .gate__back { color: var(--color-graphite-soft); }
+  .gate__back:hover { color: var(--color-ink); }
+  .gate__card { display: grid; justify-items: start; gap: var(--space-4); width: 100%; max-width: 36rem; padding: var(--space-12) var(--space-8); --tilt: -0.4deg; }
+  /* Already opened in this tab: skip straight to the case, no flash of the form. */
+  .gate.is-resuming .gate__card { visibility: hidden; }
+  /* Locked: nothing else on the page, not even the footer. */
+  body:has(.gate) .footer { display: none; }
   .gate__lock i { position: relative; display: block; width: 1.5rem; height: 1.2rem; margin-top: 0.8rem; border: 1.5px solid var(--color-ink); border-radius: 2px; }
   .gate__lock i::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 0.95rem; height: 0.8rem; translate: -50% 0; border: 1.5px solid var(--color-ink); border-bottom: 0; border-radius: 0.6rem 0.6rem 0 0; transition: translate var(--duration-settle) var(--ease-settle); }
   .gate.is-opening .gate__lock i::before { translate: -20% -0.3rem; }
@@ -365,7 +386,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
       try {
         const html = await unseal(payload, password);
         if (!html) {
-          if (remembered) { try { sessionStorage.removeItem(KEY); } catch { /* ignore */ } err.textContent = ''; return; }
+          if (remembered) { try { sessionStorage.removeItem(KEY); } catch { /* ignore */ } err.classList.remove('is-busy'); err.textContent = ''; gate.classList.remove('is-resuming'); return; }
           err.classList.remove('is-busy');
           err.textContent = err.dataset.wrong ?? '';
           gate.classList.remove('is-wrong'); void gate.offsetWidth; gate.classList.add('is-wrong');
@@ -374,16 +395,21 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
         }
         try { sessionStorage.setItem(KEY, password); } catch { /* ignore */ }
         gate.classList.add('is-opening');
+        // Let the shackle lift before the page turns into the case.
+        if (!remembered && matchMedia('(prefers-reduced-motion: no-preference)').matches) await new Promise((r) => setTimeout(r, 450));
         document.querySelector('[data-sealed-index]')!.outerHTML = html.index;
         const target = document.querySelector<HTMLElement>('[data-sealed-sections]')!;
         target.innerHTML = html.sections;
         gate.remove();
+        document.querySelectorAll<HTMLElement>('[data-case]').forEach((el) => { el.hidden = false; });
+        if (!remembered) window.scrollTo({ top: 0 });
         initReveals(target);
         initIndex();
         window.dispatchEvent(new CustomEvent('ina:case-content', { detail: { root: target } }));
-        if (!remembered) target.querySelector<HTMLElement>('h2')?.setAttribute('tabindex', '-1');
-        if (!remembered) target.querySelector<HTMLElement>('h2')?.focus({ preventScroll: false });
+        const h1 = document.querySelector<HTMLElement>('.case-hero__title');
+        if (!remembered && h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
       } catch {
+        gate.classList.remove('is-resuming');
         err.classList.remove('is-busy');
         err.textContent = err.dataset.failed ?? '';
       } finally {

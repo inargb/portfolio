@@ -197,7 +197,7 @@ const icons: Record<string, string> = {
           {b.intro && <p class="t-body">{b.intro[locale]}</p>}
           <ul class="cb-cards cb-cards--3" role="list">
             {b.items.map((d, i) => (
-              <li class="cb-card paper-card lift" style={`--tilt:${tilt(i + 1)}deg`} data-reveal>
+              <li class:list={['cb-card paper-card lift', d.state && `cb-card--${d.state}`]} style={`--tilt:${tilt(i + 1)}deg`} data-reveal>
                 <svg class="cb-card__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[d.icon]} />
                 <h3 class="cb-card__title t-heading-m">{d.title[locale]}</h3>
                 <p class="cb-card__body">
@@ -289,6 +289,24 @@ const icons: Record<string, string> = {
   .cb-card__tag { margin-top: var(--space-1); font-size: var(--type-meta); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-graphite-soft); }
 
   .cb-decisions { display: grid; gap: var(--space-8); }
+  /* Options weighed: rejected ones are faded, dashed prints; the chosen one is
+     ink-framed with a blue tab, same language as before/after. */
+  .cb-card--rejected { background: var(--color-paper-shade); border-style: dashed; box-shadow: 0 0 0 7px var(--color-paper-shade), 0 0 0 8px var(--color-rule); }
+  .cb-card--rejected.lift { --lift-shadow: 0 0 0 7px var(--color-paper-shade), 0 0 0 8px var(--color-rule), 3px 3px 0 8px var(--color-shadow); }
+  .cb-card--rejected .cb-card__title, .cb-card--rejected .cb-card__body { color: var(--color-graphite-soft); }
+  .cb-card--rejected .cb-card__icon { stroke: var(--color-graphite-soft); }
+  .cb-card--rejected .cb-card__tag { margin-top: auto; text-decoration: line-through; }
+  .cb-card--chosen { border-color: var(--color-ink); box-shadow: 0 0 0 7px var(--color-paper), 0 0 0 8px var(--color-ink); }
+  .cb-card--chosen.lift { --lift-shadow: 0 0 0 7px var(--color-paper), 0 0 0 8px var(--color-ink), 3px 3px 0 8px var(--color-shadow); }
+  .cb-card--rejected.lift:hover, .cb-card--chosen.lift:hover { box-shadow: var(--lift-shadow); }
+  .cb-card--chosen .cb-card__icon { stroke: var(--color-accent); }
+  .cb-card--chosen .cb-card__tag {
+    align-self: flex-start;
+    margin-top: auto;
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
 
   .cb-gallery { display: grid; gap: var(--space-3); margin: 0; }
   /* Each image gets width in proportion to its shape, so a row shares one height. */
