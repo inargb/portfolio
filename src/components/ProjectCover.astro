@@ -1,0 +1,36 @@
+---
+import type { CoverId } from '../content/projects';
+import CoverSpecs from './covers/CoverSpecs.astro';
+import CoverMenu from './covers/CoverMenu.astro';
+import CoverBarTabs from './covers/CoverBarTabs.astro';
+import CoverPortal from './covers/CoverPortal.astro';
+import CoverBandoneon from './covers/CoverBandoneon.astro';
+import CoverBinder from './covers/CoverBinder.astro';
+import CoverSabi from './covers/CoverSabi.astro';
+
+interface Props { cover: CoverId; label: string; }
+const { cover, label } = Astro.props;
+const map = {
+  specs: CoverSpecs,
+  menu: CoverMenu,
+  bartabs: CoverBarTabs,
+  portal: CoverPortal,
+  bandoneon: CoverBandoneon,
+  binder: CoverBinder,
+  sabi: CoverSabi,
+} as const;
+const Cover = map[cover];
+---
+
+<Cover label={label} />
+
+<script>
+  // Covers animate only while visible.
+  const covers = document.querySelectorAll<HTMLElement>('[data-cover]');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) e.target.toggleAttribute('data-inview', e.isIntersecting);
+    }, { threshold: 0.25 });
+    covers.forEach((c) => io.observe(c));
+  }
+</script>

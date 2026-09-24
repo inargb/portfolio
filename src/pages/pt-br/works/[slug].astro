@@ -1,0 +1,10 @@
+---
+import CaseStubView from '../../../views/CaseStubView.astro';
+import { caseProjects, type Project } from '../../../content/projects';
+
+export function getStaticPaths() {
+  return caseProjects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+const { project } = Astro.props as { project: Project };
+---
+<CaseStubView locale="pt" project={project} />

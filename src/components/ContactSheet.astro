@@ -1,0 +1,255 @@
+---
+// The work, as a contact sheet. Two views of the same list:
+//   sheet → frames with covers (default)
+//   index → dense rows; the cover peeks in on hover/focus
+// Soon projects aren't links: their status is written, and the cursor says
+// "coming soon!". Locked ones open the password gate.
+import ProjectCover from './ProjectCover.astro';
+import { caseHref, type Locale } from '../i18n/config';
+import { ui } from '../i18n/ui';
+import { projects } from '../content/projects';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const p = ui.project;
+const cursorFor = { open: 'project', locked: 'secret', soon: 'soon' } as const;
+---
+
+<div class="sheet-view" data-sheet data-view="sheet">
+  <div class="sheet-view__bar">
+    <p class="t-meta">FR 01–{String(projects.length).padStart(2, '0')}</p>
+    <div class="sheet-view__toggle" role="group" aria-label={p.viewLabel[locale]}>
+      <button type="button" class="t-nav" data-view-btn="sheet" aria-pressed="true">▦ {p.viewSheet[locale]}</button>
+      <button type="button" class="t-nav" data-view-btn="index" aria-pressed="false">☰ {p.viewIndex[locale]}</button>
+    </div>
+  </div>
+
+  <ol class="frames" role="list" data-stagger>
+    {projects.map((proj) => {
+      const title = proj.title[locale];
+      const Tag = proj.state === 'soon' ? 'div' : 'a';
+      const linkProps = proj.state === 'soon' ? {} : { href: caseHref(proj.slug, locale) };
+      return (
+        <li class="frame" data-state={proj.state} data-reveal>
+          <Tag class="frame__hit" {...linkProps} data-cursor={cursorFor[proj.state]}>
+            <p class="frame__edge" aria-hidden="true">▸ {proj.frame} <span>▸ {proj.frame}A</span></p>
+            <div class="frame__cover frame-card__cover crop">
+              <ProjectCover cover={proj.cover} label="" />
+              {proj.state === 'soon' && <span class="frame__develop t-label">{p.soon[locale]}</span>}
+            </div>
+            <div class="frame__caption">
+              <span class="frame__no t-meta" aria-hidden="true">{proj.frame}</span>
+              <div class="frame__text">
+                <h3 class="frame__title t-heading-m">{title}</h3>
+                <p class="frame__line t-body-s">{proj.line[locale]}</p>
+              </div>
+              <p class="frame__meta t-meta">
+                <span>{proj.context[locale]}</span>
+                {proj.when && <span>{proj.when[locale]}</span>}
+                <span class="frame__status" data-state={proj.state}>
+                  {proj.state === 'locked' && <i class="frame__lock" aria-hidden="true"></i>}
+                  {proj.status[locale]}
+                </span>
+              </p>
+            </div>
+          </Tag>
+        </li>
+      );
+    })}
+  </ol>
+</div>
+
+<style>
+  .sheet-view__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-2);
+    margin-bottom: var(--space-8);
+    border-block: var(--rule-hair);
+  }
+  .sheet-view__toggle { display: flex; }
+  .sheet-view__toggle button {
+    min-height: var(--tap-min);
+    padding-inline: var(--space-3);
+    border: 0;
+    background: none;
+    color: var(--color-graphite);
+  }
+  .sheet-view__toggle button[aria-pressed='true'] { color: var(--color-ink); text-decoration: underline; text-underline-offset: 0.35em; }
+
+  /* ---------- sheet view ---------- */
+  .frames {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--project-space) var(--layout-gap);
+  }
+  /* The first frame is printed large; the rest pair up. */
+  .frame:first-child { grid-column: 1 / -1; }
+  /* Printed large: cover and caption side by side. */
+  [data-view='sheet'] .frame:first-child .frame__hit {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--layout-gap);
+  }
+  [data-view='sheet'] .frame:first-child .frame__edge { grid-column: 1 / -1; }
+  [data-view='sheet'] .frame:first-child .frame__caption { align-self: end; grid-template-columns: 2.5rem 1fr; }
+  [data-view='sheet'] .frame:first-child .frame__title { font-size: var(--type-heading-l); }
+  @media (max-width: 64rem) {
+    [data-view='sheet'] .frame:first-child .frame__hit { display: block; }
+  }
+
+  .frame__hit {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  .frame__edge {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-system);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    color: var(--color-graphite-soft);
+  }
+  .frame__cover {
+    position: relative;
+    border: var(--rule-ink);
+    transition: translate var(--duration-settle) var(--ease-settle), rotate var(--duration-settle) var(--ease-settle),
+      box-shadow var(--duration-settle) var(--ease-settle);
+  }
+  .frame__cover::before, .frame__cover::after { opacity: 0; transition: opacity var(--duration-quick); }
+  a.frame__hit:hover .frame__cover,
+  a.frame__hit:focus-visible .frame__cover {
+    translate: -4px -4px;
+    rotate: -0.4deg;
+    box-shadow: var(--shadow-offset-lift);
+  }
+  .frame__hit:hover .frame__cover::before, .frame__hit:hover .frame__cover::after,
+  .frame__hit:focus-visible .frame__cover::before, .frame__hit:focus-visible .frame__cover::after { opacity: 1; }
+  .frame__hit:focus-visible { outline: none; }
+  .frame__hit:focus-visible .frame__title { text-decoration: underline; text-decoration-color: var(--color-focus); text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+
+  .frame[data-state='soon'] .frame__cover { border-style: dashed; }
+  .frame[data-state='soon'] .frame__cover :global(.cover) { filter: saturate(0.55) contrast(0.9); opacity: 0.85; }
+  .frame__develop {
+    position: absolute;
+    left: var(--space-3);
+    top: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-highlight);
+    color: var(--color-on-highlight);
+  }
+
+  .frame__caption {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: var(--space-1) var(--space-3);
+    padding-top: var(--space-4);
+  }
+  .frame__no { padding-top: 0.35em; }
+  .frame__text { display: grid; gap: var(--space-1); }
+  .frame__line { color: var(--color-graphite); max-width: 46ch; }
+  .frame__meta {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
+    margin-top: var(--space-1);
+  }
+  .frame__status { color: var(--color-ink); }
+  .frame__status[data-state='open']::before { content: '● '; color: var(--color-redline); font-size: 0.7em; }
+  .frame__lock {
+    display: inline-block;
+    width: 0.62em;
+    height: 0.5em;
+    margin-right: 0.4em;
+    border: 1px solid currentColor;
+    position: relative;
+    top: 0.05em;
+  }
+  .frame__lock::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 0.4em;
+    height: 0.36em;
+    translate: -50% 0;
+    border: 1px solid currentColor;
+    border-bottom: 0;
+    border-radius: 0.3em 0.3em 0 0;
+  }
+
+  @media (max-width: 48rem) {
+    .frames { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- index view ---------- */
+  [data-view='index'] .frames { grid-template-columns: 1fr; gap: 0; border-top: var(--rule-ink); }
+  [data-view='index'] .frame { grid-column: auto; }
+  [data-view='index'] .frame__hit { position: relative; border-bottom: var(--rule-hair); }
+  [data-view='index'] .frame__edge { display: none; }
+  [data-view='index'] .frame__caption {
+    grid-template-columns: 3rem minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    transition: padding var(--duration-settle) var(--ease-settle);
+  }
+  [data-view='index'] .frame__line { display: none; }
+  [data-view='index'] .frame__meta { grid-column: 3; justify-content: flex-end; margin: 0; }
+  [data-view='index'] a.frame__hit:hover .frame__caption,
+  [data-view='index'] a.frame__hit:focus-visible .frame__caption { padding-left: var(--space-3); }
+  /* The cover peeks in beside the row. */
+  [data-view='index'] .frame__cover {
+    position: absolute;
+    z-index: 5;
+    right: calc(var(--peek-x, 30%));
+    top: 50%;
+    width: min(22rem, 34vw);
+    translate: 0 -50%;
+    rotate: 2deg;
+    opacity: 0;
+    scale: 0.92;
+    pointer-events: none;
+    box-shadow: var(--shadow-offset);
+    transition: opacity var(--duration-quick) var(--ease-soft), scale var(--duration-settle) var(--ease-settle);
+  }
+  [data-view='index'] .frame__hit:hover .frame__cover,
+  [data-view='index'] .frame__hit:focus-visible .frame__cover { opacity: 1; scale: 1; translate: 0 -50%; rotate: -1deg; }
+  [data-view='index'] .frame__develop { display: none; }
+  @media (max-width: 48rem) {
+    [data-view='index'] .frame__caption { grid-template-columns: 2.5rem 1fr; }
+    [data-view='index'] .frame__meta { grid-column: 2; justify-content: flex-start; }
+    [data-view='index'] .frame__cover { display: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-sheet]');
+  if (root) {
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-view-btn]');
+    const set = (view: string) => {
+      root.dataset.view = view;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.viewBtn === view)));
+      try { localStorage.setItem('ina:view', view); } catch { /* ignore */ }
+    };
+    try {
+      const saved = localStorage.getItem('ina:view');
+      if (saved === 'index' || saved === 'sheet') set(saved);
+    } catch { /* ignore */ }
+    buttons.forEach((b) => b.addEventListener('click', () => set(b.dataset.viewBtn!)));
+
+    // In index view the peek drifts with the pointer along the row.
+    root.addEventListener('pointermove', (e) => {
+      if (root.dataset.view !== 'index' || e.pointerType !== 'mouse') return;
+      const row = (e.target as Element).closest<HTMLElement>('.frame__hit');
+      if (!row) return;
+      const r = row.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      row.style.setProperty('--peek-x', `${Math.round((1 - x) * 40 + 4)}%`);
+    });
+  }
+</script>

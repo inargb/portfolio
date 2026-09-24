@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import FramesWord from '../components/FramesWord.astro';
+import ContactSheet from '../components/ContactSheet.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import { href, type Locale } from '../i18n/config';
+import { home } from '../content/home';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const other: Locale = locale === 'en' ? 'pt' : 'en';
+---
+
+<Base locale={locale} route="home" altHref={href('home', other)} pageId="home">
+  <section class="hero container" aria-labelledby="hero-title">
+    <div class="hero__meta t-meta" data-reveal>
+      <span>{home.meta[locale]}<span class="caret" aria-hidden="true"></span></span>
+      <span>{home.currently[locale]}</span>
+    </div>
+
+    <h1 id="hero-title" class="hero__title t-display" data-spec-label="display · clamp(2.6rem → 7rem)">
+      {home.headlineBefore[locale]}<FramesWord locale={locale} word={home.word[locale]} after={home.headlineAfter[locale]} />
+    </h1>
+
+    <div class="hero__foot">
+      <p class="hero__aside t-body t-secondary t-pretty" data-reveal>{home.aside[locale]}</p>
+      <a class="hero__cue t-nav" href="#work" data-reveal>
+        <span class="hero__cue-arrow" aria-hidden="true">↓</span> {home.cue[locale]}
+      </a>
+    </div>
+
+    <div class="hero__doodle">
+      <Doodle locale={locale} variant="happy" />
+    </div>
+  </section>
+
+  <section id="work" class="work container" aria-labelledby="work-title">
+    <header class="work__head">
+      <SectionLabel text={home.workLabel[locale]} />
+      <h2 id="work-title" class="t-heading-xl" data-reveal>{home.workTitle[locale]}</h2>
+      <p class="t-body t-secondary" data-reveal>{home.workNote[locale]}</p>
+    </header>
+    <ContactSheet locale={locale} />
+  </section>
+
+  <section class="about-strip container section" aria-labelledby="about-strip-title">
+    <div class="about-strip__doodle">
+      <Doodle locale={locale} variant="wonder" />
+    </div>
+    <div class="about-strip__text">
+      <SectionLabel text={home.aboutLabel[locale]} />
+      <h2 id="about-strip-title" class="t-heading-l" data-reveal>{home.aboutTitle[locale]}</h2>
+      <p class="t-body t-secondary measure" data-reveal>{home.aboutBody[locale]}</p>
+      <p class="about-strip__links" data-reveal>
+        <a class="link t-nav" href={href('about', locale)}>{home.aboutLink[locale]} →</a>
+        <span class="t-caption">{home.aboutShelf[locale]}</span>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    align-content: space-between;
+    gap: var(--space-12);
+    min-height: calc(100svh - var(--nav-height));
+    padding-block: var(--space-8) var(--space-12);
+  }
+  .hero__meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+  .hero__title { max-width: 15ch; position: relative; z-index: 2; }
+  .hero__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .hero__aside { max-width: 34ch; }
+  .hero__cue {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-min);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .hero__cue-arrow { display: inline-block; animation: nudge 2.4s var(--ease-soft) infinite; }
+  @keyframes nudge { 50% { translate: 0 4px; } }
+  :global(:root[data-motion='off']) .hero__cue-arrow { animation: none; }
+  .hero__doodle {
+    position: absolute;
+    right: calc(var(--layout-gutter) + 2%);
+    top: 18%;
+    width: clamp(6rem, 4rem + 9vw, 13rem);
+    rotate: 8deg;
+  }
+  @media (max-width: 40rem) {
+    .hero { min-height: auto; padding-top: var(--space-6); gap: var(--space-8); }
+    .hero__doodle { position: relative; right: auto; top: auto; justify-self: end; margin-top: calc(-1 * var(--space-6)); width: 6.5rem; order: -1; }
+  }
+
+  .work { padding-top: var(--space-16); scroll-margin-top: var(--nav-height); }
+  .work__head { display: grid; gap: var(--space-4); max-width: 44rem; margin-bottom: var(--space-12); }
+
+  .about-strip {
+    display: grid;
+    grid-template-columns: minmax(6rem, 14rem) 1fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+  .about-strip__doodle { rotate: -6deg; }
+  .about-strip__text { display: grid; gap: var(--space-4); }
+  .about-strip__links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); align-items: baseline; }
+  @media (max-width: 40rem) {
+    .about-strip { grid-template-columns: 1fr; gap: var(--space-6); }
+    .about-strip__doodle { width: 6rem; }
+  }
+</style>
