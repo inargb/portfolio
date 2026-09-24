@@ -45,6 +45,7 @@
   --type-heading-l: clamp(1.4rem, 1.15rem + 1.1vw, 2.15rem);
   --type-heading-m: clamp(1.15rem, 1.05rem + 0.45vw, 1.45rem);
   --type-heading-s: clamp(1rem, 0.97rem + 0.2vw, 1.125rem);
+  --type-lede: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* intro paragraph: bigger body, not a heading */
   --type-body: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
   --type-body-s: 0.9375rem;
   --type-caption: 0.8125rem;

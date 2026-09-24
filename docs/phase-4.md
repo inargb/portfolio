@@ -5,8 +5,7 @@
 - Content model: `src/content/cases/types.ts`. A case is sections → blocks
   (text, stats, question, figure, gallery, steps, decisions). Adding a case is
   writing one content file; no new components.
-- Page: hero (frame no., title, line, role, duration, period, skills & tools,
-  tags, "see it live") → sticky index that
+- Page: hero → sticky index that
   follows the reading (desktop) → numbered sections → previous / next frame.
 - Figures are prints: the print lift on hover, the "look" cursor, numbered
   captions (FIG. 01) that run through the whole case, and a lightbox
@@ -21,6 +20,13 @@
 - Images keep their own look (hairline frame, print lift on hover) and open in
   the lightbox (← → through every image in the case). The "how might we" is a
   shaded panel with crop marks. Paragraphs stay as running text.
+
+- Hero hierarchy: eyebrow (frame no. · context, small caps) → title (the only
+  heading-sized text, mono) → intro in the reading face one step up
+  (`--type-lede`) → "see it live". Facts sit in their own column on the right:
+  small uppercase labels over plain values, hairline between each; Focus (the
+  tags as text) and Skills & tools span the full width. Empty facts ("—") are
+  hidden. Stacks on tablets and phones.
 
 ## Cases
 

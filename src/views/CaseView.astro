@@ -5,7 +5,6 @@
 import Base from '../layouts/Base.astro';
 import CaseNav from '../components/CaseNav.astro';
 import CaseBlocks from '../components/case/CaseBlocks.astro';
-import Pill from '../components/ui/Pill.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
 import { caseHref, type Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
@@ -33,27 +32,27 @@ const sections = study.sections.map((s) => {
 
 <Base locale={locale} altHref={caseHref(project.slug, other)} pageId={project.slug} title={project.title[locale]} description={project.line[locale]}>
   <article class="case">
+    <!-- Hero, by hierarchy: eyebrow (where it sits) → title → intro in the
+         reading face → the facts in their own quiet column. -->
     <header class="case-hero container">
-      <SectionLabel text={p.frame[locale]} frame={project.frame} />
-      <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
-      <p class="case-hero__line t-heading-s t-secondary">{project.line[locale]}</p>
-      <dl class="case-hero__meta">
-        <div><dt class="t-label">{p.role[locale]}</dt><dd class="t-meta">{project.role[locale]}</dd></div>
-        {project.duration && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.duration[locale]}</dd></div>}
-        <div><dt class="t-label">{p.period[locale]}</dt><dd class="t-meta">{project.period[locale]}</dd></div>
-        {study.facts?.map((f) => <div><dt class="t-label">{f.label[locale]}</dt><dd class="t-meta">{f.value[locale]}</dd></div>)}
-        <div class="case-hero__tools"><dt class="t-label">{c.tools[locale]}</dt><dd class="t-meta">{study.tools[locale]}</dd></div>
-      </dl>
-      <div class="case-hero__foot">
-        <ul class="case-hero__tags" role="list">
-          {project.tags.map((tg) => <li><Pill>{tg[locale]}</Pill></li>)}
-        </ul>
+      <div class="case-hero__main">
+        <p class="case-hero__eyebrow t-label"><span class="case-hero__no">{p.frame[locale]} {project.frame}</span> · {project.context[locale]}</p>
+        <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
+        <p class="case-hero__lede">{project.line[locale]}</p>
         {study.live && (
-          <a class="link t-nav" href={study.live.href} target="_blank" rel="noopener">
+          <a class="case-hero__live link t-nav" href={study.live.href} target="_blank" rel="noopener">
             {study.live.label[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span>
           </a>
         )}
       </div>
+      <dl class="case-hero__facts">
+        <div><dt>{p.role[locale]}</dt><dd>{project.role[locale]}</dd></div>
+        {project.duration && <div><dt>{p.timeline[locale]}</dt><dd>{project.duration[locale]}</dd></div>}
+        {project.period[locale] !== '—' && <div><dt>{p.period[locale]}</dt><dd>{project.period[locale]}</dd></div>}
+        {study.facts?.map((f) => <div><dt>{f.label[locale]}</dt><dd>{f.value[locale]}</dd></div>)}
+        <div class="case-hero__wide"><dt>{c.focus[locale]}</dt><dd>{project.tags.map((tg) => tg[locale]).join(' · ')}</dd></div>
+        <div class="case-hero__wide"><dt>{c.tools[locale]}</dt><dd>{study.tools[locale]}</dd></div>
+      </dl>
     </header>
 
     <div class="case-body container">
@@ -96,21 +95,52 @@ const sections = study.sections.map((s) => {
 </Base>
 
 <style>
-  .case-hero { display: grid; gap: var(--space-4); padding-block: var(--space-12) var(--space-8); }
-  .case-hero__title { max-width: 20ch; }
-  .case-hero__line { max-width: 44rem; text-wrap: pretty; }
-  .case-hero__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4) var(--space-12);
-    margin-top: var(--space-4);
-    padding-top: var(--space-4);
-    border-top: var(--rule-hair);
+  /* Hero: title and intro on the left (the read), facts on the right (the
+     scan). Title is the only heading-sized text; the intro is the reading
+     face one step up; facts are small labels over plain values. */
+  .case-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(16rem, 1fr);
+    gap: var(--space-8) var(--space-16);
+    align-items: end;
+    padding-block: var(--space-16) var(--space-12);
+    border-bottom: var(--rule-hair);
   }
-  .case-hero__meta div { display: grid; gap: var(--space-1); }
-  .case-hero__meta dd { color: var(--color-ink); }
-  .case-hero__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
-  .case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .case-hero__main { display: grid; justify-items: start; gap: var(--space-4); }
+  .case-hero__eyebrow { color: var(--color-graphite-soft); }
+  .case-hero__no { color: var(--color-accent); }
+  .case-hero__title { max-width: 18ch; text-wrap: balance; }
+  .case-hero__lede {
+    max-width: 34rem;
+    margin-top: var(--space-2);
+    font-size: var(--type-lede);
+    line-height: 1.5;
+    color: var(--color-graphite);
+    text-wrap: pretty;
+  }
+  .case-hero__live { margin-top: var(--space-2); }
+
+  .case-hero__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
+    align-content: end;
+  }
+  .case-hero__facts div { display: grid; gap: var(--space-1); padding-top: var(--space-3); border-top: var(--rule-hair); }
+  .case-hero__wide { grid-column: 1 / -1; }
+  .case-hero__facts dt {
+    font-family: var(--font-system);
+    font-size: var(--type-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-graphite-soft);
+  }
+  .case-hero__facts dd { font-size: var(--type-body-s); line-height: 1.45; color: var(--color-ink); }
+
+  @media (max-width: 64rem) {
+    .case-hero { grid-template-columns: 1fr; padding-block: var(--space-12) var(--space-8); }
+    .case-hero__facts { max-width: 36rem; }
+  }
 
   /* Body: index on the left (sticky), sections on the right. */
   .case-body {

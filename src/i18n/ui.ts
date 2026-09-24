@@ -64,6 +64,7 @@ export const ui = {
   case: {
     contents: { en: 'in this case', pt: 'neste case' },
     tools: { en: 'Skills & tools', pt: 'Habilidades e ferramentas' },
+    focus: { en: 'Focus', pt: 'Foco' },
     question: { en: 'how might we', pt: 'como poderíamos' },
     fig: { en: 'fig.', pt: 'fig.' },
     enlarge: { en: 'See larger', pt: 'Ver maior' },
