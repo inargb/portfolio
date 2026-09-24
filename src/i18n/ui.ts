@@ -68,6 +68,8 @@ export const ui = {
     fig: { en: 'fig.', pt: 'fig.' },
     enlarge: { en: 'See larger', pt: 'Ver maior' },
     close: { en: 'Close', pt: 'Fechar' },
+    prev: { en: 'Previous image', pt: 'Imagem anterior' },
+    next: { en: 'Next image', pt: 'Próxima imagem' },
   },
 
   shortcuts: {

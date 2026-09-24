@@ -11,6 +11,7 @@ const c = ui.cursor;
 
 <div
   class="cursor is-away"
+  popover="manual"
   aria-hidden="true"
   data-cursor-root
   data-state="default"
@@ -41,7 +42,11 @@ const c = ui.cursor;
     display: none;
     color: var(--color-ink);
   }
-  :global(.has-custom-cursor) .cursor { display: block; }
+  /* It lives in the top layer (a manual popover) so it stays above open
+     dialogs and their backdrops; these undo the popover's default box. */
+  .cursor[popover] { inset: auto; left: 0; top: 0; margin: 0; padding: 0; border: 0; background: none; overflow: visible; width: auto; height: auto; }
+  :global(.has-custom-cursor) .cursor:popover-open { display: block; }
+  @supports not selector(:popover-open) { :global(.has-custom-cursor) .cursor { display: block; } }
   .cursor.is-away { opacity: 0; }
 
   /* Default: a thin crosshair, the centre of a viewfinder. */

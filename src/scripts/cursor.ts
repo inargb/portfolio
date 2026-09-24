@@ -56,10 +56,20 @@ function init(cursor: HTMLElement) {
   const onUp = () => cursor.classList.remove('is-down');
   const onLeave = () => cursor.classList.add('is-away');
 
+  // The cursor sits in the top layer. A dialog opened later lands above it,
+  // so whenever a dialog opens or closes, bring the cursor back on top.
+  const raise = () => {
+    if (!enabled || !cursor.showPopover) return;
+    try { if (cursor.matches(':popover-open')) cursor.hidePopover(); cursor.showPopover(); } catch { /* unsupported */ }
+  };
+  const dialogs = new MutationObserver(raise);
+
   function enable() {
     if (enabled) return;
     enabled = true;
     document.documentElement.classList.add('has-custom-cursor');
+    raise();
+    dialogs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
     window.addEventListener('pointermove', onMove, { passive: true });
     document.addEventListener('pointerover', onOver, { passive: true });
     window.addEventListener('ina:cursor', onRefresh);
@@ -71,6 +81,8 @@ function init(cursor: HTMLElement) {
     if (!enabled) return;
     enabled = false;
     document.documentElement.classList.remove('has-custom-cursor');
+    dialogs.disconnect();
+    try { if (cursor.matches(':popover-open')) cursor.hidePopover(); } catch { /* unsupported */ }
     window.removeEventListener('pointermove', onMove);
     document.removeEventListener('pointerover', onOver);
     window.removeEventListener('ina:cursor', onRefresh);

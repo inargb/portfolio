@@ -210,8 +210,12 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
 
+/* ---- Overlays: while any dialog is open, the page behind stays put ------- */
+html:has(dialog[open]) { overflow: hidden; scrollbar-gutter: stable; }
+
 /* ---- Custom cursor: hide the native one only when ours is running -------- */
 .has-custom-cursor,
-.has-custom-cursor * { cursor: none; }
+.has-custom-cursor *,
+.has-custom-cursor ::backdrop { cursor: none; }
 .has-custom-cursor input,
 .has-custom-cursor textarea { cursor: text; }
