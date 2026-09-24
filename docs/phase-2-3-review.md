@@ -73,3 +73,5 @@ Marked in the code as DRAFT, or written new:
 - Covers develop as they scroll in (pale print → full tone).
 - The cover hover is now a reusable pattern, the **print lift** (`.lift.crop` in `components.css`), kept for case-study images.
 - Reel frames don't move. One frame is on: the one under the pointer (or focused), otherwise the one in the middle of the screen. Its image and notes are at full strength; every other frame sits under a 40% film-dark shade and its notes at 45%.
+- About · shelf: the controls moved under the pile of objects, with a hairline above. A notched meter shows how many things are put away (one notch per object), and "tidy up for me ↺" is a quiet link instead of a boxed button.
+- About · portrait: uses the print lift on hover (it already sits tilted; `--lift-rest` keeps that tilt and adds the lift's).

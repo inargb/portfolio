@@ -31,9 +31,11 @@ const tr = (v: L10n | string) => (typeof v === 'string' ? v : v[locale]);
 
   <!-- 02 · hello -->
   <section class="hello container section" aria-labelledby="hello-title">
-    <figure class="hello__portrait crop" data-reveal>
-      <Image src={about.portrait} alt={about.hello.portraitAlt[locale]} widths={[360, 720]} sizes="(max-width: 40rem) 70vw, 22rem" data-develop data-cursor="look" />
-    </figure>
+    <div class="hello__photo" data-reveal>
+      <figure class="hello__portrait lift crop" data-cursor="look">
+        <Image src={about.portrait} alt={about.hello.portraitAlt[locale]} widths={[360, 720]} sizes="(max-width: 40rem) 70vw, 22rem" data-develop />
+      </figure>
+    </div>
     <div class="hello__text">
       <SectionLabel text={locale === 'pt' ? 'oi' : 'hello'} frame="02" />
       <h2 id="hello-title" class="t-heading-l">{about.hello.title[locale]}</h2>
@@ -145,10 +147,11 @@ const tr = (v: L10n | string) => (typeof v === 'string' ? v : v[locale]);
 
   /* 02 */
   .hello { display: grid; grid-template-columns: minmax(10rem, 22rem) 1fr; gap: var(--space-12); align-items: start; }
-  .hello__portrait { rotate: -1.5deg; padding: var(--space-2); background: var(--color-paper-shade); border: var(--rule-hair); }
+  /* A print on the table: tilted at rest, picked up on hover (print lift). */
+  .hello__portrait { --lift-rest: -1.5deg; padding: var(--space-2); background: var(--color-paper-shade); border: var(--rule-hair); }
   .hello__portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
   .hello__text { display: grid; gap: var(--space-4); }
-  @media (max-width: 40rem) { .hello { grid-template-columns: 1fr; } .hello__portrait { width: 70%; } }
+  @media (max-width: 40rem) { .hello { grid-template-columns: 1fr; } .hello__photo { width: 70%; } }
 
   /* 03 */
   .craft { display: grid; gap: var(--space-8); }
