@@ -320,6 +320,38 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   }
   initIndex();
 
+  // ---- The index lets go at the last section --------------------------------
+  // Sticky until its last entry reaches the last section's title; from there
+  // it stays level with that title and scrolls away with the content.
+  const indexEl = document.querySelector<HTMLElement>('[data-case-index]');
+  if (indexEl) {
+    const nav: HTMLElement = indexEl;
+    let shift = 0;
+    let queued = false;
+    function release() {
+      queued = false;
+      const links = nav.querySelectorAll<HTMLElement>('[data-index-link]');
+      const sections = document.querySelectorAll<HTMLElement>('[data-case-section]');
+      const lastLink = links[links.length - 1];
+      const title = sections[sections.length - 1]?.querySelector<HTMLElement>('h2');
+      if (!lastLink || !title || !nav.offsetParent) { shift = 0; nav.style.translate = ''; return; }
+      // Where the link would be without our shift, and the title's first line.
+      const l = lastLink.getBoundingClientRect();
+      const linkMid = l.top + l.height / 2 - shift;
+      const t = title.getBoundingClientRect();
+      const titleMid = t.top + (parseFloat(getComputedStyle(title).lineHeight) || t.height) / 2;
+      const next = Math.min(0, titleMid - linkMid);
+      if (next === shift) return;
+      shift = next;
+      nav.style.translate = shift ? `0 ${shift}px` : '';
+    }
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(release); } };
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    addEventListener('ina:case-content', queue);
+    queue();
+  }
+
   // ---- Lightbox: any [data-lightbox] print opens here ---------------------
   // ← → (buttons, arrow keys or a swipe) walk through every image in the case.
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
