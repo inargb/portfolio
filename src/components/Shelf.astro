@@ -29,14 +29,11 @@ const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[local
     <p class="shelf__note t-caption" data-note-bubble aria-hidden="true"></p>
     <div class="shelf__stars" data-stars aria-hidden="true"></div>
   </div>
-  <!-- Under the pile: how much is put away, and the lazy way out. -->
-  <div class="shelf__bar" style={`--total:${shelf.objects.length}`}>
-    <p class="shelf__count t-meta" aria-hidden="true">
-      <span class="shelf__meter"></span>
-      <span><span data-count>0</span>/{shelf.objects.length}</span>
-    </p>
+  <!-- Under the pile, on the right: the lazy way out, then the count. -->
+  <div class="shelf__bar">
     <button type="button" class="shelf__btn t-nav" data-tidy data-cursor="link">{u.tidy[locale]} <span aria-hidden="true">↺</span></button>
     <button type="button" class="shelf__btn t-nav" data-mess data-cursor="link" hidden>{u.mess[locale]} <span aria-hidden="true">↺</span></button>
+    <p class="shelf__count t-meta" aria-hidden="true"><span data-count>0</span>/{shelf.objects.length}</p>
   </div>
   <p class="visually-hidden" aria-live="polite" data-shelf-live></p>
 </div>
@@ -90,26 +87,14 @@ const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[local
   }
   .shelf__note.is-on { opacity: 1; }
 
-  /* Sits under the pile (the stage's right column), not under the shelf. */
+  /* Under the pile, right-aligned: "tidy up for me ↺   0/9". */
   .shelf__bar {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    gap: var(--space-4);
-    margin-left: 52%;
-    padding-top: var(--space-3);
-    border-top: var(--rule-hair);
+    gap: var(--space-6);
   }
-  .shelf__count { display: flex; align-items: center; gap: var(--space-2); color: var(--color-graphite); }
-  /* One notch per object; filled as they go on the shelf. */
-  .shelf__meter {
-    width: calc(var(--total) * 0.625rem);
-    height: 0.5rem;
-    background: linear-gradient(to right, var(--color-ink) calc(var(--put, 0) / var(--total) * 100%), var(--color-rule) 0);
-    -webkit-mask: repeating-linear-gradient(to right, #000 0 0.5rem, transparent 0.5rem 0.625rem);
-    mask: repeating-linear-gradient(to right, #000 0 0.5rem, transparent 0.5rem 0.625rem);
-    transition: background var(--duration-settle);
-  }
+  .shelf__count { color: var(--color-graphite); }
   .shelf__btn {
     display: inline-flex;
     align-items: center;
@@ -140,7 +125,6 @@ const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[local
   @media (max-width: 40rem) {
     .shelf__stage { grid-template-columns: 1fr; padding-top: 24%; }
     .shelf__pile { min-height: 70vw; }
-    .shelf__bar { margin-left: 0; }
   }
 </style>
 

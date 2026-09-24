@@ -79,7 +79,6 @@ function init(root: HTMLElement) {
   function refresh(announce?: string, byHand = true) {
     const n = putAwayCount();
     countEl.textContent = String(n);
-    root.style.setProperty('--put', String(n));
     const done = n === items.length;
     root.classList.toggle('is-tidy', done);
     tidyBtn.hidden = done;
