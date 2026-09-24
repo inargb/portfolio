@@ -12,6 +12,9 @@ export const ui = {
     about: { en: 'about', pt: 'sobre' },
     resume: { en: 'resume', pt: 'currículo' },
     home: { en: 'Inaiá Silva, home', pt: 'Inaiá Silva, início' },
+    homeShort: { en: 'home', pt: 'início' },
+    menuOpen: { en: 'Open menu', pt: 'Abrir menu' },
+    menuClose: { en: 'Close menu', pt: 'Fechar menu' },
     newTab: { en: '(opens in a new tab)', pt: '(abre em outra aba)' },
   },
 

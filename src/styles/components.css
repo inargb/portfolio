@@ -42,7 +42,7 @@
 }
 .egg-toast:empty { display: none; }
 .egg-toast.is-on { opacity: 1; translate: -50% 0; }
-@media (max-width: 40rem) { .egg-toast { bottom: calc(4.5rem + env(safe-area-inset-bottom)); } }
+@media (max-width: 40rem) { .egg-toast { bottom: calc(1.5rem + env(safe-area-inset-bottom)); } }
 
 /* ---- Shutter flash ("yashica") ------------------------------------------ */
 .shutter {
