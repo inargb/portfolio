@@ -90,6 +90,24 @@ export const ui = {
     failed: { en: 'Something went wrong loading the case. Please try again.', pt: 'Algo deu errado ao carregar o case. Tente de novo.' },
   },
 
+  polaroid: {
+    camera: { en: 'Take a picture', pt: 'Tirar uma foto' },
+    cursor: { en: 'cheese!', pt: 'xis!' },
+    title: { en: 'A polaroid for you', pt: 'Uma polaroid pra você' },
+    caption: { en: 'Write on the polaroid', pt: 'Escreva na polaroid' },
+    placeholder: { en: 'write something…', pt: 'escreva algo…' },
+    frame: { en: 'Frame colour', pt: 'Cor da moldura' },
+    another: { en: 'another dog', pt: 'outro cachorro' },
+    save: { en: 'save to device', pt: 'salvar no aparelho' },
+    pin: { en: 'pin to the mural', pt: 'fixar no mural' },
+    pinned: { en: 'pinned ✓', pt: 'fixada ✓' },
+    pinnedSay: { en: 'Pinned! The mural opens soon in the playground.', pt: 'Fixada! O mural abre em breve no playground.' },
+    saved: { en: 'Saved. Good dog.', pt: 'Salva. Bom garoto.' },
+    close: { en: 'close', pt: 'fechar' },
+    photo: { en: 'photo', pt: 'foto' },
+    alt: { en: 'A dog taking a selfie, close to the lens', pt: 'Um cachorro tirando uma selfie, bem perto da lente' },
+  },
+
   shortcuts: {
     title: { en: 'Keyboard, for the curious', pt: 'Teclado, para curiosos' },
     close: { en: 'Close', pt: 'Fechar' },

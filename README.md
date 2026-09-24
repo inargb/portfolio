@@ -136,3 +136,22 @@ bank-grade security. Anyone given the password can read the case.
 
 Sanitize media before sealing: blur colleague names, client locations and real
 addresses (see `private/<slug>/blur.py`).
+
+## Dog selfies (camera secret)
+
+The polaroid secret uses openly licensed photos, cropped square in `public/dogs/`.
+Credits (also printed on each polaroid, and in `src/content/dogs.ts`):
+
+| File | Photo | License |
+| --- | --- | --- |
+| dog-01 | [normanack](https://www.flickr.com/photos/29278394@N00/4815016325) | CC BY 2.0 |
+| dog-02 | [rikkis_refuge](https://www.flickr.com/photos/60109376@N00/16001818047) | CC BY 2.0 |
+| dog-03 | [Rennett Stowe](https://www.flickr.com/photos/10393601@N08/2593900179) | CC BY 2.0 |
+| dog-04 | [NancyFry](https://www.flickr.com/photos/36436564@N07/14809563010) | CC BY 2.0 |
+| dog-05 | [joshDubya](https://www.flickr.com/photos/9359358@N06/2310387486) | CC BY 2.0 |
+| dog-06 | [rawpixel](https://www.rawpixel.com/image/3338447/free-photo-image-animal-canine-cc0) | CC0 |
+| dog-07 | [kevinpoh](https://www.flickr.com/photos/7679455@N03/3781461111) | CC BY 2.0 |
+| dog-08 | [_tar0_](https://www.flickr.com/photos/49946687@N05/7390121066) | CC BY 2.0 |
+
+Pinned polaroids are stored in this browser (`localStorage` key `ina:mural`)
+until the playground mural exists.

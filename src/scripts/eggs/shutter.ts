@@ -1,21 +1,18 @@
-// Type "yashica" anywhere: the old camera takes a picture of the page.
-// Motion off → no flash, just the click (as text).
+// Dad's Yashica. The little camera doodle in the footer (click or tap, any
+// device), or typing "yashica" anywhere: flash, and a polaroid of a dog
+// selfie develops (scripts/polaroid.ts). Motion off → no flash, no develop.
 import { register } from './registry';
 import { onWord } from './keys';
+import { takePicture } from '../polaroid';
 
 register({
   id: 'yashica',
   init(ctx) {
-    onWord('yashica', () => {
-      if (ctx.motion()) {
-        const flash = document.createElement('div');
-        flash.className = 'shutter';
-        flash.setAttribute('aria-hidden', 'true');
-        document.body.append(flash);
-        flash.addEventListener('animationend', () => flash.remove());
-      }
-      ctx.say({ en: '*click* that one’s going on the roll.', pt: '*clique* essa vai pro filme.' });
+    const shoot = () => {
+      takePicture();
       ctx.found('yashica');
-    });
+    };
+    onWord('yashica', shoot);
+    document.querySelectorAll<HTMLElement>('[data-camera]').forEach((btn) => btn.addEventListener('click', shoot));
   },
 });
