@@ -144,7 +144,6 @@ if (dialog && data) {
   $<HTMLInputElement>('[data-polaroid-caption]').addEventListener('input', resetPin);
   $('[data-polaroid-close]').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
-  $('[data-polaroid-another]').addEventListener('click', () => { flash(); shoot(); });
   $('[data-polaroid-save]').addEventListener('click', () => { save(); });
   $<HTMLButtonElement>('[data-polaroid-pin]').addEventListener('click', (e) => {
     const btn = e.currentTarget as HTMLButtonElement;
