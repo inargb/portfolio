@@ -16,5 +16,5 @@ export const home = {
   word: { en: 'frames', pt: 'frames' } as L10n,
   headlineAfter: { en: '.', pt: '.' } as L10n,
 
-  workLabel: { en: 'works', pt: 'trabalhos' } as L10n,
+  workLabel: { en: 'works', pt: 'projetos' } as L10n,
 };

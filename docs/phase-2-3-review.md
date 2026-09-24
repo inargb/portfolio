@@ -45,5 +45,5 @@ Marked in the code as DRAFT, or written new:
 - Light background is #FBFBFD. Surfaces and rules were retuned to neutral greys for it. Dark mode is unchanged.
 - Home: removed the "Seven frames" heading + line, the short bio, the contact-sheet button and the About preview.
 - Footer: removed the polaroid. It changed randomly on every visit but was always visible, so it wasn't a real easter egg.
-- About: the shelf photo is unfiltered in every theme; Visual/Product design pills removed; graphic design items are pills; new 05 education_ section (06–08 renumbered).
-- PT: nav "projetos", footer "design feito por mim <3". Resume links open the file for the current language (header, footer, About contact).
+- About: the shelf is a transparent cut-out of the real photo (same colours, no white box) in every theme; Visual/Product design pills removed; graphic design items are pills; new 05 education_ section (06–08 renumbered).
+- PT: "projetos" everywhere (nav, home label, view toggle, case nav), footer "design feito por mim <3". Resume links open the file for the current language (header, footer, About contact).
