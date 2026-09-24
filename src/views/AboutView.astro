@@ -52,12 +52,6 @@ const tr = (v: L10n | string) => (typeof v === 'string' ? v : v[locale]);
     <ul class="craft__pills" role="list" data-stagger>
       {about.disciplines.items.map((d) => <li data-reveal><Pill glyph={d.glyph}>{d.label[locale]}</Pill></li>)}
     </ul>
-    <div class="craft__more">
-      <p class="t-label">{about.disciplines.craftLabel[locale]}</p>
-      <ul class="craft__pills" role="list" data-stagger>
-        {about.disciplines.craft.map((d) => <li data-reveal><Pill glyph={d.glyph}>{d.label[locale]}</Pill></li>)}
-      </ul>
-    </div>
     <div class="craft__tools">
       <p class="t-label">{about.tools.label[locale]}</p>
       <ul class="craft__keys" role="list">
@@ -155,8 +149,7 @@ const tr = (v: L10n | string) => (typeof v === 'string' ? v : v[locale]);
 
   /* 03 */
   .craft { display: grid; gap: var(--space-8); }
-  .craft__pills { display: flex; flex-wrap: wrap; gap: var(--space-3); max-width: 56rem; }
-  .craft__more { display: grid; gap: var(--space-3); }
+  .craft__pills { display: flex; flex-wrap: wrap; gap: var(--space-3); max-width: 72rem; }
   .craft__tools { display: grid; gap: var(--space-3); }
   .craft__keys { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
   .craft__keys li { display: inline-flex; align-items: center; gap: var(--space-2); }

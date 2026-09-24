@@ -75,3 +75,4 @@ Marked in the code as DRAFT, or written new:
 - Reel frames don't move. One frame is on: the one under the pointer (or focused), otherwise the one in the middle of the screen. Its image and notes are at full strength; every other frame sits under a 40% film-dark shade and its notes at 45%.
 - About · shelf: the controls sit under the pile, on the right: "tidy up for me ↺" (a quiet link instead of a boxed button), then the 0/9 count.
 - About · portrait: uses the print lift on hover (it already sits tilted; `--lift-rest` keeps that tilt and adds the lift's).
+- About · what I do: the graphic-design skills (Brand identity, Editorial design, Typography, Mixed media art) join the same list; the "and from graphic design" label is gone.
