@@ -1,6 +1,8 @@
 // The doodles are Inaiá's own drawings, and purely decorative. They notice you:
 //   · they turn slightly toward the pointer (fine pointers, motion on)
 //   · leave the page idle and they doze off
+//   · [data-doodle-drag] ones can be picked up and moved around the page
+//     (mouse, touch or pen); they stay inside the page
 import { register } from './registry';
 
 register({
@@ -26,6 +28,9 @@ register({
       });
     }, { passive: true });
 
+    // Pick up and move.
+    document.querySelectorAll<HTMLElement>('[data-doodle-drag]').forEach(draggable);
+
     // Idle → sleepy.
     let idle = 0;
     const sleep = () => doodles.forEach((d) => d.classList.add('is-sleepy'));
@@ -38,3 +43,38 @@ register({
     wake();
   },
 });
+
+function draggable(el: HTMLElement) {
+  let dx = 0, dy = 0;          // current offset from where the layout put it
+  let sx = 0, sy = 0;          // pointer start
+  let ox = 0, oy = 0;          // offset at start
+  let held = false;
+  let pageH = 0;               // page height before the drag, so it can't grow
+
+  el.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    held = true;
+    sx = e.clientX; sy = e.clientY; ox = dx; oy = dy;
+    pageH = document.documentElement.scrollHeight;
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('is-held');
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!held) return;
+    let nx = ox + e.clientX - sx;
+    let ny = oy + e.clientY - sy;
+    // Keep it on the page: inside the viewport's width and the page's height.
+    const r = el.getBoundingClientRect();
+    const left = r.left - dx, top = r.top + window.scrollY - dy;  // un-dragged box
+    const maxX = document.documentElement.clientWidth - r.width - left - 2;
+    nx = Math.min(Math.max(nx, -left), maxX);
+    ny = Math.min(Math.max(ny, -top), pageH - r.height - top);
+    dx = nx; dy = ny;
+    el.style.setProperty('--drag-x', `${dx}px`);
+    el.style.setProperty('--drag-y', `${dy}px`);
+  });
+  const drop = () => { held = false; el.classList.remove('is-held'); };
+  el.addEventListener('pointerup', drop);
+  el.addEventListener('pointercancel', drop);
+}

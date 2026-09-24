@@ -19,8 +19,8 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
     </h1>
 
     <div class="hero__doodles">
-      <div class="hero__doodle hero__doodle--happy"><Doodle variant="happy" /></div>
-      <div class="hero__doodle hero__doodle--wonder"><Doodle variant="wonder" /></div>
+      <div class="hero__doodle hero__doodle--happy" data-doodle-drag data-cursor="drag"><Doodle variant="happy" /></div>
+      <div class="hero__doodle hero__doodle--wonder" data-doodle-drag data-cursor="drag"><Doodle variant="wonder" /></div>
     </div>
   </section>
 
@@ -41,12 +41,23 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
     gap: var(--space-8);
     min-height: calc(88svh - var(--nav-height));
     padding-block: var(--space-8) var(--space-12);
+    overflow-x: clip; /* a doodle dragged to the edge never adds a sideways scroll */
   }
   .hero__title { max-width: 22ch; position: relative; z-index: 2; }
 
   /* Two of Inaiá's doodles keep each other company on the right. */
   .hero__doodles { position: absolute; inset: 0 var(--layout-gutter); pointer-events: none; }
-  .hero__doodle { position: absolute; }
+  /* They can be picked up and moved anywhere on the page (scripts/eggs/doodle.ts). */
+  .hero__doodle {
+    position: absolute;
+    z-index: 3;
+    pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    translate: var(--drag-x, 0px) var(--drag-y, 0px);
+    transition: scale var(--duration-quick) var(--ease-settle), filter var(--duration-quick);
+  }
+  .hero__doodle.is-held { scale: 1.08; filter: drop-shadow(3px 4px 0 var(--color-paper-deep)); }
   .hero__doodle--happy { right: 2%; top: 14%; width: clamp(6rem, 4rem + 9vw, 13rem); rotate: 8deg; }
   .hero__doodle--wonder { right: 16%; bottom: 12%; width: clamp(4.5rem, 3rem + 6vw, 9rem); rotate: -10deg; }
   @media (max-width: 40rem) {

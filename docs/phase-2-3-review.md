@@ -62,3 +62,4 @@ Marked in the code as DRAFT, or written new:
 - Film strip: no caption and no pause/play. The first time it comes into view, the visible photos develop one by one, and then the loop starts. It still stops on hover, focus and drag. With reduced motion it stays still and fully developed.
 - Page dividers (header, footer, case nav, lists) use the light-gray hairline (`--rule-hair`). Component outlines keep the ink line.
 - Light only: the dark theme, the lights pull-cord and the `L` shortcut are removed. The site stays light even when the OS is in dark mode.
+- Home: both doodles can be picked up and moved around the page (mouse, touch or pen). They stay inside the page and go back to their place on reload.
