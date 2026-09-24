@@ -42,7 +42,6 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
     /* Fills the first screen but leaves a peek of the work below (~13rem). */
     min-height: max(20rem, calc(100svh - var(--nav-height) - 13rem));
     padding-block: clamp(var(--space-6), 11svh, 8rem) var(--space-4);
-    overflow-x: clip; /* a doodle dragged to the edge never adds a sideways scroll */
   }
   .hero__title { max-width: 22ch; position: relative; z-index: 2; }
 
@@ -56,9 +55,9 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
     touch-action: none;
     user-select: none;
     translate: var(--drag-x, 0px) var(--drag-y, 0px);
-    transition: scale var(--duration-quick) var(--ease-settle), filter var(--duration-quick);
+    transition: scale var(--duration-quick) var(--ease-settle);
   }
-  .hero__doodle.is-held { scale: 1.08; filter: drop-shadow(3px 4px 0 var(--color-paper-deep)); }
+  .hero__doodle.is-held { scale: 1.08; }
   .hero__doodle--happy { right: 2%; top: 8%; width: clamp(6rem, 4rem + 9vw, 13rem); rotate: 8deg; }
   .hero__doodle--wonder { right: 17%; bottom: 8%; width: clamp(4.5rem, 3rem + 6vw, 9rem); rotate: -10deg; }
   @media (max-width: 40rem) {
