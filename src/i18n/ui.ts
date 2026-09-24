@@ -86,10 +86,6 @@ export const ui = {
     busy: { en: 'developing…', pt: 'revelando…' },
     wrong: { en: 'That’s not it. Try again?', pt: 'Não é essa. Tenta de novo?' },
     failed: { en: 'Something went wrong loading the case. Please try again.', pt: 'Algo deu errado ao carregar o case. Tente de novo.' },
-    note: {
-      en: 'A simple password gate to keep client work private, not bank-grade security.',
-      pt: 'Uma senha simples para manter o trabalho do cliente privado, não é segurança de banco.',
-    },
   },
 
   shortcuts: {

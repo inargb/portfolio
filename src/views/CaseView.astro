@@ -59,7 +59,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
           <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
         </form>
         <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
-        <p class="gate__note t-caption">{g.note[locale]}</p>
       </div>
     </section>
   )}
@@ -296,7 +295,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   .gate__error.is-busy { color: var(--color-graphite); }
   .gate.is-wrong .gate__card { animation: gate-shake 0.35s var(--ease-soft); }
   @keyframes gate-shake { 25% { translate: -6px 0; } 50% { translate: 5px 0; } 75% { translate: -3px 0; } }
-  .gate__note { color: var(--color-graphite-soft); }
   .case-sealed:empty { display: none; }
   @media (max-width: 40rem) { .gate__card { padding: var(--space-8) var(--space-6); } .gate__form { flex-direction: column; } }
 </style>
