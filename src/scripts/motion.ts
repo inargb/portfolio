@@ -38,7 +38,8 @@ export function initReveals(scope: ParentNode = document) {
         io.unobserve(entry.target);
       }
     },
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+    // Start as soon as a sliver is on screen, so a peek below the fold isn't blank.
+    { rootMargin: '0px', threshold: 0.02 },
   );
   targets.forEach((el) => io.observe(el));
 }

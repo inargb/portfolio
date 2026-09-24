@@ -63,3 +63,4 @@ Marked in the code as DRAFT, or written new:
 - Page dividers (header, footer, case nav, lists) use the light-gray hairline (`--rule-hair`). Component outlines keep the ink line.
 - Light only: the dark theme, the lights pull-cord and the `L` shortcut are removed. The site stays light even when the OS is in dark mode.
 - Home: both doodles can be picked up and moved around the page (mouse, touch or pen). They stay inside the page and go back to their place on reload.
+- Home: the headline sits higher, and the first screen leaves a peek of the work (the label and the top of the first two covers) at any desktop size.
