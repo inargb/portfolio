@@ -5,4 +5,3 @@ import './spec-mode';
 import './doodle';
 import './shutter';
 import './shortcuts';
-import './footer-status';

@@ -76,3 +76,4 @@ Marked in the code as DRAFT, or written new:
 - About · shelf: the controls sit under the pile, on the right: "tidy up for me ↺" (a quiet link instead of a boxed button), then the 0/9 count.
 - About · portrait: uses the print lift on hover (it already sits tilted; `--lift-rest` keeps that tilt and adds the lift's).
 - About · what I do: the graphic-design skills (Brand identity, Editorial design, Typography, Mixed media art) join the same list; the "and from graphic design" label is gone.
+- Footer: "nice to meet you" and the elsewhere links sit on opposite ends of one row (links under the greeting on phones), with no divider between them. The secrets counter and "the kit" link are gone; spec mode is the ruler icon alone (still labelled for screen readers). The Playground stays at /playground.

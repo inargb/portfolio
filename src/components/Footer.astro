@@ -1,5 +1,5 @@
 ---
-import { href, type Locale } from '../i18n/config';
+import type { Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
 import { site } from '../content/site';
 
@@ -17,45 +17,41 @@ const links = [
 
 <footer class="footer" data-spec-label="footer">
   <div class="container">
-    <p class="footer__hello t-heading-xl">
-      {f.greeting[locale]}<span class="caret" aria-hidden="true"></span>
-    </p>
+    <!-- The greeting on one end, the links on the other (stacked on phones). -->
+    <div class="footer__top">
+      <p class="footer__hello t-heading-xl">
+        {f.greeting[locale]}<span class="caret" aria-hidden="true"></span>
+      </p>
 
-    <div class="footer__mid">
-      <p class="t-label t-secondary">{f.elsewhere[locale]}</p>
-      <ul class="footer__links" role="list">
-        {links.map((l) => (
-          <li>
-            <a class="footer__link t-nav" href={l.href} target="_blank" rel="noopener">
-              {l.label}<span aria-hidden="true"> ↗</span>
-              <span class="visually-hidden">{ui.nav.newTab[locale]}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="footer__mid">
+        <p class="t-label t-secondary">{f.elsewhere[locale]}</p>
+        <ul class="footer__links" role="list">
+          {links.map((l) => (
+            <li>
+              <a class="footer__link t-nav" href={l.href} target="_blank" rel="noopener">
+                {l.label}<span aria-hidden="true"> ↗</span>
+                <span class="visually-hidden">{ui.nav.newTab[locale]}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
 
     <div class="footer__base t-meta">
       <p class="footer__sig">{f.signature[locale]}</p>
 
-      <p class="footer__secrets" data-secrets hidden>
-        {f.secrets[locale]} <span data-secrets-count></span>
-      </p>
-
       <div class="footer__controls" role="group" aria-label={c.group[locale]}>
-        <button class="footer__ctl" type="button" aria-pressed="false" data-spec-toggle>
+        <button class="footer__ctl" type="button" aria-pressed="false" data-spec-toggle aria-label={c.spec[locale]} title={c.spec[locale]}>
           <svg class="footer__ico footer__ruler" viewBox="0 0 24 8" aria-hidden="true">
             <rect x="0.5" y="0.5" width="23" height="7" fill="none" stroke="currentColor" />
             <path d="M4 1v3M8 1v4M12 1v3M16 1v4M20 1v3" stroke="currentColor" />
           </svg>
-          <span>{c.spec[locale]}</span>
         </button>
         <button class="footer__ctl" type="button" data-shortcuts-open aria-label={ui.shortcuts.title[locale]}>
           <kbd class="keycap" aria-hidden="true">?</kbd>
         </button>
       </div>
-
-      <a class="footer__kit link" href={href('playground', locale)} title={f.kitHint[locale]}>{f.kit[locale]}</a>
     </div>
   </div>
 </footer>
@@ -66,15 +62,18 @@ const links = [
     border-top: var(--rule-hair);
     padding-block: var(--space-16) var(--space-8);
   }
+  .footer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+  }
   .footer__hello { max-width: 12ch; }
   .footer__mid {
     display: flex;
-    gap: var(--space-6);
+    gap: 0 var(--space-6);
     align-items: baseline;
     flex-wrap: wrap;
-    margin-top: var(--space-12);
-    padding-top: var(--space-4);
-    border-top: var(--rule-hair);
   }
   .footer__links { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
   .footer__link {
@@ -90,7 +89,7 @@ const links = [
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2) var(--space-6);
-    margin-top: var(--space-4);
+    margin-top: var(--space-12);
     padding-top: var(--space-4);
     border-top: var(--rule-hair);
   }
@@ -111,10 +110,9 @@ const links = [
   .footer__ctl:hover, .footer__ctl[aria-pressed='true'] { color: var(--color-ink); }
   .footer__ctl[aria-pressed='true'] .footer__ico { color: var(--color-accent); }
   .footer__ruler { width: 1.5rem; }
-  .footer__kit { font-family: var(--font-system); font-size: var(--type-meta); color: var(--color-graphite); }
 
   @media (max-width: 40rem) {
     .footer { padding-bottom: calc(var(--space-12) + env(safe-area-inset-bottom)); }
-    .footer__controls { margin-left: 0; width: 100%; }
+    .footer__top { flex-direction: column; align-items: flex-start; gap: var(--space-8); }
   }
 </style>
