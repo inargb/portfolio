@@ -72,3 +72,4 @@ Marked in the code as DRAFT, or written new:
 - Home: the work is one roll of film. Every project is a frame on a single vertical reel (with a cut leader at the start); its notes sit to the right, joined by a thin line. The frame in the middle of the screen is "on": notes at full strength, title in blue; the others step back to 45% (never hidden). Tablets and phones: the reel runs full width with notes under each frame, always full strength. Reduced motion: nothing fades.
 - Covers develop as they scroll in (pale print → full tone).
 - The cover hover is now a reusable pattern, the **print lift** (`.lift.crop` in `components.css`), kept for case-study images.
+- Reel frames don't move. One frame is on: the one under the pointer (or focused), otherwise the one in the middle of the screen. Its image and notes are at full strength; every other frame sits under a 40% film-dark shade and its notes at 45%.

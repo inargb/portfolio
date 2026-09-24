@@ -1,9 +1,11 @@
 ---
 // The work, as one roll of film: every project is a frame on the same reel.
 //   desktop (> 64rem) → the reel on the left, each frame's notes on the right,
-//                       joined by a thin line. The frame in the middle of the
-//                       screen is "on": its notes are full strength and the
-//                       title turns blue; the others step back (never hidden).
+//                       joined by a thin line. One frame is "on": the one the
+//                       pointer is over, otherwise the one in the middle of the
+//                       screen. It is the only one at full strength (image and
+//                       notes, title in blue); the others step back under a
+//                       darkroom shade (never hidden). Nothing moves.
 //   tablet + phone     → the reel runs full width, notes under each frame,
 //                       always full strength.
 // Every row answers the same questions in the same place:
@@ -33,7 +35,7 @@ const total = String(projects.length).padStart(2, '0');
         <Tag class="shot__hit" {...linkProps} data-cursor={cursorFor[proj.state]}>
           <div class="shot__film">
             {i === 0 && <p class="shot__leader" aria-hidden="true"><span>start ▸ {total} exp.</span></p>}
-            <div class:list={['shot__frame frame-card__cover', proj.state !== 'soon' && 'lift crop']}>
+            <div class="shot__frame frame-card__cover">
               <div class="shot__print" data-develop>
                 <ProjectCover cover={proj.cover} media={proj.media} label="" locale={locale} sizes="(max-width: 64rem) calc(100vw - 6rem), 44vw" />
               </div>
@@ -129,17 +131,24 @@ const total = String(projects.length).padStart(2, '0');
     color: var(--color-film-edge);
   }
 
-  /* The print lift (components.css), tuned for dark film: paper-coloured
-     crop marks and a pale offset shadow, so the print reads as picked up. */
   .shot__frame {
-    --lift-mark: var(--color-film-hole);
-    --lift-shadow: 7px 7px 0 var(--color-paper-deep);
     position: relative;
     z-index: 1;
     margin-block: auto;        /* centred in its row when the notes run taller */
     border-radius: 4px;
   }
-  .shot__print { border-radius: inherit; overflow: hidden; background: var(--color-film); }
+  .shot__print { position: relative; border-radius: inherit; overflow: hidden; background: var(--color-film); }
+  /* The shade over frames that aren't on: film-dark at 40%. */
+  .shot__print::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--color-film);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-slow) var(--ease-soft);
+  }
   /* Edge print, in the black between frames: ▸ 01  01A */
   .shot__edge {
     position: absolute;
@@ -210,9 +219,9 @@ const total = String(projects.length).padStart(2, '0');
 
   /* ---- On / off: the frame in the middle of the screen leads --------------- */
   :global(.reel.is-tracking) .shot:not(.is-on) .shot__notes { opacity: 0.45; }
+  :global(.reel.is-tracking) .shot:not(.is-on) .shot__print::after { opacity: 0.4; }
   :global(.reel.is-tracking) .shot.is-on .shot__title { color: var(--color-accent); }
   a.shot__hit:hover .shot__title { color: var(--color-accent-hover); }
-  a.shot__hit:hover .shot__notes, .shot__hit:focus-visible .shot__notes { opacity: 1 !important; }
   .shot__hit:focus-visible { outline: none; }
   .shot__hit:focus-visible .shot__frame { outline: 2px solid var(--color-focus); outline-offset: 3px; }
 
@@ -248,12 +257,23 @@ const total = String(projects.length).padStart(2, '0');
   if (reel && 'IntersectionObserver' in window) {
     const shots = Array.from(reel.querySelectorAll<HTMLElement>('[data-shot]'));
     const setOn = (el: Element | null) => shots.forEach((s) => s.classList.toggle('is-on', s === el));
+    let middle: Element | null = null;
+    let pointed: Element | null = null;
+    const apply = () => setOn(pointed ?? middle);
     const io = new IntersectionObserver((entries) => {
-      for (const e of entries) if (e.isIntersecting) setOn(e.target);
+      for (const e of entries) if (e.isIntersecting) { middle = e.target; apply(); }
     }, { rootMargin: '-50% 0px -50% 0px' });
     shots.forEach((s) => io.observe(s));
+    // The pointer wins while it's over a frame; leaving the reel hands back
+    // to the frame in the middle of the screen.
+    shots.forEach((s) => s.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      pointed = s; apply();
+    }));
+    reel.addEventListener('pointerleave', () => { pointed = null; apply(); });
     // Keyboard: the focused frame is on.
-    reel.addEventListener('focusin', (e) => setOn((e.target as Element).closest('[data-shot]')));
+    reel.addEventListener('focusin', (e) => { pointed = (e.target as Element).closest('[data-shot]'); apply(); });
+    reel.addEventListener('focusout', () => { pointed = null; apply(); });
     const sync = () => reel.classList.toggle('is-tracking', wide.matches && motionOn());
     wide.addEventListener('change', sync);
     window.addEventListener('ina:prefs', sync);
