@@ -43,8 +43,8 @@ const hint = { en: 'show another kind of frame', pt: 'mostrar outro tipo de fram
   .fw:focus-visible { outline: none; }
 
   /* 0 · Figma frame: blue-ish selection box with handles and a name tag. */
-  .fw[data-kind='0'] .fw__deco { outline: 0.02em solid var(--color-redline); }
-  .fw__h { position: absolute; width: 0.1em; height: 0.1em; background: var(--color-paper); border: 0.02em solid var(--color-redline); display: none; }
+  .fw[data-kind='0'] .fw__deco { outline: 0.02em solid var(--color-accent); }
+  .fw__h { position: absolute; width: 0.1em; height: 0.1em; background: var(--color-paper); border: 0.02em solid var(--color-accent); display: none; }
   .fw[data-kind='0'] .fw__h { display: block; }
   .tl { left: -0.05em; top: -0.05em; } .tr { right: -0.05em; top: -0.05em; }
   .bl { left: -0.05em; bottom: -0.05em; } .br { right: -0.05em; bottom: -0.05em; }
@@ -71,7 +71,7 @@ const hint = { en: 'show another kind of frame', pt: 'mostrar outro tipo de fram
     letter-spacing: 0.04em;
     white-space: nowrap;
     color: var(--color-paper);
-    background: var(--color-redline);
+    background: var(--color-accent);
     opacity: 0;
     translate: 0 -4px;
     transition: opacity var(--duration-quick), translate var(--duration-settle) var(--ease-settle);

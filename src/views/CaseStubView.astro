@@ -39,7 +39,9 @@ const locked = project.state === 'locked';
       <p class="t-heading-s t-secondary measure">{project.line[locale]}</p>
       <dl class="case-hero__meta">
         <div><dt class="t-label">{p.context[locale]}</dt><dd class="t-meta">{project.context[locale]}</dd></div>
-        {project.when && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.when[locale]}</dd></div>}
+        <div><dt class="t-label">{p.role[locale]}</dt><dd class="t-meta">{project.role[locale]}</dd></div>
+        <div><dt class="t-label">{p.period[locale]}</dt><dd class="t-meta">{project.period[locale]}</dd></div>
+        {project.duration && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.duration[locale]}</dd></div>}
         <div><dt class="t-label">{p.status[locale]}</dt><dd class="t-meta">{project.status[locale]}</dd></div>
       </dl>
       <ul class="case-hero__tags" role="list">

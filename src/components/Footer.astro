@@ -50,17 +50,6 @@ const links = [
       </p>
 
       <div class="footer__controls" role="group" aria-label={c.group[locale]}>
-        <button
-          class="footer__ctl"
-          type="button"
-          aria-pressed="false"
-          data-motion-toggle
-          data-label-pause={c.motionPause[locale]}
-          data-label-play={c.motionPlay[locale]}
-        >
-          <span class="footer__ico" aria-hidden="true">❙❙</span>
-          <span data-motion-label>{c.motionPause[locale]}</span>
-        </button>
         <button class="footer__ctl" type="button" aria-pressed="false" data-spec-toggle>
           <svg class="footer__ico footer__ruler" viewBox="0 0 24 8" aria-hidden="true">
             <rect x="0.5" y="0.5" width="23" height="7" fill="none" stroke="currentColor" />
@@ -130,8 +119,7 @@ const links = [
     font-size: var(--type-meta);
   }
   .footer__ctl:hover, .footer__ctl[aria-pressed='true'] { color: var(--color-ink); }
-  .footer__ctl[aria-pressed='true'] .footer__ico { color: var(--color-redline); }
-  .footer__ico { font-size: 0.6rem; letter-spacing: -0.1em; }
+  .footer__ctl[aria-pressed='true'] .footer__ico { color: var(--color-accent); }
   .footer__ruler { width: 1.5rem; }
   .footer__kit { font-family: var(--font-system); font-size: var(--type-meta); color: var(--color-graphite); }
 

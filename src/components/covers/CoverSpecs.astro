@@ -58,15 +58,15 @@ interface Props { label: string; }
   .specs__btn { justify-self: start; font-size: 1.35cqw; padding: 0.8cqw 1.6cqw; background: #1c1a17; color: #f6f3ec; }
 
   /* Redlines */
-  .rl { position: absolute; color: #b8321f; font-size: 1.25cqw; white-space: nowrap; }
-  .rl b { font-weight: 500; background: #b8321f; color: #fff; padding: 0.2cqw 0.6cqw; }
-  .rl::before { content: ''; position: absolute; background: #b8321f; }
+  .rl { position: absolute; color: #2447d6; font-size: 1.25cqw; white-space: nowrap; }
+  .rl b { font-weight: 500; background: #2447d6; color: #fff; padding: 0.2cqw 0.6cqw; }
+  .rl::before { content: ''; position: absolute; background: #2447d6; }
   .rl--w { left: 0; right: 0; top: -4.5cqw; text-align: center; animation: draw-x 6s var(--ease-settle) infinite; transform-origin: left; }
   .rl--w::before { left: 0; right: 0; top: 50%; height: 0.15cqw; }
   .rl--w b { position: relative; }
   .rl--h { top: 0; bottom: 0; right: -9.5cqw; width: 8cqw; display: grid; place-items: center; animation: draw-y 6s var(--ease-settle) infinite; transform-origin: top; }
   .rl--h::before { left: 0; top: 0; bottom: 0; width: 0.15cqw; }
-  .rl--pad { left: 0; top: 2.2cqw; width: 2.2cqw; height: 0.15cqw; background: #b8321f; animation: fade 6s var(--ease-soft) infinite; }
+  .rl--pad { left: 0; top: 2.2cqw; width: 2.2cqw; height: 0.15cqw; background: #2447d6; animation: fade 6s var(--ease-soft) infinite; }
   .rl--pad b { position: absolute; top: 0.6cqw; left: 0; font-size: 1cqw; }
 
   .specs__table {
@@ -87,7 +87,7 @@ interface Props { label: string; }
     border-bottom: 0.1cqw solid #cbc2b1;
     animation: row 6s var(--ease-soft) infinite;
   }
-  .specs__table li span:last-child { color: #b8321f; }
+  .specs__table li span:last-child { color: #2447d6; }
   .specs__table li:nth-child(2) { animation-delay: 0.15s; }
   .specs__table li:nth-child(3) { animation-delay: 0.3s; }
   .specs__table li:nth-child(4) { animation-delay: 0.45s; }
@@ -116,6 +116,4 @@ interface Props { label: string; }
   @keyframes row { 0%, 40% { opacity: 0.25; } 50%, 90% { opacity: 1; } 100% { opacity: 0.25; } }
   @keyframes pop { 0%, 60% { scale: 0.85; opacity: 0; } 68% { scale: 1.06; opacity: 1; } 74%, 92% { scale: 1; opacity: 1; } 100% { opacity: 0; } }
 
-  /* Still frame (motion off): everything measured and visible. */
-  :global(:root[data-motion='off']) .rl, :global(:root[data-motion='off']) .specs__chip { opacity: 1; scale: 1; }
 </style>

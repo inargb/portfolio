@@ -1,6 +1,6 @@
 ---
 // Paper ↔ darkroom. A pull-cord: the cord tugs when pressed, and in the
-// darkroom the bulb becomes the red safelight.
+// darkroom the bulb lights up in the accent colour.
 import type { Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
 
@@ -50,8 +50,8 @@ const c = ui.controls;
   @keyframes tug { 30% { translate: 0 6px; } 60% { translate: 0 -1px; } }
 
   .lights[aria-pressed='true'] .lights__bulb {
-    fill: var(--color-redline);
-    stroke: var(--color-redline);
-    filter: drop-shadow(0 0 4px var(--color-redline));
+    fill: var(--color-accent);
+    stroke: var(--color-accent);
+    filter: drop-shadow(0 0 4px var(--color-accent));
   }
 </style>

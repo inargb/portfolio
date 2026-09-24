@@ -46,15 +46,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#161412" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <!-- Apply saved theme/motion before first paint, so nothing flashes. -->
+    <!-- Apply the saved theme before first paint, so nothing flashes. -->
     <script is:inline>
       (function () {
         var d = document.documentElement;
         try {
           var th = localStorage.getItem('ina:theme');
-          var mo = localStorage.getItem('ina:motion');
           if (th) d.dataset.theme = th;
-          if (mo) d.dataset.motion = mo;
         } catch (e) {}
         d.classList.add('js');
         if ('IntersectionObserver' in window) d.classList.add('js-reveal');

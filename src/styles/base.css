@@ -14,7 +14,7 @@ html {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion='off']) { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -120,15 +120,16 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 
 /* ---- Links ---------------------------------------------------------------- */
 .link {
-  color: inherit;
+  color: var(--color-accent);
   text-decoration-line: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
-  text-decoration-color: var(--color-graphite-soft);
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
   transition: text-decoration-color var(--duration-quick) var(--ease-soft),
     text-underline-offset var(--duration-quick) var(--ease-soft);
 }
-.link:hover { text-decoration-color: var(--color-redline); text-underline-offset: 0.3em; }
+.link:visited { color: var(--color-accent); }
+.link:hover, .link:active { color: var(--color-accent-hover); text-decoration-color: currentColor; text-underline-offset: 0.3em; }
 
 /* ---- Layout primitives --------------------------------------------------- */
 .container {
@@ -192,9 +193,8 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 .js-reveal [data-develop].is-revealed { filter: none; opacity: 1; }
 
 /* Motion off: everything is simply there. */
-:root[data-motion='off'] .caret::after { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  :root:not([data-motion='on']) .caret::after { animation: none; }
+  .caret::after { animation: none; }
 }
 
 /* ---- Page transitions (cross-document View Transitions) ------------------ */

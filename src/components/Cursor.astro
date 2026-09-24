@@ -124,15 +124,13 @@ const c = ui.cursor;
   .cursor[data-state='soon'] .cursor__label { background: var(--color-highlight); color: var(--color-on-highlight); }
   .cursor[data-state='soon'] .cursor__corner { border-style: dashed; }
   .cursor[data-state='soon'] .cursor__frame { animation: wobble 1.6s var(--ease-soft) infinite; }
-  .cursor[data-state='secret'] .cursor__label { background: var(--color-redline); color: #fff; }
+  .cursor[data-state='secret'] .cursor__label { background: var(--color-accent); color: var(--color-on-accent); }
   @keyframes wobble { 50% { rotate: -2deg; } }
 
   /* Press: the shutter closes a little. */
   .cursor.is-down .cursor__frame { scale: 0.86; transition: scale var(--duration-instant); }
   .cursor.is-down .cursor__cross { scale: 0.6; }
 
-  /* The Doodle can ask the cursor to hide (shy easter egg). */
-  .cursor.is-hidden { opacity: 0; transition: opacity var(--duration-settle); }
 </style>
 
 <script>

@@ -76,9 +76,4 @@ function init(cursor: HTMLElement) {
   fine.addEventListener('change', sync);
   sync();
 
-  // Let other modules (easter eggs) nudge the cursor.
-  window.addEventListener('ina:cursor', (e) => {
-    const d = (e as CustomEvent<{ hidden?: boolean }>).detail;
-    cursor.classList.toggle('is-hidden', !!d?.hidden);
-  });
 }

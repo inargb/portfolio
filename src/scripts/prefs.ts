@@ -1,4 +1,5 @@
-// Visitor preferences: theme (paper / darkroom) and motion (on / off).
+// Visitor preferences: theme (paper / darkroom). Motion is always on,
+// except when the visitor's system asks to reduce it.
 // Stored per browser; the page works identically if storage is unavailable.
 
 const root = document.documentElement;
@@ -15,8 +16,7 @@ export function isDark(): boolean {
 }
 
 export function motionOn(): boolean {
-  const m = root.dataset.motion;
-  return m ? m === 'on' : !mqReduce.matches;
+  return !mqReduce.matches;
 }
 
 function emit() {
@@ -36,25 +36,12 @@ export function setTheme(dark: boolean) {
   else apply();
 }
 
-export function setMotion(on: boolean) {
-  root.dataset.motion = on ? 'on' : 'off';
-  store('ina:motion', root.dataset.motion);
-  syncControls();
-  emit();
-}
-
 function syncControls() {
   const dark = isDark();
   document.querySelectorAll<HTMLButtonElement>('[data-lights]').forEach((b) => {
     b.setAttribute('aria-pressed', String(dark));
     const label = b.querySelector('[data-lights-label]');
     if (label) label.textContent = (dark ? b.dataset.labelOn : b.dataset.labelOff) ?? '';
-  });
-  const on = motionOn();
-  document.querySelectorAll<HTMLButtonElement>('[data-motion-toggle]').forEach((b) => {
-    b.setAttribute('aria-pressed', String(!on));
-    const label = b.querySelector('[data-motion-label]');
-    if (label) label.textContent = (on ? b.dataset.labelPause : b.dataset.labelPlay) ?? '';
   });
 }
 
@@ -66,9 +53,7 @@ document.addEventListener('click', (e) => {
     void lights.offsetWidth;
     lights.classList.add('is-tugged');
     setTheme(!isDark());
-    return;
   }
-  if (target?.closest('[data-motion-toggle]')) setMotion(!motionOn());
 });
 
 mqDark.addEventListener('change', () => { syncControls(); emit(); });

@@ -1,0 +1,174 @@
+---
+// The film strip drifts by itself (~22px/s), in a seamless loop: the photo
+// set is duplicated and the track wraps after exactly one set's width.
+//   · pauses on hover, keyboard focus, drag, and while off-screen
+//   · resumes ~2s after the last interaction
+//   · drag, horizontal wheel and arrow keys still move it
+//   · a pause/play toggle (WCAG 2.2.2); reduced motion → still + draggable
+import { Image } from 'astro:assets';
+import type { Locale } from '../i18n/config';
+import { about } from '../content/about';
+import { photos } from '../content/photos';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const a = about.art;
+---
+
+<div class="film" data-film>
+  <div class="film__viewport" tabindex="0" role="region" aria-label={a.strip[locale]} data-film-viewport data-cursor="drag">
+    <ol class="film__track" role="list" data-film-track>
+      {[0, 1].map((copy) =>
+        photos.map((ph, i) => (
+          <li class="film__frame" aria-hidden={copy === 1 ? 'true' : undefined}>
+            <Image src={ph.src} alt={copy === 1 ? '' : ph.alt[locale]} widths={[420, 840]} sizes="(max-width: 40rem) 70vw, 26rem" loading="lazy" draggable="false" />
+            <span class="film__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}A</span>
+          </li>
+        )),
+      )}
+    </ol>
+  </div>
+  <p class="film__bar container t-caption">
+    <span>{a.caption[locale]}</span>
+    <span class="film__dot" aria-hidden="true">·</span>
+    <button class="film__toggle" type="button" data-film-toggle data-label-pause={a.pause[locale]} data-label-play={a.play[locale]}>
+      <span aria-hidden="true" data-film-icon>❚❚</span> <span data-film-label>{a.pause[locale]}</span>
+    </button>
+  </p>
+</div>
+
+<style>
+  .film__viewport {
+    overflow: hidden;
+    padding-block: var(--space-6);
+    background: #141210;
+    /* sprocket holes */
+    background-image:
+      radial-gradient(circle at 50% 50%, #fbfbfd 0 3px, transparent 3.5px),
+      radial-gradient(circle at 50% 50%, #fbfbfd 0 3px, transparent 3.5px);
+    background-size: 22px 22px, 22px 22px;
+    background-position: 0 4px, 0 calc(100% - 4px);
+    background-repeat: repeat-x;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .film__viewport:focus-visible { outline-offset: -4px; }
+  .film__track { display: flex; gap: var(--space-4); width: max-content; padding-left: var(--space-4); will-change: transform; }
+  .film__frame { position: relative; width: clamp(15rem, 60vw, 26rem); flex: none; }
+  .film__frame :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; pointer-events: none; }
+  .film__no { position: absolute; left: var(--space-2); bottom: calc(-1 * var(--space-6) + 4px); font-family: var(--font-system); font-size: 0.625rem; color: #f3cf1c; letter-spacing: 0.1em; }
+  .film__bar { display: flex; justify-content: flex-end; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
+  .film__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--tap-min);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-accent);
+    font: inherit;
+  }
+  .film__toggle:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 0.25em; }
+  .film.is-still .film__toggle, .film.is-still .film__dot { display: none; }
+</style>
+
+<script>
+  import { motionOn } from '../scripts/prefs';
+
+  const root = document.querySelector<HTMLElement>('[data-film]');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const viewport = root.querySelector<HTMLElement>('[data-film-viewport]')!;
+    const track = root.querySelector<HTMLElement>('[data-film-track]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-film-toggle]')!;
+    const icon = toggle.querySelector<HTMLElement>('[data-film-icon]')!;
+    const label = toggle.querySelector<HTMLElement>('[data-film-label]')!;
+    const SPEED = 22;          // px per second: it should drift, not move
+    const RESUME_AFTER = 2000; // ms of idle before drifting again
+
+    let x = 0;
+    let setWidth = 0;
+    let last = 0;
+    let userPaused = false;    // the toggle
+    let holding = false;       // hover / focus / drag
+    let idleUntil = 0;
+    let onScreen = false;
+    let raf = 0;
+
+    const measure = () => { setWidth = track.scrollWidth / 2; };
+    const wrap = () => {
+      if (!setWidth) return;
+      while (x <= -setWidth) x += setWidth;
+      while (x > 0) x -= setWidth;
+    };
+    const paint = () => { track.style.transform = `translate3d(${x}px, 0, 0)`; };
+    const drifting = () => motionOn() && !userPaused && !holding && onScreen && performance.now() > idleUntil;
+
+    function tick(now: number) {
+      const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
+      last = now;
+      if (drifting()) { x -= SPEED * dt; wrap(); paint(); }
+      raf = onScreen ? requestAnimationFrame(tick) : 0;
+    }
+    const start = () => { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } };
+    const touch = () => { idleUntil = performance.now() + RESUME_AFTER; };
+
+    function syncToggle() {
+      const still = !motionOn();
+      root.classList.toggle('is-still', still);
+      toggle.setAttribute('aria-pressed', String(userPaused));
+      icon.textContent = userPaused ? '▶' : '❚❚';
+      label.textContent = (userPaused ? toggle.dataset.labelPlay : toggle.dataset.labelPause) ?? '';
+    }
+    toggle.addEventListener('click', () => { userPaused = !userPaused; syncToggle(); });
+    window.addEventListener('ina:prefs', syncToggle);
+
+    // Hover and keyboard focus hold the strip still.
+    viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') holding = true; });
+    viewport.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { holding = false; touch(); } });
+    viewport.addEventListener('focus', () => { holding = true; });
+    viewport.addEventListener('blur', () => { holding = false; touch(); });
+
+    // Drag (mouse, touch, pen) moves it by hand.
+    let dragging = false, px = 0;
+    viewport.addEventListener('pointerdown', (e) => {
+      dragging = true; px = e.clientX;
+      viewport.setPointerCapture(e.pointerId);
+    });
+    viewport.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      x += e.clientX - px; px = e.clientX;
+      wrap(); paint(); touch();
+    });
+    const end = () => { dragging = false; touch(); };
+    viewport.addEventListener('pointerup', end);
+    viewport.addEventListener('pointercancel', end);
+
+    // Horizontal wheel / trackpad.
+    viewport.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      x -= e.deltaX; wrap(); paint(); touch();
+    }, { passive: false });
+
+    // Arrow keys.
+    viewport.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      x += e.key === 'ArrowLeft' ? 240 : -240;
+      wrap(); paint(); touch();
+    });
+
+    // Only run while on screen.
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen) start();
+    }).observe(viewport);
+
+    new ResizeObserver(() => { measure(); wrap(); paint(); }).observe(track);
+    measure();
+    syncToggle();
+  }
+</script>
