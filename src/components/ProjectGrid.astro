@@ -1,6 +1,6 @@
 ---
 // The work, as a grid of cards. Every card answers the same questions in
-// the same place: cover · title · period · context · role · status.
+// the same place: cover · title · period · description · context · role · status.
 //   desktop + tablet → 2 columns (an odd last card stays half-width, left)
 //   phone            → 1 column
 // Open projects link to their case; locked ones open the password gate;
@@ -35,6 +35,7 @@ const shape = { live: '●', prototype: '◐', developing: '○', locked: '' } a
               <h3 class="card__title t-heading-m">{proj.title[locale]}</h3>
               <p class="card__period t-meta"><span class="visually-hidden">{p.period[locale]}: </span>{proj.period[locale]}</p>
             </div>
+            <p class="card__line t-body">{proj.line[locale]}</p>
             <p class="card__who t-meta">
               <span>{proj.context[locale]}</span><span aria-hidden="true"> · </span><span><span class="visually-hidden">{p.role[locale]}: </span>{proj.role[locale]}</span>
             </p>
@@ -118,6 +119,7 @@ const shape = { live: '●', prototype: '◐', developing: '○', locked: '' } a
   .card__body { display: grid; gap: var(--space-1); padding-top: var(--space-4); }
   .card__top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); }
   .card__title { transition: color var(--duration-quick); }
+  .card__line { margin-block: var(--space-1) var(--space-2); color: var(--color-graphite); max-width: 36rem; text-wrap: pretty; }
   .card__period { flex: none; color: var(--color-ink); white-space: nowrap; }
   .card__status { display: flex; align-items: center; gap: 0.45em; margin-top: var(--space-1); color: var(--color-ink); }
   .card__shape { color: var(--color-accent); }

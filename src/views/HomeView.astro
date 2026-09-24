@@ -14,16 +14,13 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
 
 <Base locale={locale} route="home" altHref={href('home', other)} pageId="home">
   <section class="hero container" aria-labelledby="hero-title">
-    <div class="hero__meta t-meta" data-reveal>
-      <span>{home.meta[locale]}<span class="caret" aria-hidden="true"></span></span>
-    </div>
-
     <h1 id="hero-title" class="hero__title t-display" data-spec-label="display · clamp(2rem → 4.4rem)">
       {home.headlineBefore[locale]}<FramesWord locale={locale} word={home.word[locale]} after={home.headlineAfter[locale]} />
     </h1>
 
-    <div class="hero__doodle">
-      <Doodle locale={locale} variant="happy" />
+    <div class="hero__doodles">
+      <div class="hero__doodle hero__doodle--happy"><Doodle variant="happy" /></div>
+      <div class="hero__doodle hero__doodle--wonder"><Doodle variant="wonder" /></div>
     </div>
   </section>
 
@@ -40,23 +37,24 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
   .hero {
     position: relative;
     display: grid;
-    grid-template-rows: auto 1fr;
-    gap: var(--space-12);
+    align-items: center;
+    gap: var(--space-8);
     min-height: calc(88svh - var(--nav-height));
     padding-block: var(--space-8) var(--space-12);
   }
-  .hero__meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
-  .hero__title { align-self: center; max-width: 22ch; position: relative; z-index: 2; }
-  .hero__doodle {
-    position: absolute;
-    right: calc(var(--layout-gutter) + 2%);
-    top: 18%;
-    width: clamp(6rem, 4rem + 9vw, 13rem);
-    rotate: 8deg;
-  }
+  .hero__title { max-width: 22ch; position: relative; z-index: 2; }
+
+  /* Two of Inaiá's doodles keep each other company on the right. */
+  .hero__doodles { position: absolute; inset: 0 var(--layout-gutter); pointer-events: none; }
+  .hero__doodle { position: absolute; }
+  .hero__doodle--happy { right: 2%; top: 14%; width: clamp(6rem, 4rem + 9vw, 13rem); rotate: 8deg; }
+  .hero__doodle--wonder { right: 16%; bottom: 12%; width: clamp(4.5rem, 3rem + 6vw, 9rem); rotate: -10deg; }
   @media (max-width: 40rem) {
-    .hero { min-height: auto; padding-top: var(--space-6); gap: var(--space-8); }
-    .hero__doodle { position: relative; right: auto; top: auto; justify-self: end; margin-top: calc(-1 * var(--space-6)); width: 6.5rem; order: -1; }
+    .hero { min-height: auto; padding-top: var(--space-6); }
+    .hero__doodles { position: relative; inset: auto; display: flex; justify-content: flex-end; align-items: flex-end; gap: var(--space-3); order: -1; }
+    .hero__doodle { position: relative; right: auto; top: auto; bottom: auto; }
+    .hero__doodle--happy { width: 6rem; }
+    .hero__doodle--wonder { width: 4.5rem; order: -1; }
   }
 
   .work { padding-top: var(--space-16); scroll-margin-top: var(--nav-height); }

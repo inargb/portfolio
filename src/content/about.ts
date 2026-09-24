@@ -200,9 +200,6 @@ export const about = {
       ),
     ],
     strip: l('Film strip of photographs', 'Filme com fotografias'),
-    caption: l('drag to see more', 'arraste para ver mais'),
-    pause: l('pause', 'pausar'),
-    play: l('play', 'tocar'),
   },
 };
 

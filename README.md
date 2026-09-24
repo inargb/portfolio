@@ -42,7 +42,7 @@ docs/                      audit, phase notes, Framer migration notes
 - Components use tokens only: no raw hex, no one-off sizes.
 - Every text pairing is WCAG AA. The playground computes it live.
 - Motion is always on, except when the visitor's system asks for reduced motion.
-  Anything that moves by itself for more than 5s has its own pause (the film strip).
+  The film strip stops on hover, focus and drag, and stays still with reduced motion.
 - The custom cursor and the easter eggs are a layer on top. Nothing depends on them.
 - Content lives in `src/content`, one object per string with `en` and `pt`.
 - Protected case-study sources never go into the repo in plain text (`private/` is ignored).

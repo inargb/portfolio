@@ -54,3 +54,10 @@ Marked in the code as DRAFT, or written new:
 - About: kind words live in a drawer (open, read, arrows/swipe, Esc, close). Education has Degrees + Courses. "say hi" removed (LinkedIn and resume stay in the header and footer). The film strip drifts in a seamless loop with a pause toggle.
 - Motion is always on (no site toggle, no `M` shortcut); a system-level reduced-motion setting is still respected.
 - The doodles are decorative now: the "poke five times" secret is gone.
+
+### Update 3
+
+- Home: the "FR 00 · oi" line is gone; the hero now has both doodles (happy and wonder).
+- Cards show a description (15+ words, EN/PT) under the title. It uses only facts already on the site.
+- Film strip: no caption and no pause/play. The first time it comes into view, the visible photos develop one by one, and then the loop starts. It still stops on hover, focus and drag. With reduced motion it stays still and fully developed.
+- Page dividers (header, footer, case nav, lists) use the light-gray hairline (`--rule-hair`). Component outlines keep the ink line.

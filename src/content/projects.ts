@@ -16,7 +16,7 @@ export interface Project {
   frame: string;              // frame number
   state: ProjectState;        // open (linked) · locked (password) · soon (no link)
   title: L10n;
-  line: L10n;                 // one-line description (case page)
+  line: L10n;                 // description, 15+ words (card + case page)
   context: L10n;              // client / setting
   role: L10n;                 // '—' until known
   period: L10n;               // always a year range, '—' until known
@@ -67,8 +67,8 @@ export const projects: Project[] = [
       pt: 'Gerador de Specs Responsivas & Acessibilidade',
     },
     line: {
-      en: 'A Figma Make tool that turned a week of handoff documentation into two days.',
-      pt: 'Uma ferramenta no Figma Make que transformou uma semana de documentação de handoff em dois dias.',
+      en: 'A Figma Make tool that turned a week of handoff documentation into two days, generating responsive specs and accessibility notes every sprint.',
+      pt: 'Uma ferramenta no Figma Make que transformou uma semana de documentação de handoff em dois dias, gerando specs responsivas e notas de acessibilidade a cada sprint.',
     },
     context: { en: 'Internal tool · Volanté', pt: 'Ferramenta interna · Volanté' },
     role: { en: 'Design lead', pt: 'Líder de design' },
@@ -92,8 +92,8 @@ export const projects: Project[] = [
     state: 'locked',
     title: { en: 'Menu Management', pt: 'Gestão de Cardápios' },
     line: {
-      en: 'A year-long redesign of the back-office module behind every POS and kiosk menu.',
-      pt: 'Um ano redesenhando o módulo de back-office por trás de cada cardápio de PDV e totem.',
+      en: 'A year-long redesign of the back-office module behind every POS and kiosk menu, rethinking the information architecture of an enterprise tool.',
+      pt: 'Um ano redesenhando o módulo de back-office por trás de cada cardápio de PDV e totem, repensando a arquitetura da informação de uma ferramenta enterprise.',
     },
     context: { en: 'Enterprise · Volanté', pt: 'Enterprise · Volanté' },
     // From the case-study brief, where it is marked as still to be confirmed.
@@ -118,8 +118,8 @@ export const projects: Project[] = [
     state: 'locked',
     title: { en: 'Bar Tabs System', pt: 'Sistema de Comandas' },
     line: {
-      en: 'A bar-tab product for hospitality and food service businesses across North America.',
-      pt: 'Um produto de comandas para bares e restaurantes na América do Norte.',
+      en: 'A bar-tab product for hospitality and food service businesses across North America, designed within Volanté’s point-of-sale platform and its design system.',
+      pt: 'Um produto de comandas para bares e restaurantes na América do Norte, desenhado dentro da plataforma de PDV da Volanté e do seu design system.',
     },
     context: { en: 'POS · Volanté', pt: 'PDV · Volanté' },
     role: { en: 'UX/UI designer', pt: 'UX/UI designer' },
@@ -141,8 +141,8 @@ export const projects: Project[] = [
     state: 'open',
     title: { en: 'Systems Portal', pt: 'Portal de Sistemas' },
     line: {
-      en: 'Making 100+ government systems findable, for a fisherman in Pará and a ministry clerk alike.',
-      pt: 'Tornando 100+ sistemas do governo fáceis de achar, para um pescador no Pará e para um servidor do ministério.',
+      en: 'Making 100+ government systems findable, for a fisherman in Pará and a ministry clerk alike, through user research and a full redesign.',
+      pt: 'Tornando 100+ sistemas do governo fáceis de achar, para um pescador no Pará e para um servidor do ministério, com pesquisa e um redesign completo.',
     },
     context: { en: 'Ministry of Agriculture and Livestock', pt: 'Ministério da Agricultura e Pecuária' },
     role: { en: 'UX/UI designer intern', pt: 'Estagiária de UX/UI' },
@@ -166,8 +166,8 @@ export const projects: Project[] = [
     state: 'open',
     title: { en: 'Bandoneón Initiative', pt: 'Iniciativa Bandoneón' },
     line: {
-      en: 'A cooking app for a social project that teaches culinary skills on the road.',
-      pt: 'Um app de culinária para um projeto social de educação gastronômica itinerante.',
+      en: 'A cooking app for a social project that teaches culinary skills on the road, taken from its design system to a tested prototype.',
+      pt: 'Um app de culinária para um projeto social de educação gastronômica itinerante, levado do seu design system até um protótipo testado.',
     },
     context: { en: 'Academic', pt: 'Acadêmico' },
     role: { en: 'Lead designer', pt: 'Designer líder' },
@@ -191,8 +191,8 @@ export const projects: Project[] = [
     state: 'soon',
     title: { en: 'Pocabin', pt: 'Pocabin' },
     line: {
-      en: 'A digital binder for organizing and tracking K-pop photocard collections.',
-      pt: 'Um binder digital para organizar e acompanhar coleções de photocards de K-pop.',
+      en: 'A digital binder for organizing and tracking K-pop photocard collections, a side project designed and vibe-coded as a website, still developing.',
+      pt: 'Um binder digital para organizar e acompanhar coleções de photocards de K-pop, um projeto pessoal desenhado e vibe-codado como website, ainda revelando.',
     },
     context: { en: 'Side project', pt: 'Projeto pessoal' },
     role: unknown,
@@ -215,8 +215,8 @@ export const projects: Project[] = [
     state: 'soon',
     title: { en: 'Sabi', pt: 'Sabi' },
     line: {
-      en: 'Turning any dish or menu into the right allergen question.',
-      pt: 'Transformando qualquer prato ou cardápio na pergunta certa sobre alérgenos.',
+      en: 'Turning any dish or menu into the right allergen question: an app still in UX research, being designed one careful step at a time.',
+      pt: 'Transformando qualquer prato ou cardápio na pergunta certa sobre alérgenos: um app ainda em pesquisa de UX, sendo desenhado com calma, passo a passo.',
     },
     context: { en: 'Product · app', pt: 'Produto · app' },
     role: unknown,

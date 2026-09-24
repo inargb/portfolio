@@ -4,7 +4,9 @@
 //   · pauses on hover, keyboard focus, drag, and while off-screen
 //   · resumes ~2s after the last interaction
 //   · drag, horizontal wheel and arrow keys still move it
-//   · a pause/play toggle (WCAG 2.2.2); reduced motion → still + draggable
+//   · the first time it comes into view, the visible photos develop one by
+//     one (pale print → full tone); only then does the drift start
+//   · reduced motion → developed, still, draggable
 import { Image } from 'astro:assets';
 import type { Locale } from '../i18n/config';
 import { about } from '../content/about';
@@ -20,7 +22,7 @@ const a = about.art;
     <ol class="film__track" role="list" data-film-track>
       {[0, 1].map((copy) =>
         photos.map((ph, i) => (
-          <li class="film__frame" aria-hidden={copy === 1 ? 'true' : undefined}>
+          <li class="film__frame" data-film-frame aria-hidden={copy === 1 ? 'true' : undefined}>
             <Image src={ph.src} alt={copy === 1 ? '' : ph.alt[locale]} widths={[420, 840]} sizes="(max-width: 40rem) 70vw, 26rem" loading="lazy" draggable="false" />
             <span class="film__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}A</span>
           </li>
@@ -28,13 +30,6 @@ const a = about.art;
       )}
     </ol>
   </div>
-  <p class="film__bar container t-caption">
-    <span>{a.caption[locale]}</span>
-    <span class="film__dot" aria-hidden="true">·</span>
-    <button class="film__toggle" type="button" data-film-toggle data-label-pause={a.pause[locale]} data-label-play={a.play[locale]}>
-      <span aria-hidden="true" data-film-icon>❚❚</span> <span data-film-label>{a.pause[locale]}</span>
-    </button>
-  </p>
 </div>
 
 <style>
@@ -57,20 +52,16 @@ const a = about.art;
   .film__frame { position: relative; width: clamp(15rem, 60vw, 26rem); flex: none; }
   .film__frame :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; pointer-events: none; }
   .film__no { position: absolute; left: var(--space-2); bottom: calc(-1 * var(--space-6) + 4px); font-family: var(--font-system); font-size: 0.625rem; color: #f3cf1c; letter-spacing: 0.1em; }
-  .film__bar { display: flex; justify-content: flex-end; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
-  .film__toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    min-height: var(--tap-min);
-    padding: 0 var(--space-2);
-    border: 0;
-    background: none;
-    color: var(--color-accent);
-    font: inherit;
+  /* Develops once: frames start as pale prints (only when JS will develop
+     them) and come up to full tone one by one. */
+  .film.is-developing .film__frame :global(img) {
+    filter: grayscale(1) contrast(0.55) brightness(1.35) sepia(0.25);
+    opacity: 0.35;
+    transition: filter var(--duration-develop) var(--ease-develop),
+      opacity calc(var(--duration-develop) * 0.6) var(--ease-soft);
+    transition-delay: var(--develop-delay, 0ms);
   }
-  .film__toggle:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 0.25em; }
-  .film.is-still .film__toggle, .film.is-still .film__dot { display: none; }
+  .film.is-developing .film__frame.is-developed :global(img) { filter: none; opacity: 1; }
 </style>
 
 <script>
@@ -82,16 +73,15 @@ const a = about.art;
   function init(root: HTMLElement) {
     const viewport = root.querySelector<HTMLElement>('[data-film-viewport]')!;
     const track = root.querySelector<HTMLElement>('[data-film-track]')!;
-    const toggle = root.querySelector<HTMLButtonElement>('[data-film-toggle]')!;
-    const icon = toggle.querySelector<HTMLElement>('[data-film-icon]')!;
-    const label = toggle.querySelector<HTMLElement>('[data-film-label]')!;
+    const frames = Array.from(root.querySelectorAll<HTMLElement>('[data-film-frame]'));
     const SPEED = 22;          // px per second: it should drift, not move
     const RESUME_AFTER = 2000; // ms of idle before drifting again
+    const DEVELOP_STEP = 380;  // ms between one print and the next
 
     let x = 0;
     let setWidth = 0;
     let last = 0;
-    let userPaused = false;    // the toggle
+    let developed = !motionOn(); // the drift waits for the first develop
     let holding = false;       // hover / focus / drag
     let idleUntil = 0;
     let onScreen = false;
@@ -104,7 +94,7 @@ const a = about.art;
       while (x > 0) x -= setWidth;
     };
     const paint = () => { track.style.transform = `translate3d(${x}px, 0, 0)`; };
-    const drifting = () => motionOn() && !userPaused && !holding && onScreen && performance.now() > idleUntil;
+    const drifting = () => motionOn() && developed && !holding && onScreen && performance.now() > idleUntil;
 
     function tick(now: number) {
       const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
@@ -115,15 +105,31 @@ const a = about.art;
     const start = () => { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } };
     const touch = () => { idleUntil = performance.now() + RESUME_AFTER; };
 
-    function syncToggle() {
-      const still = !motionOn();
-      root.classList.toggle('is-still', still);
-      toggle.setAttribute('aria-pressed', String(userPaused));
-      icon.textContent = userPaused ? '▶' : '❚❚';
-      label.textContent = (userPaused ? toggle.dataset.labelPlay : toggle.dataset.labelPause) ?? '';
+    // ---- Develop, once ----------------------------------------------------
+    // Pale prints only if JS is here to develop them.
+    let developTimer = 0;
+    const finishDevelop = () => {
+      if (developed) return;
+      window.clearTimeout(developTimer);
+      frames.forEach((f) => f.classList.add('is-developed'));
+      developed = true;
+    };
+    function develop() {
+      const box = viewport.getBoundingClientRect();
+      const inView = frames.filter((f) => {
+        const r = f.getBoundingClientRect();
+        return r.right > box.left && r.left < box.right;
+      });
+      inView.forEach((f, i) => {
+        f.style.setProperty('--develop-delay', `${i * DEVELOP_STEP}ms`);
+        f.classList.add('is-developed');
+      });
+      const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--duration-develop')) || 0;
+      // Everything else develops out of sight, then the loop starts.
+      developTimer = window.setTimeout(finishDevelop, (inView.length - 1) * DEVELOP_STEP + duration);
     }
-    toggle.addEventListener('click', () => { userPaused = !userPaused; syncToggle(); });
-    window.addEventListener('ina:prefs', syncToggle);
+    if (!developed) root.classList.add('is-developing');
+    window.addEventListener('ina:prefs', () => { if (!motionOn()) finishDevelop(); });
 
     // Hover and keyboard focus hold the strip still.
     viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') holding = true; });
@@ -131,7 +137,10 @@ const a = about.art;
     viewport.addEventListener('focus', () => { holding = true; });
     viewport.addEventListener('blur', () => { holding = false; touch(); });
 
-    // Drag (mouse, touch, pen) moves it by hand.
+    // Moving it by hand finishes the develop, so no pale print scrolls in.
+    const move = (dx: number) => { finishDevelop(); x += dx; wrap(); paint(); touch(); };
+
+    // Drag (mouse, touch, pen).
     let dragging = false, px = 0;
     viewport.addEventListener('pointerdown', (e) => {
       dragging = true; px = e.clientX;
@@ -139,8 +148,7 @@ const a = about.art;
     });
     viewport.addEventListener('pointermove', (e) => {
       if (!dragging) return;
-      x += e.clientX - px; px = e.clientX;
-      wrap(); paint(); touch();
+      move(e.clientX - px); px = e.clientX;
     });
     const end = () => { dragging = false; touch(); };
     viewport.addEventListener('pointerup', end);
@@ -150,25 +158,31 @@ const a = about.art;
     viewport.addEventListener('wheel', (e) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
-      x -= e.deltaX; wrap(); paint(); touch();
+      move(-e.deltaX);
     }, { passive: false });
 
     // Arrow keys.
     viewport.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       e.preventDefault();
-      x += e.key === 'ArrowLeft' ? 240 : -240;
-      wrap(); paint(); touch();
+      move(e.key === 'ArrowLeft' ? 240 : -240);
     });
 
-    // Only run while on screen.
+    // Only run while on screen; develop the first time it is well in view.
+    let seen = false;
     new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting;
       if (onScreen) start();
     }).observe(viewport);
+    const firstLook = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || seen) return;
+      seen = true;
+      firstLook.disconnect();
+      if (!developed) develop();
+    }, { threshold: 0.5 });
+    firstLook.observe(viewport);
 
     new ResizeObserver(() => { measure(); wrap(); paint(); }).observe(track);
     measure();
-    syncToggle();
   }
 </script>
