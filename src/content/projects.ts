@@ -5,18 +5,44 @@ import type { L10n } from '../i18n/config';
 
 export type ProjectState = 'open' | 'locked' | 'soon';
 
+// Status shape works without colour: ● live / in use · ◐ prototype tested
+// · lock = protected · ○ developing.
+export type StatusKind = 'live' | 'prototype' | 'locked' | 'developing';
+
+// Every card answers the same questions in the same place:
+// cover · title · period · context · role · status.
 export interface Project {
   slug: string;
-  frame: string;              // contact-sheet frame number
-  state: ProjectState;
+  frame: string;              // frame number
+  state: ProjectState;        // open (linked) · locked (password) · soon (no link)
   title: L10n;
-  line: L10n;                 // one-line description
+  line: L10n;                 // one-line description (case page)
   context: L10n;              // client / setting
-  when?: L10n;                // year or span, only when known
-  status: L10n;               // honest status, like a film label
+  role: L10n;                 // '—' until known
+  period: L10n;               // always a year range, '—' until known
+  duration?: L10n;            // lives on the case page, never on the card
+  status: L10n;
+  statusKind: StatusKind;
   tags: L10n[];
   cover: CoverId;
+  media?: CoverMedia;         // uploaded cover video/gif; falls back to the CSS cover
   liveUrl?: string;           // current case on inasilva.com (until rebuilt)
+}
+
+// Uploaded covers live in public/covers/ (paths without the base, e.g.
+// 'covers/pocabin.mp4'). Sources are 16:9; the card frame changes shape per
+// breakpoint (16:10 desktop, 4:3 tablet and phone), so each cover says where
+// its subject is (`focus`, an object-position) and how far to zoom into it.
+// Animated covers are MP4/WebM (GIFs converted: same look, ~10× lighter)
+// with a still poster for loading and reduced motion. GIF sources are kept
+// in design/covers-src/.
+export interface CoverMedia {
+  image?: { src: string; small: string };   // 1600w + 800w stills
+  video?: { mp4: string; webm: string };
+  poster?: string;                          // still frame for a video
+  alt: L10n;                                // describes the product, not the animation
+  focus?: string;                           // e.g. '30% 50%'
+  zoom?: number;                            // 1 = fit, >1 crops tighter around focus
 }
 
 export type CoverId =
@@ -29,6 +55,7 @@ export type CoverId =
   | 'sabi';
 
 const tag = (en: string, pt: string): L10n => ({ en, pt });
+const unknown: L10n = { en: '—', pt: '—' };
 
 export const projects: Project[] = [
   {
@@ -43,11 +70,20 @@ export const projects: Project[] = [
       en: 'A Figma Make tool that turned a week of handoff documentation into two days.',
       pt: 'Uma ferramenta no Figma Make que transformou uma semana de documentação de handoff em dois dias.',
     },
-    context: { en: 'Internal tool · design lead', pt: 'Ferramenta interna · líder de design' },
-    when: { en: '2 months', pt: '2 meses' },
+    context: { en: 'Internal tool · Volanté', pt: 'Ferramenta interna · Volanté' },
+    role: { en: 'Design lead', pt: 'Líder de design' },
+    period: unknown,
+    duration: { en: '2 months', pt: '2 meses' },
     status: { en: 'in use every sprint', pt: 'em uso a cada sprint' },
+    statusKind: 'live',
     tags: [tag('AI-driven', 'IA'), tag('Documentation', 'Documentação'), tag('Design systems', 'Design systems')],
     cover: 'specs',
+    media: {
+      video: { mp4: 'covers/specs-generator.mp4', webm: 'covers/specs-generator.webm' },
+      poster: 'covers/specs-generator-poster.webp',
+      alt: { en: 'The generator documenting a product page: panels of measurements in px and vw, with contrast warnings.', pt: 'O gerador documentando uma página de produto: painéis de medidas em px e vw, com alertas de contraste.' },
+      focus: '12% 50%',
+    },
     liveUrl: 'https://inasilva.com/works/responsive-specs-and-accessibility-generator',
   },
   {
@@ -59,14 +95,22 @@ export const projects: Project[] = [
       en: 'A year-long redesign of the back-office module behind every POS and kiosk menu.',
       pt: 'Um ano redesenhando o módulo de back-office por trás de cada cardápio de PDV e totem.',
     },
-    context: { en: 'Enterprise back office · Volanté', pt: 'Back-office enterprise · Volanté' },
-    when: { en: '2025 – ongoing', pt: '2025 – em andamento' },
+    context: { en: 'Enterprise · Volanté', pt: 'Enterprise · Volanté' },
+    // From the case-study brief, where it is marked as still to be confirmed.
+    role: { en: 'Product designer', pt: 'Product designer' },
+    period: { en: '2025 — ongoing', pt: '2025 — em andamento' },
     status: { en: 'protected case', pt: 'case protegido' },
+    statusKind: 'locked',
     tags: [
       tag('Enterprise software', 'Software enterprise'),
       tag('Information architecture', 'Arquitetura da informação'),
     ],
     cover: 'menu',
+    media: {
+      image: { src: 'covers/menu-management-1600.webp', small: 'covers/menu-management-800.webp' },
+      alt: { en: 'The Menu Management workspace: a menu tree on the left and a list of items with prices beside it. Brand and staff names are blurred.', pt: 'O espaço de trabalho de Gestão de Cardápios: a árvore do cardápio à esquerda e a lista de itens com preços ao lado. Marca e nomes de pessoas estão desfocados.' },
+      focus: '22% 40%',
+    },
   },
   {
     slug: 'bar-tabs-system',
@@ -78,9 +122,18 @@ export const projects: Project[] = [
       pt: 'Um produto de comandas para bares e restaurantes na América do Norte.',
     },
     context: { en: 'POS · Volanté', pt: 'PDV · Volanté' },
+    role: { en: 'UX/UI designer', pt: 'UX/UI designer' },
+    period: { en: '2024 — 2026', pt: '2024 — 2026' },
     status: { en: 'protected case', pt: 'case protegido' },
+    statusKind: 'locked',
     tags: [tag('POS', 'PDV'), tag('Design systems', 'Design systems')],
     cover: 'bartabs',
+    media: {
+      image: { src: 'covers/bar-tabs-1600.webp', small: 'covers/bar-tabs-800.webp' },
+      alt: { en: 'The Bar Tabs screen in dark mode: a selected tab’s details on the left and open tabs as colour-coded cards.', pt: 'A tela de comandas no modo escuro: os detalhes de uma comanda à esquerda e as comandas abertas como cards coloridos.' },
+      focus: '50% 50%',
+      zoom: 1.2,
+    },
   },
   {
     slug: 'systems-portal',
@@ -92,10 +145,19 @@ export const projects: Project[] = [
       pt: 'Tornando 100+ sistemas do governo fáceis de achar, para um pescador no Pará e para um servidor do ministério.',
     },
     context: { en: 'Ministry of Agriculture and Livestock', pt: 'Ministério da Agricultura e Pecuária' },
-    when: { en: '4 months', pt: '4 meses' },
+    role: { en: 'UX/UI designer intern', pt: 'Estagiária de UX/UI' },
+    period: { en: '2023', pt: '2023' },
+    duration: { en: '4 months', pt: '4 meses' },
     status: { en: 'live', pt: 'no ar' },
+    statusKind: 'live',
     tags: [tag('UX/UI', 'UX/UI'), tag('Research', 'Pesquisa'), tag('Redesign', 'Redesign')],
     cover: 'portal',
+    media: {
+      video: { mp4: 'covers/systems-portal.mp4', webm: 'covers/systems-portal.webm' },
+      poster: 'covers/systems-portal-poster.webp',
+      alt: { en: 'The redesigned Systems Portal: a search bar and a grid of the most accessed systems.', pt: 'O Portal de Sistemas redesenhado: uma busca e uma grade com os sistemas mais acessados.' },
+      focus: '62% 45%',
+    },
     liveUrl: 'https://inasilva.com/works/systems-portal',
   },
   {
@@ -107,26 +169,45 @@ export const projects: Project[] = [
       en: 'A cooking app for a social project that teaches culinary skills on the road.',
       pt: 'Um app de culinária para um projeto social de educação gastronômica itinerante.',
     },
-    context: { en: 'Academic · lead designer', pt: 'Acadêmico · designer líder' },
-    when: { en: '6 months', pt: '6 meses' },
+    context: { en: 'Academic', pt: 'Acadêmico' },
+    role: { en: 'Lead designer', pt: 'Designer líder' },
+    period: unknown,
+    duration: { en: '6 months', pt: '6 meses' },
     status: { en: 'prototype, tested', pt: 'protótipo testado' },
+    statusKind: 'prototype',
     tags: [tag('UX/UI', 'UX/UI'), tag('Design systems', 'Design systems'), tag('Case study', 'Estudo de caso')],
     cover: 'bandoneon',
+    media: {
+      image: { src: 'covers/bandoneon-1600.webp', small: 'covers/bandoneon-800.webp' },
+      alt: { en: 'Two phones with the Bandoneón app: the green splash screen and the recipe of the day.', pt: 'Dois celulares com o app Bandoneón: a tela de abertura verde e a receita do dia.' },
+      focus: '52% 50%',
+      zoom: 1.1,
+    },
     liveUrl: 'https://inasilva.com/works/bandoneon-iniciative',
   },
   {
     slug: 'photocard-binder',
     frame: '06',
     state: 'soon',
-    title: { en: 'Photocard Binder', pt: 'Binder de Photocards' },
+    title: { en: 'Pocabin', pt: 'Pocabin' },
     line: {
       en: 'A digital binder for organizing and tracking K-pop photocard collections.',
       pt: 'Um binder digital para organizar e acompanhar coleções de photocards de K-pop.',
     },
     context: { en: 'Side project', pt: 'Projeto pessoal' },
+    role: unknown,
+    period: unknown,
     status: { en: 'developing', pt: 'revelando' },
+    statusKind: 'developing',
     tags: [tag('Website', 'Website'), tag('Product', 'Produto'), tag('Vibe-coding', 'Vibe-coding')],
     cover: 'binder',
+    media: {
+      video: { mp4: 'covers/pocabin.mp4', webm: 'covers/pocabin.webm' },
+      poster: 'covers/pocabin-poster.webp',
+      alt: { en: 'Pocabin: a digital binder opening to pages of photocards and a collection list.', pt: 'Pocabin: um binder digital abrindo em páginas de photocards e uma lista da coleção.' },
+      focus: '50% 45%',
+      zoom: 1.3,
+    },
   },
   {
     slug: 'sabi',
@@ -138,9 +219,18 @@ export const projects: Project[] = [
       pt: 'Transformando qualquer prato ou cardápio na pergunta certa sobre alérgenos.',
     },
     context: { en: 'Product · app', pt: 'Produto · app' },
+    role: unknown,
+    period: unknown,
     status: { en: 'developing', pt: 'revelando' },
+    statusKind: 'developing',
     tags: [tag('UX/UI research', 'Pesquisa UX/UI'), tag('Product', 'Produto'), tag('App', 'App')],
     cover: 'sabi',
+    media: {
+      image: { src: 'covers/sabi-1600.webp', small: 'covers/sabi-800.webp' },
+      alt: { en: 'The Sabi mark: three rounded bars with a yellow dot in the middle.', pt: 'A marca do Sabi: três barras arredondadas com um ponto amarelo no meio.' },
+      focus: '50% 50%',
+      zoom: 1.4,
+    },
   },
 ];
 

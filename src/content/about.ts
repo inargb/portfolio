@@ -95,15 +95,49 @@ export const about = {
     ],
   },
 
-  // From the IESB coordinator's recommendation on the current site.
+  // Newest first, in two groups. Course names stay in English in both
+  // languages: they're the official titles recruiters search for.
   education: {
     label: l('education', 'formação'),
-    items: [{ when: l('studied', 'estudei'), course: l('Graphic Design (CST)', 'Design Gráfico (CST)'), org: 'IESB' }],
+    groups: [
+      {
+        heading: l('Degrees', 'Formação'),
+        items: [
+          {
+            period: l('2025 — 2026', '2025 — 2026'),
+            title: l('Postgraduate Specialization in User Experience Design', 'Especialização em User Experience Design'),
+            org: l('PUCRS', 'PUCRS'),
+          },
+          {
+            period: l('2021 — 2023', '2021 — 2023'),
+            title: l('Bachelor’s degree (Technologist) in Graphic Design', 'Tecnólogo em Design Gráfico'),
+            org: l('IESB University Center', 'Centro Universitário IESB'),
+          },
+        ],
+      },
+      {
+        heading: l('Courses', 'Cursos'),
+        items: [
+          { period: l('2026', '2026'), title: l('WAI0.1x: Introduction to Web Accessibility', 'WAI0.1x: Introduction to Web Accessibility'), org: l('W3C (edX)', 'W3C (edX)') },
+          { period: l('2023', '2023'), title: l('Foundations of User Experience (UX) Design', 'Foundations of User Experience (UX) Design'), org: l('Google', 'Google') },
+        ],
+      },
+    ],
   },
 
   words: {
     label: l('kind words', 'palavras gentis'),
     title: l('Things people said, kept in a drawer.', 'Coisas que as pessoas disseram, guardadas numa gaveta.'),
+    drawer: {
+      front: l('kind words', 'palavras'),
+      open: l('open the drawer', 'abrir a gaveta'),
+      close: l('close drawer', 'fechar gaveta'),
+      read: l('read note', 'ler bilhete'),
+      putBack: l('put it back', 'guardar'),
+      prev: l('previous note', 'bilhete anterior'),
+      next: l('next note', 'próximo bilhete'),
+      of: l('of', 'de'),
+    },
     items: [
       {
         quote: l(
@@ -165,14 +199,10 @@ export const about = {
         'O momento em que me sinto mais feliz é quando vejo fotos reveladas que eu nem lembro de ter tirado. É bom lembrar de momentos e pessoas :)',
       ),
     ],
-    drag: l('drag or scroll the strip', 'arraste ou role o filme'),
-  },
-
-  contact: {
-    label: l('say hi', 'diga oi'),
-    title: l('I’m quiet, but I always answer.', 'Sou quietinha, mas sempre respondo.'),
-    linkedin: l('write to me on LinkedIn', 'me escreva no LinkedIn'),
-    resume: l('or read the resume', 'ou leia o currículo'),
+    strip: l('Film strip of photographs', 'Filme com fotografias'),
+    caption: l('drag to see more', 'arraste para ver mais'),
+    pause: l('pause', 'pausar'),
+    play: l('play', 'tocar'),
   },
 };
 

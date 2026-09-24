@@ -8,17 +8,17 @@ pages; they're Phase 4.
 
 | Route | What's there |
 |---|---|
-| `/` · `/pt-br` | Hero with the interactive word "frames", then the contact sheet (sheet / index views) |
-| `/about` · `/pt-br/sobre` | The shelf (drag, or keyboard), hello, what I do, experience, education, kind words, film strip, contact |
+| `/` · `/pt-br` | Hero with the interactive word "frames", then the project grid |
+| `/about` · `/pt-br/sobre` | The shelf (drag, or keyboard), hello, what I do, experience, education, kind words (drawer), film strip |
 | `/playground` · `/pt-br/playground` | Live tokens, type specimens, spacing, motion demos, cursor zones, components, all 7 covers, secrets catalog |
 | `/works/<slug>` | Placeholder case page: cover, facts, link to the current case, prev/next frame |
 | 404 | "This frame didn't develop." |
 
 ## Things to try
 
-- Press `?` for the keyboard sheet. `L` toggles lights (darkroom), `M` pauses motion, `S` turns on spec mode.
+- Press `?` for the keyboard sheet. `L` toggles lights (darkroom), `S` turns on spec mode.
 - Click "frames" in the headline until you've seen all three.
-- Poke a doodle five times. Leave the page alone for 45 seconds.
+- Leave the page alone for 45 seconds and watch the doodle.
 - Organize the shelf. Then look at the La La Land DVD a few times.
 - Type `yashica`.
 - Visit every page. The footer counts the frames you've seen.
@@ -30,7 +30,6 @@ Marked in the code as DRAFT, or written new:
 - About bio: rewritten from your current text, keeping "3+ years".
 - Shelf notes: only facts (titles, and "dad's old Yashica"). Replace them with your own one-liners in `src/content/about.ts`.
 - Education: "Graphic Design (CST), IESB" comes from Marco Aurélio's recommendation. Confirm it.
-- Contact: there's no public email on the current site, so contact goes through LinkedIn.
 - All Portuguese copy is new. Read it once for your voice.
 
 ## Decisions made on your behalf
@@ -47,3 +46,11 @@ Marked in the code as DRAFT, or written new:
 - Footer: removed the polaroid. It changed randomly on every visit but was always visible, so it wasn't a real easter egg.
 - About: the shelf is a transparent cut-out of the real photo (same colours, no white box) in every theme; Visual/Product design pills removed; graphic design items are pills; new 05 education_ section (06–08 renumbered).
 - PT: "projetos" everywhere (nav, home label, view toggle, case nav), footer "design feito por mim <3". Resume links open the file for the current language (header, footer, About contact).
+
+## Update 2 (24 Sep 2026, "Portfolio updates, ready to build" brief)
+
+- Accent is now blue (#2447D6; #8EA6FF in the darkroom), set as tokens `accent`, `accent-hover`, `accent-tint`. No red remains.
+- Home: "currently" line removed. Projects are a 2-column card grid (1 column on phones) with 4:3 covers; every card shows cover · title · period · context · role · status (● live · ◐ prototype · lock protected · ○ developing). Unknown values show "—". The sheet/index toggle is gone.
+- About: kind words live in a drawer (open, read, arrows/swipe, Esc, close). Education has Degrees + Courses. "say hi" removed (LinkedIn and resume stay in the header and footer). The film strip drifts in a seamless loop with a pause toggle.
+- Motion is always on (no site toggle, no `M` shortcut); a system-level reduced-motion setting is still respected.
+- The doodles are decorative now: the "poke five times" secret is gone.

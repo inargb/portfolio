@@ -16,8 +16,11 @@
   --color-rule: #cfcfd8;           /* hairlines, never text                 */
   --color-highlight: #f3cf1c;      /* doodle yellow · marker behind ink     */
   --color-on-highlight: #1c1a17;   /* text on highlight · 11.4:1            */
-  --color-redline: #b8321f;        /* safelight red · annotations · 5.8:1   */
-  --color-focus: #b8321f;
+  --color-accent: #2447d6;         /* numbers, status, links, focus · 6.9:1 */
+  --color-accent-hover: #1e3aa8;   /* hover / pressed · 9.1:1               */
+  --color-accent-tint: #e9edfb;    /* selected backgrounds only (ink 14.9:1)*/
+  --color-on-accent: #ffffff;      /* text on accent · 7.1:1                */
+  --color-focus: var(--color-accent);
   --color-shadow: #1c1a17;         /* hard offset shadow (print, not blur)  */
   --color-scrim: rgb(28 26 23 / 0.55);
 
@@ -116,7 +119,7 @@
 }
 
 /* ---- Color: darkroom theme ------------------------------------------------
-   Not an inverted page: a warm dark room lit by a safelight. */
+   Not an inverted page: a warm dark room with one blue light on. */
 :root[data-theme='darkroom'] {
   --color-paper: #161412;
   --color-paper-shade: #211e1a;
@@ -127,9 +130,12 @@
   --color-rule: #3d3731;
   --color-highlight: #f3cf1c;
   --color-on-highlight: #1c1a17;
-  --color-redline: #ff6a55;
-  --color-focus: #ff6a55;
-  --color-shadow: #ff6a55;
+  --color-accent: #8ea6ff;         /* 7.9:1 on the darkroom paper           */
+  --color-accent-hover: #bcc9ff;
+  --color-accent-tint: #1d2340;
+  --color-on-accent: #161412;
+  --color-focus: var(--color-accent);
+  --color-shadow: var(--color-accent);
   --color-scrim: rgb(0 0 0 / 0.6);
   color-scheme: dark;
 }
@@ -144,17 +150,20 @@
     --color-graphite: #c3b9aa;
     --color-graphite-soft: #a0968a;
     --color-rule: #3d3731;
-    --color-redline: #ff6a55;
-    --color-focus: #ff6a55;
-    --color-shadow: #ff6a55;
+    --color-accent: #8ea6ff;
+    --color-accent-hover: #bcc9ff;
+    --color-accent-tint: #1d2340;
+    --color-on-accent: #161412;
+    --color-focus: var(--color-accent);
+    --color-shadow: var(--color-accent);
     --color-scrim: rgb(0 0 0 / 0.6);
     color-scheme: dark;
   }
 }
 
-/* ---- Motion off: OS setting or the site's own "pause motion" ------------ */
+/* ---- Motion off: only when the visitor's system asks for it -------------- */
 @media (prefers-reduced-motion: reduce) {
-  :root:not([data-motion='on']) {
+  :root {
     --duration-quick: 1ms;
     --duration-settle: 1ms;
     --duration-slow: 1ms;
@@ -164,14 +173,4 @@
     --jitter: 0ms;
     --cursor-lag: 1;
   }
-}
-:root[data-motion='off'] {
-  --duration-quick: 1ms;
-  --duration-settle: 1ms;
-  --duration-slow: 1ms;
-  --duration-develop: 1ms;
-  --duration-page: 1ms;
-  --stagger-step: 0ms;
-  --jitter: 0ms;
-  --cursor-lag: 1;
 }

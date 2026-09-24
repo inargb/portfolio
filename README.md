@@ -26,12 +26,14 @@ src/
   i18n/ui.ts               interface strings (EN / PT)
   content/*.ts             page content, bilingual, typed (projects, home, about, photos)
   components/              Nav, Footer, Cursor, LanguageSwitch, LightsToggle, Doodle,
-                           ContactSheet, ProjectCover + covers/, Shelf, CaseNav, FramesWord
+                           ProjectGrid, ProjectCover + covers/, Shelf, KindWordsDrawer,
+                           FilmStrip, CaseNav, FramesWord
   components/ui/           Button, Pill, SectionLabel
   views/                   one view per page, rendered by thin EN/PT page files
   pages/                   routes: /, /about, /playground, /works/[slug] (+ /pt-br/…)
   scripts/                 prefs (theme/motion), motion (reveals), cursor, shelf
   scripts/eggs/            easter-egg system: catalog.ts + one module per egg
+public/covers/             uploaded project covers (see "Covers" below)
 docs/                      audit, phase notes, Framer migration notes
 ```
 
@@ -39,7 +41,41 @@ docs/                      audit, phase notes, Framer migration notes
 
 - Components use tokens only: no raw hex, no one-off sizes.
 - Every text pairing is WCAG AA. The playground computes it live.
-- Motion follows `prefers-reduced-motion` and the site's own pause button (`M`).
+- Motion is always on, except when the visitor's system asks for reduced motion.
+  Anything that moves by itself for more than 5s has its own pause (the film strip).
 - The custom cursor and the easter eggs are a layer on top. Nothing depends on them.
 - Content lives in `src/content`, one object per string with `en` and `pt`.
 - Protected case-study sources never go into the repo in plain text (`private/` is ignored).
+
+## Covers
+
+Each project can use an uploaded cover instead of its built-in CSS cover.
+Files live in `public/covers/`; original GIFs and source images are kept in
+`design/covers-src/` (not deployed).
+
+- **Frame shape changes with the screen:** 16:10 in the desktop grid, 4:3 on
+  tablets and phones, 16:9 on case pages. Media fills the frame
+  (`object-fit: cover`), centred on the project's `focus` and zoomed by `zoom`,
+  so the subject survives every crop. Export sources at 16:9.
+- **Stills:** two WebP widths, `-800.webp` and `-1600.webp`, served with `srcset`.
+- **Animations:** convert GIFs to MP4 + WebM (same look, ~10× lighter) and
+  export a still `-poster.webp`. Videos load only near the viewport, play only
+  while visible, and show the poster when reduced motion is on.
+
+```bash
+ffmpeg -i in.gif -vf "fps=20,scale='min(1280,iw)':-2,format=yuv420p" -c:v libx264 -crf 26 -movflags +faststart -an public/covers/x.mp4
+ffmpeg -i in.gif -vf "fps=20,scale='min(1280,iw)':-2" -c:v libvpx-vp9 -crf 38 -b:v 0 -an public/covers/x.webm
+ffmpeg -ss 2 -i in.gif -frames:v 1 -c:v libwebp -quality 82 public/covers/x-poster.webp
+```
+
+Then in `src/content/projects.ts`:
+
+```ts
+media: {
+  video: { mp4: 'covers/x.mp4', webm: 'covers/x.webm' },  // or image: { src, small }
+  poster: 'covers/x-poster.webp',
+  alt: { en: 'What the product shows…', pt: 'O que o produto mostra…' },
+  focus: '40% 50%',   // where the subject is
+  zoom: 1.2,          // optional
+},
+```

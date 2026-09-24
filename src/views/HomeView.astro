@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Doodle from '../components/Doodle.astro';
 import FramesWord from '../components/FramesWord.astro';
-import ContactSheet from '../components/ContactSheet.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
 import { href, type Locale } from '../i18n/config';
 import { home } from '../content/home';
@@ -16,7 +16,6 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
   <section class="hero container" aria-labelledby="hero-title">
     <div class="hero__meta t-meta" data-reveal>
       <span>{home.meta[locale]}<span class="caret" aria-hidden="true"></span></span>
-      <span>{home.currently[locale]}</span>
     </div>
 
     <h1 id="hero-title" class="hero__title t-display" data-spec-label="display · clamp(2rem → 4.4rem)">
@@ -33,7 +32,7 @@ const other: Locale = locale === 'en' ? 'pt' : 'en';
       <SectionLabel text={home.workLabel[locale]} />
       <h2 id="work-title" class="visually-hidden">{home.workLabel[locale]}</h2>
     </header>
-    <ContactSheet locale={locale} />
+    <ProjectGrid locale={locale} />
   </section>
 </Base>
 

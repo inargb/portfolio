@@ -8,7 +8,6 @@ const s = ui.shortcuts;
 const keys = [
   { k: 'S', en: 'spec mode: the site measures itself', pt: 'modo spec: o site se mede' },
   { k: 'L', en: 'lights on / off', pt: 'acender / apagar as luzes' },
-  { k: 'M', en: 'pause / play motion', pt: 'pausar / retomar animações' },
   { k: 'Esc', en: 'close things', pt: 'fechar coisas' },
   { k: '?', en: 'this sheet', pt: 'esta folha' },
 ];
@@ -54,6 +53,6 @@ const keys = [
   .sheet__eggs { display: grid; gap: var(--space-2); font-family: var(--font-system); font-size: var(--type-caption); }
   .sheet__eggs :global(li) { display: grid; grid-template-columns: 11rem 1fr; gap: var(--space-2); color: var(--color-graphite-soft); }
   .sheet__eggs :global(li.is-found) { color: var(--color-ink); }
-  .sheet__eggs :global(li.is-found .egg-name)::before { content: '✓ '; color: var(--color-redline); }
+  .sheet__eggs :global(li.is-found .egg-name)::before { content: '✓ '; color: var(--color-accent); }
   @media (max-width: 30rem) { .sheet__eggs :global(li) { grid-template-columns: 1fr; gap: 0; } }
 </style>

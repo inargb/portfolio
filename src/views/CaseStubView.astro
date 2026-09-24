@@ -39,7 +39,9 @@ const locked = project.state === 'locked';
       <p class="t-heading-s t-secondary measure">{project.line[locale]}</p>
       <dl class="case-hero__meta">
         <div><dt class="t-label">{p.context[locale]}</dt><dd class="t-meta">{project.context[locale]}</dd></div>
-        {project.when && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.when[locale]}</dd></div>}
+        <div><dt class="t-label">{p.role[locale]}</dt><dd class="t-meta">{project.role[locale]}</dd></div>
+        <div><dt class="t-label">{p.period[locale]}</dt><dd class="t-meta">{project.period[locale]}</dd></div>
+        {project.duration && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.duration[locale]}</dd></div>}
         <div><dt class="t-label">{p.status[locale]}</dt><dd class="t-meta">{project.status[locale]}</dd></div>
       </dl>
       <ul class="case-hero__tags" role="list">
@@ -50,7 +52,7 @@ const locked = project.state === 'locked';
 
     <div class="case-cover container">
       <div class="case-cover__frame crop">
-        <ProjectCover cover={project.cover} label={project.title[locale]} />
+        <ProjectCover cover={project.cover} media={project.media} label={project.title[locale]} locale={locale} sizes="(max-width: 84rem) 100vw, 84rem" />
       </div>
     </div>
 
@@ -71,6 +73,7 @@ const locked = project.state === 'locked';
   .case-hero__meta div { display: grid; gap: var(--space-1); }
   .case-hero__meta dd { color: var(--color-ink); }
   .case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .case-cover__frame { border: var(--rule-ink); }
+  .case-cover__frame { --cover-ratio: 16 / 9; border: var(--rule-ink); }
+  @media (max-width: 40rem) { .case-cover__frame { --cover-ratio: 4 / 3; } }
   .case-note { display: grid; gap: var(--space-4); justify-items: start; }
 </style>
