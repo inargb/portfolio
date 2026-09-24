@@ -54,9 +54,6 @@ export const about = {
       { glyph: '◐', label: l('Accessibility', 'Acessibilidade') },
       { glyph: '↻', label: l('Prototyping', 'Prototipação') },
       { glyph: '✦', label: l('AI + design', 'IA + design') },
-    ],
-    craftLabel: l('and from graphic design', 'e do design gráfico'),
-    craft: [
       { glyph: '◎', label: l('Brand identity', 'Identidade visual') },
       { glyph: '❡', label: l('Editorial design', 'Design editorial') },
       { glyph: 'Aa', label: l('Typography', 'Tipografia') },

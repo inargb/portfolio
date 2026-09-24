@@ -45,8 +45,6 @@ export const ui = {
     greeting: { en: 'nice to meet you', pt: 'prazer em te conhecer' },
     secrets: { en: 'secrets found', pt: 'segredos encontrados' },
     elsewhere: { en: 'elsewhere', pt: 'por aí' },
-    kit: { en: 'the kit', pt: 'o kit' },
-    kitHint: { en: 'design system playground', pt: 'playground do design system' },
   },
 
   project: {

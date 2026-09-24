@@ -46,8 +46,8 @@ docs/                      audit, phase notes, Framer migration notes
 - The custom cursor and the easter eggs are a layer on top. Nothing depends on them.
 - Images that open something use the **print lift** hover (`class="lift crop"` in
   `styles/components.css`): the print lifts up-left, tilts a hair, casts a hard offset
-  shadow and shows its crop marks, with the cursor's frame state on top. The project
-  reel uses it, and case-study images should too.
+  shadow and shows its crop marks, with the cursor's frame state on top. Kept for
+  case-study images. (The home reel doesn't move: it shades the frames that aren't on.)
 - Content lives in `src/content`, one object per string with `en` and `pt`.
 - Protected case-study sources never go into the repo in plain text (`private/` is ignored).
 

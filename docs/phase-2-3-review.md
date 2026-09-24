@@ -72,3 +72,8 @@ Marked in the code as DRAFT, or written new:
 - Home: the work is one roll of film. Every project is a frame on a single vertical reel (with a cut leader at the start); its notes sit to the right, joined by a thin line. The frame in the middle of the screen is "on": notes at full strength, title in blue; the others step back to 45% (never hidden). Tablets and phones: the reel runs full width with notes under each frame, always full strength. Reduced motion: nothing fades.
 - Covers develop as they scroll in (pale print → full tone).
 - The cover hover is now a reusable pattern, the **print lift** (`.lift.crop` in `components.css`), kept for case-study images.
+- Reel frames don't move. One frame is on: the one under the pointer (or focused), otherwise the one in the middle of the screen. Its image and notes are at full strength; every other frame sits under a 40% film-dark shade and its notes at 45%.
+- About · shelf: the controls sit under the pile, on the right: "tidy up for me ↺" (a quiet link instead of a boxed button), then the 0/9 count.
+- About · portrait: uses the print lift on hover (it already sits tilted; `--lift-rest` keeps that tilt and adds the lift's).
+- About · what I do: the graphic-design skills (Brand identity, Editorial design, Typography, Mixed media art) join the same list; the "and from graphic design" label is gone.
+- Footer: "nice to meet you" and the elsewhere links sit on opposite ends of one row (links under the greeting on phones), with no divider between them. The secrets counter and "the kit" link are gone; spec mode is the ruler icon alone (still labelled for screen readers). The Playground stays at /playground.

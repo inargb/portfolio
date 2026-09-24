@@ -121,8 +121,10 @@
    print lifts up-left, tilts a hair, casts a hard offset shadow, and its
    crop marks appear. Pair it with the cursor's frame state (data-cursor).
      <figure class="lift crop" data-cursor="look">…</figure>
-   Tune per surface: --lift-mark (crop-mark colour), --lift-shadow. */
+   Tune per surface: --lift-mark (crop-mark colour), --lift-shadow, and
+   --lift-rest for a print that already sits tilted (the tilt adds to it). */
 .lift {
+  rotate: var(--lift-rest, 0deg);
   transition: translate var(--duration-settle) var(--ease-settle), rotate var(--duration-settle) var(--ease-settle),
     box-shadow var(--duration-settle) var(--ease-settle);
 }
@@ -133,7 +135,7 @@ a:hover .lift,
 a:focus-visible .lift,
 [data-lift-host]:hover .lift {
   translate: -4px -4px;
-  rotate: -0.4deg;
+  rotate: calc(var(--lift-rest, 0deg) - 0.4deg);
   box-shadow: var(--lift-shadow, var(--shadow-offset-lift));
 }
 .lift.crop:hover::before, .lift.crop:hover::after,
