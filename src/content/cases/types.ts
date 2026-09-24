@@ -33,7 +33,11 @@ export type CaseBlock =
   | { type: 'figure'; image: CaseImage; caption?: L10n }
   /** Several images in a row (a contact strip); each opens larger. */
   | { type: 'gallery'; images: CaseImage[]; caption?: L10n }
-  /** Numbered process steps. */
+  /** Numbered process steps, as a row of cards: number → title → text. */
   | { type: 'steps'; items: { title: L10n; body: L10n }[] }
-  /** Design decisions, each tagged with the principle behind it. */
-  | { type: 'decisions'; intro?: L10n; items: { title: L10n; body: L10n; tag: L10n }[] };
+  /** Design decisions, as cards: icon → title → text → the principle behind it.
+      `note` is a quieter aside after the text (e.g. "approved, not shipped"). */
+  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag: L10n }[] };
+
+/** Line icons for decision cards (drawn in components/case/CaseBlocks.astro). */
+export type CaseIcon = 'layout' | 'search' | 'star';

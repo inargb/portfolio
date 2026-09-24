@@ -99,8 +99,11 @@ Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`
 | `question` | the "how might we", framed |
 | `figure` | one image + numbered caption (FIG. 01); lifts on hover, opens in the lightbox |
 | `gallery` | several images in a row, each opens larger |
-| `steps` | numbered process steps |
-| `decisions` | design decisions, each tagged with the principle behind it |
+| `steps` | process steps as cards: big number → title → text |
+| `decisions` | design decisions as cards: icon → title → text (+ quieter note) → principle |
+
+Stats, steps and decisions sit on `.paper-card` (paper, thin double frame, a
+slight tilt). Images, the question and paragraphs keep their own look.
 
 Images live in `src/assets/cases/<slug>/` and are optimised at build time.
 Alt text describes what the image shows. Projects without a case keep the

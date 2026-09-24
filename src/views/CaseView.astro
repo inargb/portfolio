@@ -85,8 +85,12 @@ const sections = study.sections.map((s) => {
 
   <dialog class="lightbox" data-lightbox-dialog aria-label={c.enlarge[locale]}>
     <button class="lightbox__close t-nav" type="button" data-lightbox-close>{c.close[locale]} ✕</button>
-    <img class="lightbox__img" alt="" data-lightbox-img />
-    <p class="lightbox__cap t-caption" data-lightbox-cap></p>
+    <div class="lightbox__stage">
+      <button class="lightbox__step t-nav" type="button" data-lightbox-prev aria-label={c.prev[locale]}>←</button>
+      <img class="lightbox__img" alt="" data-lightbox-img />
+      <button class="lightbox__step t-nav" type="button" data-lightbox-next aria-label={c.next[locale]}>→</button>
+    </div>
+    <p class="lightbox__cap t-caption"><span class="lightbox__count" aria-live="polite" data-lightbox-count></span> <span data-lightbox-cap></span></p>
   </dialog>
 </Base>
 
@@ -158,8 +162,27 @@ const sections = study.sections.map((s) => {
   }
   .lightbox::backdrop { background: var(--color-scrim); }
   .lightbox[open] { display: grid; gap: var(--space-3); justify-items: center; }
-  .lightbox__img { max-width: 100%; max-height: calc(94vh - 9rem); width: auto; height: auto; object-fit: contain; }
+  .lightbox__stage { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); width: 100%; }
+  .lightbox__img { justify-self: center; max-width: 100%; max-height: calc(94vh - 9rem); width: auto; height: auto; object-fit: contain; touch-action: pan-y; }
+  .lightbox__step {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border: var(--rule-ink);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 1.125rem;
+  }
+  .lightbox__step:hover { background: var(--color-accent-tint); }
+  .lightbox__step[hidden] { visibility: hidden; display: block !important; }
   .lightbox__cap { max-width: 60rem; text-align: center; }
+  .lightbox__count { font-family: var(--font-system); color: var(--color-ink); }
+  @media (max-width: 40rem) {
+    .lightbox { padding-inline: var(--space-3); }
+    .lightbox__stage { grid-template-columns: 1fr 1fr; }
+    .lightbox__img { grid-column: 1 / -1; grid-row: 1; }
+    .lightbox__step { grid-row: 2; }
+    .lightbox__step:last-child { justify-self: end; }
+  }
   .lightbox__close {
     position: absolute;
     top: var(--space-2);
@@ -186,23 +209,50 @@ const sections = study.sections.map((s) => {
     document.querySelectorAll('[data-case-section]').forEach((s) => io.observe(s));
   }
 
-  // Lightbox: any [data-lightbox] print opens here.
+  // Lightbox: any [data-lightbox] print opens here. ← → (buttons, arrow
+  // keys or a swipe) walk through every image in the case, in page order.
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
   if (dialog) {
     const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
     const cap = dialog.querySelector<HTMLElement>('[data-lightbox-cap]')!;
-    let opener: HTMLElement | null = null;
+    const count = dialog.querySelector<HTMLElement>('[data-lightbox-count]')!;
+    const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+    const prints = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
+    let i = 0;
+
+    function show(n: number) {
+      i = Math.max(0, Math.min(prints.length - 1, n));
+      const p = prints[i];
+      img.src = p.dataset.full ?? '';
+      img.alt = p.dataset.alt ?? '';
+      cap.textContent = p.dataset.caption ?? '';
+      count.textContent = `${i + 1} / ${prints.length}`;
+      prev.hidden = i === 0;
+      next.hidden = i === prints.length - 1;
+    }
     document.addEventListener('click', (e) => {
       const btn = (e.target as Element).closest<HTMLElement>('[data-lightbox]');
       if (!btn) return;
-      opener = btn;
-      img.src = btn.dataset.full ?? '';
-      img.alt = btn.dataset.alt ?? '';
-      cap.textContent = btn.dataset.caption ?? '';
+      show(prints.indexOf(btn));
       dialog.showModal();
     });
+    prev.addEventListener('click', () => show(i - 1));
+    next.addEventListener('click', () => show(i + 1));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
+    });
+    // Swipe on touch screens.
+    let sx = 0;
+    img.addEventListener('pointerdown', (e) => { sx = e.clientX; });
+    img.addEventListener('pointerup', (e) => {
+      const dx = e.clientX - sx;
+      if (e.pointerType !== 'mouse' && Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1));
+    });
     dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (e) => { if (e.target === dialog || e.target === img) dialog.close(); });
-    dialog.addEventListener('close', () => { opener?.focus(); img.removeAttribute('src'); });
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    // Focus goes back to the print you were on (the last one viewed).
+    dialog.addEventListener('close', () => { prints[i]?.focus(); img.removeAttribute('src'); });
   }
 </script>

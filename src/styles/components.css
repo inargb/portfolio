@@ -115,6 +115,17 @@
 .crop::before { top: -0.45rem; left: -0.45rem; border-width: 1px 0 0 1px; }
 .crop::after { bottom: -0.45rem; right: -0.45rem; border-width: 0 1px 1px 0; }
 
+/* ---- Paper card: a note on the table -------------------------------------
+   The case-study surface: paper with a thin double frame, a hair off
+   straight (--tilt). Case text blocks use it (stats, steps, decisions);
+   images and the "how might we" keep their own look. */
+.paper-card {
+  background: var(--color-paper);
+  border: var(--rule-hair);
+  box-shadow: 0 0 0 7px var(--color-paper), 0 0 0 8px var(--color-rule);
+  rotate: var(--tilt, 0deg);
+}
+
 /* ---- Print lift: a print picked up off the table -------------------------
    The hover used by project covers, and meant for images in case studies.
    On hover (of the image, or of the link / [data-lift-host] around it) the
