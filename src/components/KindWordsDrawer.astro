@@ -4,7 +4,7 @@
 //   1 closed → the drawer front, note tops peeking out
 //   2 open   → the drawer slides out (~400ms), notes fan out at ±2–4°
 //   3 read   → a note lifts into a dialog; arrows / swipe move, Esc puts it back
-//   4 close  → "close drawer" returns everything
+//   4 close  → pressing the drawer front again slides it back in
 // The notes are a real <ul>, readable by screen readers even when closed.
 // Reduced motion: no slide, no fan: opening shows a static grid.
 // Phone: opens into a vertical stack, no fanning.
@@ -22,8 +22,6 @@ const n = w.items.length;
 ---
 
 <div class="drawer" data-drawer data-open="false" data-i18n={JSON.stringify({ of: d.of[locale] })}>
-  <button class="drawer__close link t-nav" type="button" data-drawer-close hidden>{d.close[locale]} ↑</button>
-
   <div class="drawer__well" id="kind-words-notes" data-drawer-well>
     <ul class="drawer__notes" role="list">
       {w.items.map((item, i) => (
@@ -46,8 +44,7 @@ const n = w.items.length;
   <button class="drawer__front" type="button" aria-expanded="false" aria-controls="kind-words-notes" data-drawer-front data-cursor="open">
     <span class="drawer__label t-label">{d.front[locale]} <span class="drawer__count">({n})</span></span>
     <span class="drawer__handle" aria-hidden="true"></span>
-    <span class="drawer__hint t-caption" aria-hidden="true">{d.open[locale]} ↓</span>
-    <span class="visually-hidden" data-front-sr>{d.open[locale]}</span>
+    <span class="visually-hidden" data-front-sr data-close-label={d.close[locale]}>{d.open[locale]}</span>
   </button>
 </div>
 
@@ -63,7 +60,6 @@ const n = w.items.length;
 
 <style>
   .drawer { position: relative; display: grid; }
-  .drawer__close { justify-self: end; margin-bottom: var(--space-4); border: 0; background: none; min-height: var(--tap-min); }
 
   /* The well: notes live here. Closed, only their tops peek over the front. */
   .drawer__well {
@@ -135,13 +131,11 @@ const n = w.items.length;
     border-radius: var(--radius-pill);
     background: var(--color-paper-shade);
   }
-  .drawer__hint { justify-self: end; color: var(--color-graphite); }
 
   /* 2 · open */
   .drawer[data-open='true'] .drawer__well { overflow: visible; }
   .drawer[data-open='true'] .note { rotate: var(--tilt); translate: 0 0; }
   .drawer[data-open='true'] .drawer__front { translate: 0 var(--space-4); }
-  .drawer[data-open='true'] .drawer__hint { visibility: hidden; }
   .drawer[data-open='true'] .note:hover { rotate: 0deg; translate: 0 -4px; }
 
   /* 3 · reading: the others dim */
@@ -154,7 +148,6 @@ const n = w.items.length;
     .drawer__notes { grid-template-columns: 1fr; gap: var(--space-6); }
     .drawer[data-open='true'] .note { rotate: 0deg; }
     .drawer__front { grid-template-columns: 1fr auto; }
-    .drawer__hint { display: none; }
   }
   /* Reduced motion: no slide, no fan; open is a static grid. */
   @media (prefers-reduced-motion: reduce) {
@@ -213,7 +206,6 @@ const n = w.items.length;
     const well = drawer.querySelector<HTMLElement>('[data-drawer-well]')!;
     const front = drawer.querySelector<HTMLButtonElement>('[data-drawer-front]')!;
     const frontSr = front.querySelector<HTMLElement>('[data-front-sr]')!;
-    const closeBtn = drawer.querySelector<HTMLButtonElement>('[data-drawer-close]')!;
     const notes = Array.from(drawer.querySelectorAll<HTMLElement>('[data-note]'));
     const reads = Array.from(drawer.querySelectorAll<HTMLButtonElement>('[data-note-read]'));
     const slot = dialog.querySelector<HTMLElement>('[data-note-slot]')!;
@@ -221,7 +213,7 @@ const n = w.items.length;
     const of = JSON.parse(drawer.dataset.i18n ?? '{}').of ?? '/';
     const closedHeight = getComputedStyle(well).height;
     const openLabel = frontSr.textContent ?? '';
-    const closeLabel = closeBtn.textContent?.replace('↑', '').trim() ?? '';
+    const closeLabel = frontSr.dataset.closeLabel ?? '';
     let current = 0;
     let opener: HTMLElement | null = null;
 
@@ -229,7 +221,6 @@ const n = w.items.length;
       drawer.dataset.open = String(open);
       front.setAttribute('aria-expanded', String(open));
       frontSr.textContent = open ? closeLabel : openLabel;
-      closeBtn.hidden = !open;
       reads.forEach((b) => (b.tabIndex = open ? 0 : -1));
       const animate = motionOn();
       if (open) {
@@ -250,7 +241,6 @@ const n = w.items.length;
       setOpen(open);
       if (open) reads[0]?.focus({ preventScroll: true });
     });
-    closeBtn.addEventListener('click', () => { setOpen(false); front.focus(); });
 
     // ---- reading -------------------------------------------------------
     function show(i: number) {
