@@ -102,6 +102,9 @@ Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`
 | `steps` | process steps as cards: big number → title → text |
 | `decisions` | design decisions as cards: icon → title → text (+ quieter note) → principle |
 
+Every block sits on the same surface, `.paper-card` (paper, thin double frame,
+a slight tilt); plain paragraphs stay as running text.
+
 Images live in `src/assets/cases/<slug>/` and are optimised at build time.
 Alt text describes what the image shows. Projects without a case keep the
 placeholder page.

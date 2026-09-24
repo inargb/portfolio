@@ -14,8 +14,9 @@ interface Props {
   caption?: L10n;
   sizes?: string;
   bare?: boolean;            // inside a gallery: no figure/figcaption of its own
+  tilt?: number;             // degrees off straight, like the other paper cards
 }
-const { image, locale, n, caption, sizes = '(max-width: 64rem) 100vw, 60rem', bare = false } = Astro.props;
+const { image, locale, n, caption, sizes = '(max-width: 64rem) 100vw, 60rem', bare = false, tilt = -0.25 } = Astro.props;
 const full = await getImage({ src: image.src, width: Math.min(image.src.width, 2000), format: 'webp' });
 const alt = image.alt[locale];
 const no = `${ui.case.fig[locale]} ${String(n).padStart(2, '0')}`;
@@ -25,7 +26,8 @@ const Wrap = bare ? 'div' : 'figure';
 <Wrap class="cfig">
   <button
     type="button"
-    class="cfig__print lift crop"
+    class="cfig__print paper-card lift crop"
+    style={`--tilt:${tilt}deg`}
     data-lightbox
     data-full={full.src}
     data-alt={alt}
@@ -43,13 +45,12 @@ const Wrap = bare ? 'div' : 'figure';
 </Wrap>
 
 <style>
-  .cfig { display: grid; gap: var(--space-3); margin: 0; }
+  .cfig { display: grid; gap: var(--space-6); margin: 0; padding: var(--space-2); }
+  /* A print on paper: the image sits on the card with a paper mat around it. */
   .cfig__print {
     display: block;
     width: 100%;
-    padding: 0;
-    border: var(--rule-hair);
-    background: var(--color-paper-shade);
+    padding: var(--space-3);
     cursor: zoom-in;
   }
   .cfig__print :global(img) { display: block; width: 100%; height: auto; }
