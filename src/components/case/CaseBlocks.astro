@@ -68,7 +68,7 @@ const icons: Record<string, string> = {
       return (
         <figure class="cb-marquee" style={`--row-h:${b.height ?? 300}px;${b.background ? `--mq-bg:${b.background};` : ''}`} data-marquee>
           {b.rows.map((img, r) => (
-            <div class="cb-marquee__row" style={`--mq-speed:${b.speed ?? 40}s`} data-dir={r % 2 ? 'right' : 'left'}>
+            <div class="cb-marquee__row" data-mq-row data-speed={b.speed ?? 35} data-dir={r % 2 ? 'right' : 'left'} data-cursor="drag" tabindex="0" role="region" aria-label={img.alt[locale]}>
               <div class="cb-marquee__track">
                 {[0, 1].map((copy) => (
                   <Image src={img.src} alt={copy ? '' : img.alt[locale]} aria-hidden={copy ? 'true' : undefined} height={(b.height ?? 300) * 2} widths={[Math.round(img.src.width * ((b.height ?? 300) / img.src.height)), Math.min(img.src.width, Math.round(img.src.width * ((b.height ?? 300) * 2 / img.src.height)))]} sizes={`${Math.round(img.src.width * ((b.height ?? 300) / img.src.height))}px`} loading="lazy" draggable="false" />
@@ -212,7 +212,8 @@ const icons: Record<string, string> = {
   }
 })}
 
-<style>
+<style is:global>
+  /* Global (prefixed cb-/cfig) so sealed cases, injected after unlock, are styled. */
   .cb-heading { display: grid; gap: var(--space-2); margin-bottom: calc(-1 * var(--space-6)); }
   .cb-heading h3 { color: var(--color-graphite-soft); }
 
@@ -221,33 +222,33 @@ const icons: Record<string, string> = {
   .cb-diamond__ends { display: flex; justify-content: space-between; color: var(--color-graphite-soft); }
   .cb-diamond__svg { width: 100%; height: clamp(7rem, 14vw, 12rem); overflow: visible; }
   .cb-diamond__svg path { fill: none; stroke: var(--color-ink); stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
-  :global(.js-reveal) .cb-diamond__svg path { stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-settle); }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path { stroke-dashoffset: 0; }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(2) { transition-delay: 0.35s; }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(3) { transition-delay: 0.7s; }
+  .js-reveal .cb-diamond__svg path { stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-settle); }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path { stroke-dashoffset: 0; }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(2) { transition-delay: 0.35s; }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(3) { transition-delay: 0.7s; }
   .cb-diamond__phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
   .cb-diamond__phases li { display: grid; gap: var(--space-1); align-content: start; padding-top: var(--space-3); border-top: var(--rule-hair); }
   .cb-diamond__phases h3 { font-family: var(--font-system); font-size: var(--type-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-ink); }
   .cb-diamond__phases p { font-size: var(--type-body-s); color: var(--color-graphite); text-wrap: pretty; }
 
-  /* Marquee: each row is two copies of an image strip, sliding one copy's
-     width, forever. Alternate rows run the other way. */
+  /* Marquee: each row is two copies of an image strip that drifts one copy's
+     width, forever (script below); alternate rows run the other way. The row
+     is a real scroller: drag, swipe, wheel or arrow keys move it by hand, and
+     the drift picks up again a moment later. */
   .cb-marquee { display: grid; gap: var(--space-3); margin: 0; }
-  .cb-marquee__row { overflow: hidden; background: var(--mq-bg, transparent); padding-block: var(--mq-pad, 0); }
+  .cb-marquee__row { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; background: var(--mq-bg, transparent); cursor: grab; }
+  .cb-marquee__row::-webkit-scrollbar { display: none; }
+  .cb-marquee__row.is-dragging { cursor: grabbing; }
+  .cb-marquee__row:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
   .cb-marquee[style*='--mq-bg'] { gap: 0; }
-  .cb-marquee__track { display: flex; gap: var(--space-8); width: max-content; animation: mq var(--mq-speed) linear infinite; }
-  .cb-marquee__row[data-dir='right'] .cb-marquee__track { animation-direction: reverse; }
-  .cb-marquee__track :global(img) { height: var(--row-h); width: auto; flex: none; user-select: none; }
-  .cb-marquee:hover .cb-marquee__track { animation-play-state: paused; }
-  @keyframes mq { to { translate: calc(-50% - var(--space-8) / 2) 0; } }
+  .cb-marquee__track { display: flex; gap: var(--space-8); width: max-content; }
+  .cb-marquee__track img { height: var(--row-h); width: auto; flex: none; user-select: none; pointer-events: none; }
   .cb-marquee__cap { margin-top: var(--space-3); }
   @media (prefers-reduced-motion: reduce) {
-    .cb-marquee__row { overflow-x: auto; }
-    .cb-marquee__track { animation: none; }
-    .cb-marquee__track :global(img[aria-hidden='true']) { display: none; }
+    .cb-marquee__track img[aria-hidden='true'] { display: none; }
   }
   @media (max-width: 40rem) {
-    .cb-marquee__track :global(img) { height: calc(var(--row-h) * 0.6); }
+    .cb-marquee__track img { height: calc(var(--row-h) * 0.6); }
     .cb-diamond__phases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
@@ -348,4 +349,103 @@ const icons: Record<string, string> = {
     .cb-cards { gap: var(--space-8); padding-inline: var(--space-2); }
     .cb-question { padding: var(--space-6); }
   }
+
+  /* Figures (components/case/CaseFigure.astro) */
+  .cfig { display: grid; gap: var(--space-3); margin: 0; }
+  .cfig__print {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: var(--rule-hair);
+    background: var(--color-paper-shade);
+    cursor: zoom-in;
+  }
+  .cfig__print img, .cfig__print picture { display: block; width: 100%; height: auto; }
+  .cfig__print--video { cursor: default; }
+  .cfig__print video { display: block; width: 100%; height: auto; }
+  @media (prefers-reduced-motion: reduce) { .cfig__print video { pointer-events: auto; } }
+  .cfig__print:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+  .cfig__cap { max-width: var(--layout-text); text-wrap: pretty; }
+  .cfig__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
 </style>
+
+<script>
+  import { motionOn } from '../../scripts/prefs';
+
+  // Marquee rows: drift on their own, move by hand, loop seamlessly.
+  // Runs on load and again when a sealed case is opened (ina:case-content).
+  const RESUME_AFTER = 1800;
+  function initMarquees(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>('[data-mq-row]:not([data-mq-ready])').forEach((row) => {
+    row.dataset.mqReady = '';
+    const track = row.firstElementChild as HTMLElement;
+    const dir = row.dataset.dir === 'right' ? -1 : 1;
+    const speed = Number(row.dataset.speed) || 35;   // px per second
+    let loop = 0;                                     // one copy + one gap
+    let pos = 0;                                      // float scroll position
+    let idleUntil = 0, onScreen = false, raf = 0, last = 0, hover = false;
+
+    const measure = () => {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      loop = (track.scrollWidth + gap) / 2;
+    };
+    const wrap = () => {
+      if (!loop) return;
+      if (row.scrollLeft >= loop) row.scrollLeft -= loop;
+      else if (row.scrollLeft <= 0) row.scrollLeft += loop;
+      pos = row.scrollLeft;
+    };
+    const touch = () => { idleUntil = performance.now() + RESUME_AFTER; };
+
+    function tick(now: number) {
+      const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
+      last = now;
+      if (motionOn() && !hover && now > idleUntil && loop) {
+        pos += dir * speed * dt;
+        if (pos >= loop) pos -= loop;
+        if (pos <= 0) pos += loop;
+        row.scrollLeft = pos;
+      }
+      raf = onScreen ? requestAnimationFrame(tick) : 0;
+    }
+
+    // By hand: native scroll (touch, trackpad, keys) + mouse drag.
+    row.addEventListener('scroll', () => { if (performance.now() < idleUntil || hover) wrap(); }, { passive: true });
+    ['wheel', 'touchstart', 'keydown'].forEach((ev) => row.addEventListener(ev, touch, { passive: true }));
+    row.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
+    row.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { hover = false; touch(); } });
+    let dragging = false, px = 0;
+    row.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      dragging = true; px = e.clientX; row.setPointerCapture(e.pointerId); row.classList.add('is-dragging');
+    });
+    row.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      row.scrollLeft -= e.clientX - px; px = e.clientX; wrap(); touch();
+    });
+    const end = () => { dragging = false; row.classList.remove('is-dragging'); touch(); };
+    row.addEventListener('pointerup', end);
+    row.addEventListener('pointercancel', end);
+    row.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault(); row.scrollBy({ left: e.key === 'ArrowLeft' ? -240 : 240, behavior: 'smooth' });
+    });
+
+    new ResizeObserver(() => { measure(); if (!pos && loop) { pos = dir < 0 ? loop : 1; row.scrollLeft = pos; } }).observe(track);
+    new IntersectionObserver(([en]) => {
+      onScreen = en.isIntersecting;
+      if (onScreen && !raf) { last = 0; raf = requestAnimationFrame(tick); }
+    }).observe(row);
+  });
+  }
+  initMarquees();
+  window.addEventListener('ina:case-content', (e) => initMarquees((e as CustomEvent).detail?.root ?? document));
+
+  // Videos: with reduced motion, hold the first frame (tap to play).
+  function calmVideos(root: ParentNode = document) {
+    if (motionOn()) return;
+    root.querySelectorAll<HTMLVideoElement>('.cfig__print video').forEach((v) => { v.pause(); v.removeAttribute('autoplay'); v.controls = true; });
+  }
+  calmVideos();
+  window.addEventListener('ina:case-content', (e) => calmVideos((e as CustomEvent).detail?.root ?? document));
+</script>

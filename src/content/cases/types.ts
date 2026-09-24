@@ -22,6 +22,8 @@ export interface CaseSection {
 
 export interface CaseImage {
   src: ImageMetadata;
+  mobile?: ImageMetadata;             // a different crop/layout for phones (≤ 40rem)
+  video?: string;                     // an animation (mp4 URL); `src` is its poster
   alt: L10n;                          // what the image shows, never "screenshot"
 }
 
@@ -31,7 +33,8 @@ export type CaseBlock =
   | { type: 'heading'; text: L10n; sub?: L10n }
   /** The Double Diamond: problem → solution over four phases. */
   | { type: 'diamond'; problem: L10n; solution: L10n; phases: { title: L10n; body: L10n }[]; note?: L10n }
-  /** Rows of images that drift sideways on a loop (pause on hover; still with reduced motion). */
+  /** Rows of images that drift sideways on a loop and can be dragged/scrolled by hand
+      (speed in px/s; still, but scrollable, with reduced motion). */
   | { type: 'marquee'; rows: CaseImage[]; height?: number; background?: string; speed?: number; caption?: L10n }
   /** Big numbers with a short label. */
   | { type: 'stats'; items: { value: L10n; label: L10n }[] }
@@ -55,6 +58,17 @@ export type CaseBlock =
   /** Design decisions, as cards: icon → title → text → the principle behind it.
       `note` is a quieter aside after the text (e.g. "approved, not shipped"). */
   | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n }[] };
+
+/** A protected case as shipped: public header facts + the encrypted body.
+    Written by scripts/seal.mjs; the plain source never enters the repo. */
+export interface SealedCase {
+  slug: string;
+  tools: L10n;
+  facts?: { label: L10n; value: L10n }[];
+  crypto: { v: 1; kdf: 'PBKDF2-SHA256'; iter: number; salt: string };
+  body: Record<'en' | 'pt', { iv: string; data: string }>;   // AES-GCM, base64
+  media: Record<string, string>;                              // id → mime type
+}
 
 export interface CompareSide { label: L10n; rows: { key: L10n; value: L10n }[] }
 

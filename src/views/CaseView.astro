@@ -1,33 +1,28 @@
 ---
-// A full case study. Hero (facts) → numbered sections, with a
-// sticky index on wide screens that follows the reading. Content comes
-// from src/content/cases/<slug>.ts; blocks render in components/case.
+// A full case study. Header (facts) → numbered sections, with a sticky
+// index that follows the reading. Content comes from
+// src/content/cases/<slug>.ts; blocks render in components/case.
+// Protected cases ship sealed: the header is public, the body (index +
+// sections + media) is AES-GCM encrypted and opens with the password
+// (see scripts/seal.mjs and the gate below). A portfolio-level gate for
+// client confidentiality, not bank-grade security.
 import Base from '../layouts/Base.astro';
 import CaseNav from '../components/CaseNav.astro';
 import CaseBlocks from '../components/case/CaseBlocks.astro';
-import SectionLabel from '../components/ui/SectionLabel.astro';
+import CaseIndex from '../components/case/CaseIndex.astro';
+import CaseSections from '../components/case/CaseSections.astro';
 import { caseHref, href, type Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
+import { site } from '../content/site';
 import type { Project } from '../content/projects';
-import type { CaseStudy } from '../content/cases/types';
+import type { CaseStudy, SealedCase } from '../content/cases/types';
 
-interface Props { locale: Locale; project: Project; study: CaseStudy; }
-const { locale, project, study } = Astro.props;
+interface Props { locale: Locale; project: Project; study: CaseStudy; sealed?: SealedCase; }
+const { locale, project, study, sealed } = Astro.props;
 const other: Locale = locale === 'en' ? 'pt' : 'en';
 const p = ui.project;
 const c = ui.case;
-const two = (i: number) => String(i + 1).padStart(2, '0');
-
-// Figure numbers run through the whole case: each section starts where the last left off.
-let fig = 1;
-const sections = study.sections.map((s) => {
-  const figStart = fig;
-  for (const b of s.blocks) {
-    if (b.type === 'figure') fig += 1;
-    if (b.type === 'gallery') fig += b.images.length;
-  }
-  return { s, figStart };
-});
+const g = ui.gate;
 
 // Header facts: four equal columns, one value per line (never a run-on line).
 const home = href('home', locale);
@@ -43,23 +38,18 @@ const facts = [
 const eyebrowParts = [`${p.frame[locale]} ${project.frame}`, ...project.context[locale].split(' · ')];
 for (const f of study.facts ?? []) if (!eyebrowParts.some((x) => x.toLowerCase() === f.value[locale].toLowerCase())) eyebrowParts.push(f.value[locale]);
 const eyebrow = eyebrowParts.join(' · ');
+const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[locale], media: sealed.media, slug: project.slug, base: import.meta.env.BASE_URL }) : '';
 ---
 
 <Base locale={locale} altHref={caseHref(project.slug, other)} pageId={project.slug} title={project.title[locale]} description={project.line[locale]}>
   <article class="case">
     <!-- Layout after the reference portfolios (Rachel Chen, Emmi Wu): the
          index is a left sidebar from the very top, with the way back above
-         it; the header sits in the same column as the content. Header:
-         eyebrow → title → one sentence → facts in equal columns, one value
-         per line. -->
+         it; the header sits in the same column as the content. -->
     <div class="case-body container">
       <nav class="case-index" aria-label={c.contents[locale]} data-case-index>
         <a class="case-index__back t-label" href={`${home}${home.endsWith('/') ? '' : '/'}#work`}>← {p.back[locale]}</a>
-        <ol role="list">
-          {study.sections.map((s, i) => (
-            <li><a href={`#${s.id}`} data-index-link={s.id}><span class="case-index__no">{two(i)}</span> {s.label[locale]}</a></li>
-          ))}
-        </ol>
+        {sealed ? <div data-sealed-index></div> : <CaseIndex study={study} locale={locale} />}
       </nav>
 
       <div class="case-main">
@@ -82,25 +72,29 @@ const eyebrow = eyebrowParts.join(' · ');
           )}
         </header>
 
-        {study.intro && <div class="case-intro"><CaseBlocks blocks={study.intro} locale={locale} figStart={0} /></div>}
-
-        {sections.map(({ s, figStart }, i) => (
-          <section class="case-sec" id={s.id} aria-labelledby={`${s.id}-title`} data-case-section>
-            <header class="case-sec__head">
-              {s.title ? (
-                <>
-                  <SectionLabel text={s.label[locale]} frame={two(i)} />
-                  <h2 id={`${s.id}-title`} class="t-heading-l">{s.title[locale]}</h2>
-                </>
-              ) : (
-                <h2 id={`${s.id}-title`} class="case-sec__label t-heading-l"><span class="case-sec__no">{two(i)}</span> {s.label[locale]}<span class="caret" aria-hidden="true"></span></h2>
-              )}
-            </header>
-            <div class="case-sec__blocks">
-              <CaseBlocks blocks={s.blocks} locale={locale} figStart={figStart} />
-            </div>
-          </section>
-        ))}
+        {sealed ? (
+          <>
+            <section class="gate" data-gate data-payload={payload} aria-labelledby="gate-title">
+              <div class="gate__card paper-card">
+                <p class="gate__lock" aria-hidden="true"><i></i></p>
+                <p class="t-label gate__label">{g.label[locale]}</p>
+                <h2 id="gate-title" class="t-heading-l">{g.title[locale]}</h2>
+                <p class="gate__body">{g.body[locale]} <a class="link" href={site.links.linkedin} target="_blank" rel="noopener">{g.ask[locale]} ↗</a></p>
+                <form class="gate__form" data-gate-form>
+                  <label class="visually-hidden" for="gate-pw">{g.field[locale]}</label>
+                  <input id="gate-pw" class="gate__input" type="password" name="password" autocomplete="current-password" placeholder={g.field[locale]} required data-gate-input />
+                  <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
+                </form>
+                <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
+                <p class="gate__note t-caption">{g.note[locale]}</p>
+              </div>
+            </section>
+            <div class="case-sealed" data-sealed-sections></div>
+            <div hidden><CaseBlocks blocks={[]} locale={locale} figStart={0} /></div>
+          </>
+        ) : (
+          <CaseSections study={study} locale={locale} />
+        )}
       </div>
     </div>
   </article>
@@ -118,7 +112,9 @@ const eyebrow = eyebrowParts.join(' · ');
   </dialog>
 </Base>
 
-<style>
+
+<style is:global>
+  /* Global (case-* / lightbox prefixed): sealed bodies are injected after unlock. */
   /* Header, in the content column. */
   .case-hero { display: grid; justify-items: start; gap: var(--space-4); padding-bottom: var(--space-12); }
   .case-hero__eyebrow { color: var(--color-graphite-soft); }
@@ -238,24 +234,75 @@ const eyebrow = eyebrowParts.join(' · ');
     background: none;
     color: var(--color-ink);
   }
+
+  /* The gate: a paper card with a lock, where the case would be. */
+  .gate { padding-block: var(--space-4) var(--space-16); }
+  .gate__card { display: grid; justify-items: start; gap: var(--space-4); max-width: 36rem; padding: var(--space-12) var(--space-8); --tilt: -0.4deg; }
+  .gate__lock i { position: relative; display: block; width: 1.5rem; height: 1.2rem; margin-top: 0.8rem; border: 1.5px solid var(--color-ink); border-radius: 2px; }
+  .gate__lock i::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 0.95rem; height: 0.8rem; translate: -50% 0; border: 1.5px solid var(--color-ink); border-bottom: 0; border-radius: 0.6rem 0.6rem 0 0; transition: translate var(--duration-settle) var(--ease-settle); }
+  .gate.is-opening .gate__lock i::before { translate: -20% -0.3rem; }
+  .gate__label { color: var(--color-accent); }
+  .gate__body { color: var(--color-graphite); text-wrap: pretty; }
+  .gate__form { display: flex; gap: var(--space-2); width: 100%; margin-top: var(--space-2); }
+  .gate__input {
+    flex: 1;
+    min-width: 0;
+    min-height: var(--tap-min);
+    padding: 0 var(--space-3);
+    border: var(--rule-ink);
+    border-radius: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: inherit;
+    font-family: var(--font-system);
+    font-size: var(--type-body-s);
+    box-shadow: 3px 3px 0 var(--color-shadow);
+  }
+  .gate__input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .gate__btn {
+    min-height: var(--tap-min);
+    padding: 0 var(--space-6);
+    border: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-system);
+    font-size: var(--type-nav);
+    letter-spacing: 0.04em;
+  }
+  .gate__btn:hover { background: var(--color-accent); }
+  .gate__btn:disabled { opacity: 0.6; }
+  .gate__error { min-height: 1.4em; color: #b3261e; }
+  .gate__error.is-busy { color: var(--color-graphite); }
+  .gate.is-wrong .gate__card { animation: gate-shake 0.35s var(--ease-soft); }
+  @keyframes gate-shake { 25% { translate: -6px 0; } 50% { translate: 5px 0; } 75% { translate: -3px 0; } }
+  .gate__note { color: var(--color-graphite-soft); }
+  .case-sealed:empty { display: none; }
+  @media (max-width: 40rem) { .gate__card { padding: var(--space-8) var(--space-6); } .gate__form { flex-direction: column; } }
 </style>
 
 <script>
-  // Index follows the section being read.
-  const links = new Map<string, HTMLAnchorElement>();
-  document.querySelectorAll<HTMLAnchorElement>('[data-index-link]').forEach((a) => links.set(a.dataset.indexLink!, a));
-  if (links.size && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
+  import { initReveals } from '../scripts/motion';
+  import { unseal } from '../scripts/sealed';
+
+  // ---- Index follows the section being read (re-run after an unlock) ----
+  let io: IntersectionObserver | null = null;
+  function initIndex() {
+    io?.disconnect();
+    const links = new Map<string, HTMLAnchorElement>();
+    document.querySelectorAll<HTMLAnchorElement>('[data-index-link]').forEach((a) => links.set(a.dataset.indexLink!, a));
+    if (!links.size || !('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         links.forEach((a, id) => a.setAttribute('aria-current', String(id === e.target.id)));
       }
     }, { rootMargin: '-35% 0px -60% 0px' });
-    document.querySelectorAll('[data-case-section]').forEach((s) => io.observe(s));
+    document.querySelectorAll('[data-case-section]').forEach((s) => io!.observe(s));
   }
+  initIndex();
 
-  // Lightbox: any [data-lightbox] print opens here. ← → (buttons, arrow
-  // keys or a swipe) walk through every image in the case, in page order.
+  // ---- Lightbox: any [data-lightbox] print opens here ---------------------
+  // ← → (buttons, arrow keys or a swipe) walk through every image in the case.
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
   if (dialog) {
     const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
@@ -263,7 +310,7 @@ const eyebrow = eyebrowParts.join(' · ');
     const count = dialog.querySelector<HTMLElement>('[data-lightbox-count]')!;
     const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
     const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
-    const prints = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
+    let prints: HTMLElement[] = [];
     let i = 0;
 
     function show(n: number) {
@@ -279,6 +326,7 @@ const eyebrow = eyebrowParts.join(' · ');
     document.addEventListener('click', (e) => {
       const btn = (e.target as Element).closest<HTMLElement>('[data-lightbox]');
       if (!btn) return;
+      prints = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
       show(prints.indexOf(btn));
       dialog.showModal();
     });
@@ -288,7 +336,6 @@ const eyebrow = eyebrowParts.join(' · ');
       if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
       if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
     });
-    // Swipe on touch screens.
     let sx = 0;
     img.addEventListener('pointerdown', (e) => { sx = e.clientX; });
     img.addEventListener('pointerup', (e) => {
@@ -297,7 +344,56 @@ const eyebrow = eyebrowParts.join(' · ');
     });
     dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
-    // Focus goes back to the print you were on (the last one viewed).
     dialog.addEventListener('close', () => { prints[i]?.focus(); img.removeAttribute('src'); });
+  }
+
+  // ---- The gate (protected cases) -----------------------------------------
+  const gateEl = document.querySelector<HTMLElement>('[data-gate]');
+  if (gateEl) {
+    const gate: HTMLElement = gateEl;
+    const payload = JSON.parse(gate.dataset.payload!);
+    const form = gate.querySelector<HTMLFormElement>('[data-gate-form]')!;
+    const input = gate.querySelector<HTMLInputElement>('[data-gate-input]')!;
+    const btn = gate.querySelector<HTMLButtonElement>('[data-gate-btn]')!;
+    const err = gate.querySelector<HTMLElement>('[data-gate-error]')!;
+    const KEY = 'ina:gate';
+
+    async function open(password: string, remembered = false) {
+      btn.disabled = true;
+      err.classList.add('is-busy');
+      err.textContent = err.dataset.busy ?? '';
+      try {
+        const html = await unseal(payload, password);
+        if (!html) {
+          if (remembered) { try { sessionStorage.removeItem(KEY); } catch { /* ignore */ } err.textContent = ''; return; }
+          err.classList.remove('is-busy');
+          err.textContent = err.dataset.wrong ?? '';
+          gate.classList.remove('is-wrong'); void gate.offsetWidth; gate.classList.add('is-wrong');
+          input.select();
+          return;
+        }
+        try { sessionStorage.setItem(KEY, password); } catch { /* ignore */ }
+        gate.classList.add('is-opening');
+        document.querySelector('[data-sealed-index]')!.outerHTML = html.index;
+        const target = document.querySelector<HTMLElement>('[data-sealed-sections]')!;
+        target.innerHTML = html.sections;
+        gate.remove();
+        initReveals(target);
+        initIndex();
+        window.dispatchEvent(new CustomEvent('ina:case-content', { detail: { root: target } }));
+        if (!remembered) target.querySelector<HTMLElement>('h2')?.setAttribute('tabindex', '-1');
+        if (!remembered) target.querySelector<HTMLElement>('h2')?.focus({ preventScroll: false });
+      } catch {
+        err.classList.remove('is-busy');
+        err.textContent = err.dataset.failed ?? '';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+    form.addEventListener('submit', (e) => { e.preventDefault(); if (input.value) open(input.value); });
+    // Already unlocked in this tab? Open straight away.
+    let saved: string | null = null;
+    try { saved = sessionStorage.getItem(KEY); } catch { /* ignore */ }
+    if (saved) open(saved, true);
   }
 </script>

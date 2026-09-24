@@ -115,3 +115,24 @@ slight tilt). Images, the question and paragraphs keep their own look.
 Images live in `src/assets/cases/<slug>/` and are optimised at build time.
 Alt text describes what the image shows. Projects without a case keep the
 placeholder page.
+
+## Protected cases (password gate)
+
+Bar Tabs (and later Menu Management) are sealed. The plain case lives in
+`private/<slug>/case.ts` plus its media, and `private/` is gitignored. To
+publish or update one, on a machine that has `private/`:
+
+```bash
+CASE_PASSWORD='…' npm run seal   # builds, encrypts, writes the files below
+```
+
+This writes `src/content/cases/sealed/<slug>.json` (the public header facts and
+the AES-GCM-encrypted body) and `public/sealed/<slug>/*.bin` (each image or
+video, also encrypted). Commit those. The password is never stored. On the
+page, the header is public; the body opens in the browser once the password
+derives the right key (PBKDF2-SHA256), and it stays open for the tab's
+session. This is a portfolio-level gate to keep client work private, not
+bank-grade security. Anyone given the password can read the case.
+
+Sanitize media before sealing: blur colleague names, client locations and real
+addresses (see `private/<slug>/blur.py`).

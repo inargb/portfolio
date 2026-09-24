@@ -73,6 +73,25 @@ export const ui = {
     next: { en: 'Next image', pt: 'Próxima imagem' },
   },
 
+  gate: {
+    label: { en: 'protected case', pt: 'case protegido' },
+    title: { en: 'This one’s a little secret.', pt: 'Esse aqui é um segredinho.' },
+    body: {
+      en: 'It covers confidential client work, so it sits behind a password. Reviewing my work and don’t have it?',
+      pt: 'Ele mostra trabalho confidencial de cliente, então fica atrás de uma senha. Está avaliando meu trabalho e não tem a senha?',
+    },
+    ask: { en: 'ask me on LinkedIn', pt: 'me chama no LinkedIn' },
+    field: { en: 'Password', pt: 'Senha' },
+    unlock: { en: 'unlock', pt: 'abrir' },
+    busy: { en: 'developing…', pt: 'revelando…' },
+    wrong: { en: 'That’s not it. Try again?', pt: 'Não é essa. Tenta de novo?' },
+    failed: { en: 'Something went wrong loading the case. Please try again.', pt: 'Algo deu errado ao carregar o case. Tente de novo.' },
+    note: {
+      en: 'A simple password gate to keep client work private, not bank-grade security.',
+      pt: 'Uma senha simples para manter o trabalho do cliente privado, não é segurança de banco.',
+    },
+  },
+
   shortcuts: {
     title: { en: 'Keyboard, for the curious', pt: 'Teclado, para curiosos' },
     close: { en: 'Close', pt: 'Fechar' },

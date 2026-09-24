@@ -3,6 +3,7 @@
 // discover_ · define_ · develop_ · delivery_ · outcome_. Small fixes only.
 import type { CaseStudy } from './types';
 import ia from '../../assets/cases/bandoneon/information-architecture.png';
+import iaMobile from '../../assets/cases/bandoneon/information-architecture-mobile.png';
 import wireframes from '../../assets/cases/bandoneon/wireframes.png';
 import designSystem from '../../assets/cases/bandoneon/design-system-preview.png';
 import uiSteps from '../../assets/cases/bandoneon/ui-recipe-steps.png';
@@ -108,7 +109,7 @@ export const bandoneon: CaseStudy = {
         },
         {
           type: 'figure',
-          image: { src: ia, alt: l('The information architecture: sign up, login or continue without an account, then home, recipes with filters and social actions, news, and the profile with saved recipes and a shopping list.', 'A arquitetura da informação: cadastro, login ou continuar sem conta, depois home, receitas com filtros e ações sociais, notícias e o perfil com receitas salvas e lista de compras.') },
+          image: { src: ia, mobile: iaMobile, alt: l('The information architecture: sign up, login or continue without an account, then home, recipes with filters and social actions, news, and the profile with saved recipes and a shopping list.', 'A arquitetura da informação: cadastro, login ou continuar sem conta, depois home, receitas com filtros e ações sociais, notícias e o perfil com receitas salvas e lista de compras.') },
           caption: l('Information architecture: complete structure of the Bandoneón app.', 'Arquitetura da informação: estrutura completa do aplicativo Bandoneón.'),
         },
       ],
@@ -139,7 +140,7 @@ export const bandoneon: CaseStudy = {
         {
           type: 'marquee',
           height: 290,
-          speed: 45,
+          speed: 30,
           rows: [{ src: wireframes, alt: l('Six paper wireframes: sign-up, home with the recipe of the day, notifications, recipe categories, and a recipe screen with ingredients and comments.', 'Seis wireframes em papel: cadastro, home com a receita do dia, notificações, categorias de receitas e a tela de receita com ingredientes e comentários.') }],
         },
         { type: 'heading', text: l('Design system', 'Design system') },
@@ -176,7 +177,7 @@ export const bandoneon: CaseStudy = {
         {
           type: 'marquee',
           height: 260,
-          speed: 60,
+          speed: 40,
           background: '#88b40c',
           rows: [
             { src: uiSteps, alt: l('A recipe in step-by-step mode: ingredients, numbered steps with illustrations, a timer, the finished dish and comments.', 'Uma receita no modo passo a passo: ingredientes, etapas numeradas com ilustrações, temporizador, o prato pronto e comentários.') },
