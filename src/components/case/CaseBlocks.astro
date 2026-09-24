@@ -1,0 +1,149 @@
+---
+// Renders one section's blocks. Every block type in content/cases/types.ts
+// has a branch here, so cases are content only.
+import CaseFigure from './CaseFigure.astro';
+import type { Locale } from '../../i18n/config';
+import { ui } from '../../i18n/ui';
+import type { CaseBlock } from '../../content/cases/types';
+
+interface Props { blocks: CaseBlock[]; locale: Locale; figStart: number; }
+const { blocks, locale, figStart } = Astro.props;
+// Figure numbers run through the whole case.
+let fig = figStart;
+const numbered = blocks.map((b) => {
+  const first = fig;
+  if (b.type === 'figure') fig += 1;
+  if (b.type === 'gallery') fig += b.images.length;
+  return { b, first };
+});
+const two = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+{numbered.map(({ b, first }) => {
+  switch (b.type) {
+    case 'text':
+      return <div class="cb-text">{b.body.map((p) => <p class="t-body">{p[locale]}</p>)}</div>;
+
+    case 'stats':
+      return (
+        <ul class="cb-stats" role="list">
+          {b.items.map((s) => (
+            <li data-reveal>
+              <span class="cb-stats__value t-heading-xl">{s.value[locale]}</span>
+              <span class="cb-stats__label t-body-s">{s.label[locale]}</span>
+            </li>
+          ))}
+        </ul>
+      );
+
+    case 'question':
+      return (
+        <div class="cb-question crop" data-reveal>
+          <p class="t-label cb-question__label">{ui.case.question[locale]}</p>
+          <p class="t-heading-s cb-question__text">{b.text[locale]}</p>
+        </div>
+      );
+
+    case 'figure':
+      return <CaseFigure image={b.image} caption={b.caption} locale={locale} n={first} />;
+
+    case 'gallery':
+      return (
+        <figure class="cb-gallery">
+          <ul class="cb-gallery__row" role="list">
+            {b.images.map((img, i) => (
+              <li><CaseFigure image={img} locale={locale} n={first + i} bare sizes="(max-width: 40rem) 100vw, 20rem" /></li>
+            ))}
+          </ul>
+          <figcaption class="t-caption cb-gallery__cap">
+            <span class="cb-gallery__no">{ui.case.fig[locale]} {String(first).padStart(2, '0')}–{String(first + b.images.length - 1).padStart(2, '0')}</span>
+            {b.caption && <span> · {b.caption[locale]}</span>}
+          </figcaption>
+        </figure>
+      );
+
+    case 'steps':
+      return (
+        <ol class="cb-steps" role="list">
+          {b.items.map((s, i) => (
+            <li data-reveal>
+              <span class="cb-steps__no t-label">{two(i)}</span>
+              <h3 class="t-heading-s">{s.title[locale]}</h3>
+              <p class="t-body-s t-secondary">{s.body[locale]}</p>
+            </li>
+          ))}
+        </ol>
+      );
+
+    case 'decisions':
+      return (
+        <div class="cb-decisions">
+          {b.intro && <p class="t-body">{b.intro[locale]}</p>}
+          <ul class="cb-decisions__list" role="list">
+            {b.items.map((d) => (
+              <li data-reveal>
+                <div class="cb-decisions__head">
+                  <h3 class="t-heading-s">{d.title[locale]}</h3>
+                  <span class="cb-decisions__tag t-meta">{d.tag[locale]}</span>
+                </div>
+                <p class="t-body t-secondary">{d.body[locale]}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+  }
+})}
+
+<style>
+  .cb-text { display: grid; gap: var(--space-4); max-width: var(--layout-text); }
+  .cb-text p { text-wrap: pretty; }
+
+  .cb-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .cb-stats li { display: grid; align-content: start; gap: var(--space-2); padding-top: var(--space-4); border-top: var(--rule-ink); }
+  .cb-stats__value { color: var(--color-ink); }
+  .cb-stats__label { color: var(--color-graphite); max-width: 22ch; text-wrap: pretty; }
+
+  .cb-question {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 48rem;
+    padding: var(--space-8);
+    background: var(--color-paper-shade);
+  }
+  .cb-question__label { color: var(--color-accent); }
+  .cb-question__text { text-wrap: pretty; }
+
+  .cb-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  .cb-steps li { display: grid; align-content: start; gap: var(--space-2); padding-top: var(--space-4); border-top: var(--rule-hair); }
+  .cb-steps__no { color: var(--color-accent); }
+  .cb-steps p { text-wrap: pretty; }
+
+  .cb-decisions { display: grid; gap: var(--space-6); }
+  .cb-decisions__list { display: grid; }
+  .cb-decisions__list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: var(--space-3) var(--space-8);
+    padding-block: var(--space-6);
+    border-top: var(--rule-hair);
+  }
+  .cb-decisions__list li:last-child { border-bottom: var(--rule-hair); }
+  .cb-decisions__head { display: grid; align-content: start; justify-items: start; gap: var(--space-2); }
+  .cb-decisions__tag { font-family: var(--font-system); color: var(--color-accent); }
+  .cb-decisions p { max-width: var(--layout-text); text-wrap: pretty; }
+
+  .cb-gallery { display: grid; gap: var(--space-3); margin: 0; }
+  .cb-gallery__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+  .cb-gallery__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
+
+  @media (max-width: 64rem) {
+    .cb-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cb-decisions__list li { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 40rem) {
+    .cb-stats, .cb-steps, .cb-gallery__row { grid-template-columns: 1fr; }
+    .cb-stats { gap: var(--space-4); }
+    .cb-question { padding: var(--space-6); }
+  }
+</style>

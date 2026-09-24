@@ -1,0 +1,208 @@
+---
+// A full case study. Hero (facts) → numbered sections, with a
+// sticky index on wide screens that follows the reading. Content comes
+// from src/content/cases/<slug>.ts; blocks render in components/case.
+import Base from '../layouts/Base.astro';
+import CaseNav from '../components/CaseNav.astro';
+import CaseBlocks from '../components/case/CaseBlocks.astro';
+import Pill from '../components/ui/Pill.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import { caseHref, type Locale } from '../i18n/config';
+import { ui } from '../i18n/ui';
+import type { Project } from '../content/projects';
+import type { CaseStudy } from '../content/cases/types';
+
+interface Props { locale: Locale; project: Project; study: CaseStudy; }
+const { locale, project, study } = Astro.props;
+const other: Locale = locale === 'en' ? 'pt' : 'en';
+const p = ui.project;
+const c = ui.case;
+const two = (i: number) => String(i + 1).padStart(2, '0');
+
+// Figure numbers run through the whole case: each section starts where the last left off.
+let fig = 1;
+const sections = study.sections.map((s) => {
+  const figStart = fig;
+  for (const b of s.blocks) {
+    if (b.type === 'figure') fig += 1;
+    if (b.type === 'gallery') fig += b.images.length;
+  }
+  return { s, figStart };
+});
+---
+
+<Base locale={locale} altHref={caseHref(project.slug, other)} pageId={project.slug} title={project.title[locale]} description={project.line[locale]}>
+  <article class="case">
+    <header class="case-hero container">
+      <SectionLabel text={p.frame[locale]} frame={project.frame} />
+      <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
+      <p class="case-hero__line t-heading-s t-secondary">{project.line[locale]}</p>
+      <dl class="case-hero__meta">
+        <div><dt class="t-label">{p.role[locale]}</dt><dd class="t-meta">{project.role[locale]}</dd></div>
+        {project.duration && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.duration[locale]}</dd></div>}
+        <div><dt class="t-label">{p.period[locale]}</dt><dd class="t-meta">{project.period[locale]}</dd></div>
+        <div class="case-hero__tools"><dt class="t-label">{c.tools[locale]}</dt><dd class="t-meta">{study.tools[locale]}</dd></div>
+      </dl>
+      <div class="case-hero__foot">
+        <ul class="case-hero__tags" role="list">
+          {project.tags.map((tg) => <li><Pill>{tg[locale]}</Pill></li>)}
+        </ul>
+        {study.live && (
+          <a class="link t-nav" href={study.live.href} target="_blank" rel="noopener">
+            {study.live.label[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span>
+          </a>
+        )}
+      </div>
+    </header>
+
+    <div class="case-body container">
+      <nav class="case-index" aria-label={c.contents[locale]} data-case-index>
+        <p class="t-label case-index__title">{c.contents[locale]}</p>
+        <ol role="list">
+          {study.sections.map((s, i) => (
+            <li><a href={`#${s.id}`} data-index-link={s.id}><span class="case-index__no">{two(i)}</span> {s.label[locale]}</a></li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="case-main">
+        {sections.map(({ s, figStart }, i) => (
+          <section class="case-sec" id={s.id} aria-labelledby={`${s.id}-title`} data-case-section>
+            <header class="case-sec__head">
+              <SectionLabel text={s.label[locale]} frame={two(i)} />
+              <h2 id={`${s.id}-title`} class="t-heading-l">{s.title[locale]}</h2>
+            </header>
+            <div class="case-sec__blocks">
+              <CaseBlocks blocks={s.blocks} locale={locale} figStart={figStart} />
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </article>
+
+  <CaseNav locale={locale} slug={project.slug} />
+
+  <dialog class="lightbox" data-lightbox-dialog aria-label={c.enlarge[locale]}>
+    <button class="lightbox__close t-nav" type="button" data-lightbox-close>{c.close[locale]} ✕</button>
+    <img class="lightbox__img" alt="" data-lightbox-img />
+    <p class="lightbox__cap t-caption" data-lightbox-cap></p>
+  </dialog>
+</Base>
+
+<style>
+  .case-hero { display: grid; gap: var(--space-4); padding-block: var(--space-12) var(--space-8); }
+  .case-hero__title { max-width: 20ch; }
+  .case-hero__line { max-width: 44rem; text-wrap: pretty; }
+  .case-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-12);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: var(--rule-hair);
+  }
+  .case-hero__meta div { display: grid; gap: var(--space-1); }
+  .case-hero__meta dd { color: var(--color-ink); }
+  .case-hero__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+  /* Body: index on the left (sticky), sections on the right. */
+  .case-body {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--space-12);
+    padding-top: var(--space-12);
+  }
+  .case-index { position: sticky; top: calc(var(--nav-height) + var(--space-8)); align-self: start; display: grid; gap: var(--space-3); }
+  .case-index__title { color: var(--color-graphite-soft); }
+  .case-index ol { display: grid; gap: var(--space-1); }
+  .case-index a {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: 2rem;
+    font-family: var(--font-system);
+    font-size: var(--type-meta);
+    color: var(--color-graphite);
+    text-decoration: none;
+    transition: color var(--duration-quick);
+  }
+  .case-index a:hover { color: var(--color-ink); }
+  .case-index__no { color: var(--color-graphite-soft); }
+  .case-index a[aria-current='true'] { color: var(--color-accent); }
+  .case-index a[aria-current='true'] .case-index__no { color: var(--color-accent); }
+  .case-index a[aria-current='true']::before { content: '▸'; margin-left: -1.1em; width: 0.9em; }
+
+  .case-sec { padding-block: var(--space-12) var(--space-16); border-top: var(--rule-hair); scroll-margin-top: var(--nav-height); }
+  .case-sec:first-child { border-top: 0; padding-top: 0; }
+  .case-sec__head { display: grid; gap: var(--space-3); margin-bottom: var(--space-8); }
+  .case-sec__head h2 { max-width: 24ch; text-wrap: balance; }
+  .case-sec__blocks { display: grid; gap: var(--space-12); }
+
+  @media (max-width: 64rem) {
+    .case-body { grid-template-columns: 1fr; gap: 0; }
+    .case-index { display: none; }
+  }
+
+  /* Lightbox: the image, big, on paper. */
+  .lightbox {
+    width: min(96vw, 110rem);
+    max-width: none;
+    max-height: 94vh;
+    margin: auto;
+    padding: var(--space-12) var(--space-6) var(--space-6);
+    border: var(--rule-ink);
+    background: var(--color-paper);
+    box-shadow: var(--shadow-offset-lift);
+  }
+  .lightbox::backdrop { background: var(--color-scrim); }
+  .lightbox[open] { display: grid; gap: var(--space-3); justify-items: center; }
+  .lightbox__img { max-width: 100%; max-height: calc(94vh - 9rem); width: auto; height: auto; object-fit: contain; }
+  .lightbox__cap { max-width: 60rem; text-align: center; }
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-3);
+    min-height: var(--tap-min);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  // Index follows the section being read.
+  const links = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('[data-index-link]').forEach((a) => links.set(a.dataset.indexLink!, a));
+  if (links.size && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        links.forEach((a, id) => a.setAttribute('aria-current', String(id === e.target.id)));
+      }
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    document.querySelectorAll('[data-case-section]').forEach((s) => io.observe(s));
+  }
+
+  // Lightbox: any [data-lightbox] print opens here.
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+  if (dialog) {
+    const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const cap = dialog.querySelector<HTMLElement>('[data-lightbox-cap]')!;
+    let opener: HTMLElement | null = null;
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest<HTMLElement>('[data-lightbox]');
+      if (!btn) return;
+      opener = btn;
+      img.src = btn.dataset.full ?? '';
+      img.alt = btn.dataset.alt ?? '';
+      cap.textContent = btn.dataset.caption ?? '';
+      dialog.showModal();
+    });
+    dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => { if (e.target === dialog || e.target === img) dialog.close(); });
+    dialog.addEventListener('close', () => { opener?.focus(); img.removeAttribute('src'); });
+  }
+</script>
