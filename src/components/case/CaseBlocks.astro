@@ -3,6 +3,7 @@
 // has a branch here, so cases are content only.
 import { Image } from 'astro:assets';
 import CaseFigure from './CaseFigure.astro';
+import { figures } from './figures';
 import type { Locale } from '../../i18n/config';
 import { ui } from '../../i18n/ui';
 import type { CaseBlock } from '../../content/cases/types';
@@ -13,8 +14,7 @@ const { blocks, locale, figStart } = Astro.props;
 let fig = figStart;
 const numbered = blocks.map((b) => {
   const first = fig;
-  if (b.type === 'figure') fig += 1;
-  if (b.type === 'gallery') fig += b.images.length;
+  fig += figures(b);
   return { b, first };
 });
 const two = (i: number) => String(i + 1).padStart(2, '0');
@@ -209,6 +209,126 @@ const icons: Record<string, string> = {
           </ul>
         </div>
       );
+
+    case 'slots':
+      return (
+        <figure class="cb-slots">
+          <ul class="cb-slots__row" role="list">
+            {b.items.map((sl, i) => {
+              const [w, h] = sl.ratio.split('/').map(Number);
+              return (
+                <li style={`flex:${(w / h).toFixed(3)} 1 0`}>
+                  <div class="cb-slot crop" style={`aspect-ratio:${sl.ratio}`} role="img" aria-label={sl.alt[locale]}>
+                    <span class="cb-slot__id" aria-hidden="true">{sl.id} · {ui.case.fig[locale]} {String(first + i).padStart(2, '0')}</span>
+                    <span class="cb-slot__alt" aria-hidden="true">{sl.alt[locale]}</span>
+                    <span class="cb-slot__soon" aria-hidden="true">{ui.case.slot[locale]}</span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {b.caption && (
+            <figcaption class="t-caption cb-gallery__cap">
+              <span class="cb-gallery__no">{ui.case.fig[locale]} {String(first).padStart(2, '0')}{b.items.length > 1 && `–${String(first + b.items.length - 1).padStart(2, '0')}`}</span>
+              <span> · {b.caption[locale]}</span>
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case 'table':
+      return (
+        <div class="cb-table" tabindex="0" role="region" aria-label={b.head.map((h) => h[locale]).join(' · ')}>
+          <table>
+            {b.caption && <caption class="t-caption">{b.caption[locale]}</caption>}
+            <thead><tr>{b.head.map((h) => <th scope="col" class="t-label">{h[locale]}</th>)}</tr></thead>
+            <tbody>
+              {b.rows.map((r) => (
+                <tr class:list={[r.muted && 'is-muted']}>
+                  {r.cells.map((c, ci) => ci === 0 ? <th scope="row">{c[locale]}</th> : <td>{c[locale]}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+
+    case 'timeline':
+      return (
+        <div class="cb-timeline" tabindex="0" role="region" aria-label={b.items[0].date[locale] + ' – ' + b.items[b.items.length - 1].date[locale]} data-cursor="drag">
+          <ol class="cb-timeline__line" role="list">
+            {b.items.map((it, i) => (
+              <>
+                {b.marker && b.marker.before === i && (
+                  <li class="cb-timeline__marker"><span class="t-label">{b.marker.label[locale]}</span></li>
+                )}
+                <li class="cb-timeline__item">
+                  <span class="cb-timeline__date t-label">{it.date[locale]}</span>
+                  <span class="cb-timeline__topic">{it.topic[locale]}</span>
+                </li>
+              </>
+            ))}
+          </ol>
+        </div>
+      );
+
+    case 'defs':
+      return (
+        <div class="cb-defs">
+          {b.title && <h3 class="cb-defs__title t-heading-m">{b.title[locale]}</h3>}
+          {b.items.length > 0 && (
+            <dl class="cb-defs__rows">
+              {b.items.map((d) => (
+                <div><dt class="t-label">{d.term[locale]}</dt><dd>{d.body[locale]}</dd></div>
+              ))}
+            </dl>
+          )}
+        </div>
+      );
+
+    case 'cards': {
+      const Tag = b.numbered ? 'ol' : 'ul';
+      return (
+        <div class="cb-cards-wrap">
+          <Tag class="cb-cards cb-cards--3" role="list">
+            {b.items.map((c, i) => (
+              <li class="cb-card cb-card--plain paper-card lift" style={`--tilt:${tilt(i)}deg`} data-reveal>
+                {b.numbered && <span class="cb-card__no t-heading-xl" aria-hidden="true">{two(i)}</span>}
+                <h3 class="cb-card__title cb-card__title--sans">{b.numbered && <span class="visually-hidden">{two(i)}. </span>}{c.title[locale]}</h3>
+                {c.body && <p class="cb-card__body">{c.body[locale]}</p>}
+                {c.tag && <p class="cb-card__pill">{c.tag[locale]}</p>}
+              </li>
+            ))}
+          </Tag>
+          {b.loop && <p class="cb-cards__loop t-label"><span aria-hidden="true">↻</span> {b.loop[locale]}</p>}
+        </div>
+      );
+    }
+
+    case 'pull':
+      return <p class="cb-pull t-heading-l" data-reveal>{b.text[locale]}</p>;
+
+    case 'map': {
+      // Jobs around a centre, on an ellipse (percent coordinates).
+      const n = b.items.length;
+      const pos = b.items.map((_, i) => {
+        const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+        return { x: 50 + Math.cos(a) * 38, y: 50 + Math.sin(a) * 38 };
+      });
+      return (
+        <figure class="cb-map" aria-label={b.label[locale]}>
+          <svg class="cb-map__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {pos.map((p) => <line x1="50" y1="50" x2={p.x} y2={p.y} />)}
+          </svg>
+          <p class="cb-map__center t-label">{b.center[locale]}</p>
+          <ul class="cb-map__items" role="list">
+            {b.items.map((it, i) => (
+              <li style={`--x:${pos[i].x.toFixed(2)}%;--y:${pos[i].y.toFixed(2)}%`}>{it[locale]}</li>
+            ))}
+          </ul>
+        </figure>
+      );
+    }
   }
 })}
 
@@ -355,10 +475,89 @@ const icons: Record<string, string> = {
   .cb-card--compare.is-after dd { color: var(--color-ink); font-weight: 500; }
   .cb-gallery__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
 
+  /* Image slots: the shape and place of an image still to come. */
+  .cb-slots { display: grid; gap: var(--space-3); margin: 0; }
+  .cb-slots__row { display: flex; align-items: flex-start; gap: var(--space-4); }
+  .cb-slots__row li { min-width: 0; }
+  .cb-slot {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: var(--color-paper-shade);
+    border: 1px dashed var(--color-rule);
+    overflow: hidden;
+  }
+  .cb-slot__id, .cb-slot__soon { font-family: var(--font-system); font-size: var(--type-meta); letter-spacing: 0.04em; color: var(--color-graphite); }
+  .cb-slot__soon { justify-self: end; }
+  .cb-slot__alt { align-self: center; max-width: 42ch; justify-self: center; text-align: center; font-size: var(--type-body-s); line-height: 1.45; color: var(--color-graphite); text-wrap: pretty; overflow: hidden; }
+  .cb-slots__row li:not(:only-child) .cb-slot__alt { font-size: var(--type-meta); }
+
+  .cb-table { overflow-x: auto; }
+  .cb-table table { width: 100%; border-collapse: collapse; }
+  .cb-table caption { text-align: left; padding-bottom: var(--space-3); }
+  .cb-table th, .cb-table td { padding: var(--space-3) var(--space-4) var(--space-3) 0; text-align: left; vertical-align: top; border-bottom: var(--rule-hair); }
+  .cb-table thead th { color: var(--color-graphite); border-bottom: var(--rule-ink); }
+  .cb-table tbody th { width: 34%; font-weight: 500; color: var(--color-ink); }
+  .cb-table td { color: var(--color-graphite); line-height: var(--leading-body); }
+  .cb-table tr.is-muted th, .cb-table tr.is-muted td { color: var(--color-graphite-soft); font-style: italic; }
+
+  /* Scrolls sideways; the right edge fades so it reads as “more this way”. */
+  .cb-timeline { overflow-x: auto; padding-block: var(--space-6) var(--space-3); mask-image: linear-gradient(to right, #000 88%, transparent); }
+  .cb-timeline__line { position: relative; display: flex; width: max-content; padding-right: 4rem; }
+  .cb-timeline__line::before { content: ''; position: absolute; left: 0; right: 0; top: 0.35rem; border-top: var(--rule-ink); }
+  .cb-timeline__item { position: relative; display: grid; align-content: start; gap: var(--space-1); width: 8.5rem; padding: var(--space-6) var(--space-3) 0 0; }
+  .cb-timeline__item::before { content: ''; position: absolute; top: 0; left: 0; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--color-paper); border: 1px solid var(--color-ink); }
+  .cb-timeline__date { color: var(--color-accent); }
+  .cb-timeline__topic { font-size: var(--type-body-s); line-height: 1.4; color: var(--color-ink); }
+  .cb-timeline__marker { position: relative; width: 0; margin-right: var(--space-4); }
+  .cb-timeline__marker::before { content: ''; position: absolute; top: calc(-1 * var(--space-6)); bottom: calc(-1 * var(--space-2)); left: 0; border-left: 1.5px dashed var(--color-accent); }
+  .cb-timeline__marker span { position: absolute; top: calc(-1 * var(--space-6)); left: var(--space-2); white-space: nowrap; color: var(--color-accent); }
+
+  .cb-defs { display: grid; gap: var(--space-4); }
+  .cb-defs__title { color: var(--color-ink); text-wrap: balance; max-width: 30ch; }
+  .cb-defs__rows { display: grid; }
+  .cb-defs__rows div { display: grid; grid-template-columns: 9rem 1fr; gap: var(--space-4); padding-block: var(--space-3); border-top: var(--rule-hair); }
+  .cb-defs__rows div:last-child { border-bottom: var(--rule-hair); }
+  .cb-defs__rows dt { padding-top: 0.3em; color: var(--color-graphite); }
+  .cb-defs__rows dd { font-size: var(--type-body); line-height: var(--leading-body); color: var(--color-ink); max-width: 62ch; }
+
+  .cb-cards-wrap { display: grid; gap: var(--space-4); }
+  .cb-card--plain { min-height: 0; }
+  .cb-card__pill { align-self: flex-start; margin-top: auto; padding: 2px var(--space-2); border: 1px solid var(--color-ink); font-family: var(--font-system); font-size: var(--type-meta); color: var(--color-ink); }
+  .cb-cards__loop { justify-self: start; padding: var(--space-1) var(--space-3); border: 1px dashed var(--color-accent); color: var(--color-accent); }
+
+  .cb-pull { max-width: 28ch; padding-left: var(--space-6); border-left: 3px solid var(--color-accent); color: var(--color-ink); text-wrap: balance; }
+
+  .cb-map { position: relative; aspect-ratio: 16 / 9; margin: 0; }
+  .cb-map__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cb-map__lines line { stroke: var(--color-rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .cb-map__center {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+    padding: var(--space-3) var(--space-5, 1.25rem);
+    background: var(--color-ink); color: var(--color-paper);
+  }
+  .cb-map__items li {
+    position: absolute; left: var(--x); top: var(--y); translate: -50% -50%;
+    max-width: 11rem; padding: var(--space-1) var(--space-3);
+    background: var(--color-paper); border: 1px solid var(--color-ink);
+    font-size: var(--type-body-s); line-height: 1.35; text-align: center; color: var(--color-ink);
+  }
+
   @media (max-width: 64rem) {
     .cb-cards--4, .cb-cards--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .cb-cards--compare { grid-template-columns: 1fr; }
     .cb-card { min-height: 0; }
+  }
+  @media (max-width: 40rem) {
+    .cb-slots__row { flex-direction: column; }
+    .cb-slots__row li { width: 100%; }
+    .cb-defs__rows div { grid-template-columns: 1fr; gap: var(--space-1); }
+    .cb-map { aspect-ratio: auto; display: grid; gap: var(--space-3); }
+    .cb-map__lines { display: none; }
+    .cb-map__center { position: static; translate: none; justify-self: start; }
+    .cb-map__items { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .cb-map__items li { position: static; translate: none; max-width: none; text-align: left; }
   }
   @media (max-width: 40rem) {
     .cb-cards--4, .cb-cards--3 { grid-template-columns: 1fr; }

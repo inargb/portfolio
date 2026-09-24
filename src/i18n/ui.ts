@@ -64,6 +64,7 @@ export const ui = {
   },
 
   case: {
+    slot: { en: 'image to come', pt: 'imagem em breve' },
     contents: { en: 'in this case', pt: 'neste case' },
     tools: { en: 'Skills & tools', pt: 'Habilidades e ferramentas' },
     focus: { en: 'Focus', pt: 'Foco' },
@@ -97,7 +98,6 @@ export const ui = {
     caption: { en: 'Write on the polaroid', pt: 'Escreva na polaroid' },
     placeholder: { en: 'write something…', pt: 'escreva algo…' },
     frame: { en: 'Frame colour', pt: 'Cor da moldura' },
-    another: { en: 'another dog', pt: 'outro cachorro' },
     save: { en: 'save to device', pt: 'salvar no aparelho' },
     pin: { en: 'pin to the mural', pt: 'fixar no mural' },
     pinned: { en: 'pinned ✓', pt: 'fixada ✓' },

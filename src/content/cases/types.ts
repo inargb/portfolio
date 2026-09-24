@@ -57,7 +57,27 @@ export type CaseBlock =
   | { type: 'steps'; items: { title: L10n; body: L10n }[] }
   /** Design decisions, as cards: icon → title → text → the principle behind it.
       `note` is a quieter aside after the text (e.g. "approved, not shipped"). */
-  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n; state?: 'chosen' | 'rejected' }[] };
+  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n; state?: 'chosen' | 'rejected' }[] }
+  /** Image slots still waiting for their asset: they keep the shape (ratio),
+      place, figure number and caption of the image that will fill them.
+      `id` is the visual's id in the case brief (V01…). Several → one row. */
+  | { type: 'slots'; items: ImageSlot[]; caption?: L10n }
+  /** A plain table: a header row and rows of cells; `muted` quiets a row. */
+  | { type: 'table'; head: L10n[]; rows: { cells: L10n[]; muted?: boolean }[]; caption?: L10n }
+  /** Dated points on a line, with an optional marker before one of them. */
+  | { type: 'timeline'; items: { date: L10n; topic: L10n }[]; marker?: { before: number; label: L10n } }
+  /** Labelled rows (term → text), with an optional sentence-case title:
+      a decision (Problem · Options · Decision · Why · Result), constraints… */
+  | { type: 'defs'; title?: L10n; items: { term: L10n; body: L10n }[] }
+  /** Cards: title → text, optionally numbered, with a small tag; `loop`
+      closes a numbered row with a "repeat" mark (a cycle, not a line). */
+  | { type: 'cards'; items: { title: L10n; body?: L10n; tag?: L10n }[]; numbered?: boolean; loop?: L10n }
+  /** One line set large, on its own. */
+  | { type: 'pull'; text: L10n }
+  /** A centre with what surrounds it (e.g. the jobs a module does). */
+  | { type: 'map'; center: L10n; items: L10n[]; label: L10n };
+
+export interface ImageSlot { id: string; ratio: string; alt: L10n }
 
 /** A protected case as shipped: public header facts + the encrypted body.
     Written by scripts/seal.mjs; the plain source never enters the repo. */

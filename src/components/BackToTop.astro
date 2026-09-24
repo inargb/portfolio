@@ -1,6 +1,6 @@
 ---
-// Back to top: a keycap in the bottom-right corner. It shows up once the
-// reader is well into a page (past ~1.2 screens) and hides near the top.
+// Back to top: a keycap in the bottom-right corner. It shows up as soon as
+// the page scrolls, and bows out once the footer (the bottom) is in view.
 import type { Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
 
@@ -16,8 +16,7 @@ const { locale } = Astro.props;
   .to-top {
     position: fixed;
     right: var(--layout-gutter);
-    /* Rides above the footer once it scrolls in, never over its keys. */
-    bottom: calc(var(--space-6) + env(safe-area-inset-bottom) + var(--to-top-lift, 0px));
+    bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
     z-index: 30;
     width: 2.75rem;
     height: 2.75rem;
@@ -42,9 +41,8 @@ const { locale } = Astro.props;
     let on = false;
     const footer = document.querySelector<HTMLElement>('.footer');
     const update = () => {
-      const lift = footer ? Math.max(0, innerHeight - footer.getBoundingClientRect().top) : 0;
-      btn.style.setProperty('--to-top-lift', `${lift}px`);
-      const next = scrollY > innerHeight * 1.2;
+      const atBottom = footer ? footer.getBoundingClientRect().top < innerHeight : false;
+      const next = scrollY > 40 && !atBottom;
       if (next === on) return;
       on = next;
       btn.classList.toggle('is-on', on);
