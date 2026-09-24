@@ -25,13 +25,13 @@ src/
   i18n/config.ts           locales, routes, base-path helpers
   i18n/ui.ts               interface strings (EN / PT)
   content/*.ts             page content, bilingual, typed (projects, home, about, photos)
-  components/              Nav, Footer, Cursor, LanguageSwitch, LightsToggle, Doodle,
+  components/              Nav, Footer, Cursor, LanguageSwitch, Doodle,
                            ProjectGrid, ProjectCover + covers/, Shelf, KindWordsDrawer,
                            FilmStrip, CaseNav, FramesWord
   components/ui/           Button, Pill, SectionLabel
   views/                   one view per page, rendered by thin EN/PT page files
   pages/                   routes: /, /about, /playground, /works/[slug] (+ /pt-br/…)
-  scripts/                 prefs (theme/motion), motion (reveals), cursor, shelf
+  scripts/                 prefs (motion), motion (reveals), cursor, shelf
   scripts/eggs/            easter-egg system: catalog.ts + one module per egg
 public/covers/             uploaded project covers (see "Covers" below)
 docs/                      audit, phase notes, Framer migration notes

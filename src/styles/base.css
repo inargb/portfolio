@@ -116,7 +116,6 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-:root[data-theme='darkroom'] .mark { color: var(--color-on-highlight); }
 
 /* ---- Links ---------------------------------------------------------------- */
 .link {

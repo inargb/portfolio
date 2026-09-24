@@ -16,7 +16,7 @@ pages; they're Phase 4.
 
 ## Things to try
 
-- Press `?` for the keyboard sheet. `L` toggles lights (darkroom), `S` turns on spec mode.
+- Press `?` for the keyboard sheet. `S` turns on spec mode.
 - Click "frames" in the headline until you've seen all three.
 - Leave the page alone for 45 seconds and watch the doodle.
 - Organize the shelf. Then look at the La La Land DVD a few times.
@@ -61,3 +61,4 @@ Marked in the code as DRAFT, or written new:
 - Cards show a description (15+ words, EN/PT) under the title. It uses only facts already on the site.
 - Film strip: no caption and no pause/play. The first time it comes into view, the visible photos develop one by one, and then the loop starts. It still stops on hover, focus and drag. With reduced motion it stays still and fully developed.
 - Page dividers (header, footer, case nav, lists) use the light-gray hairline (`--rule-hair`). Component outlines keep the ink line.
+- Light only: the dark theme, the lights pull-cord and the `L` shortcut are removed. The site stays light even when the OS is in dark mode.
