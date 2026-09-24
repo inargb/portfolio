@@ -34,8 +34,8 @@ export interface Project {
 // public/covers/ and reference them without the base path, e.g. 'covers/specs.mp4'.
 export interface CoverMedia {
   src: string;
-  poster: string;
-  type?: 'video/mp4' | 'video/webm' | 'image/gif';
+  poster: string;             // same as src for a still image
+  type?: 'video/mp4' | 'video/webm' | 'image/gif' | 'image/webp' | 'image/png' | 'image/jpeg';
   alt: L10n;                  // describes the product, not the animation
 }
 
@@ -94,6 +94,12 @@ export const projects: Project[] = [
       tag('Information architecture', 'Arquitetura da informação'),
     ],
     cover: 'menu',
+    media: {
+      src: 'covers/menu-management.webp',
+      poster: 'covers/menu-management.webp',
+      type: 'image/webp',
+      alt: { en: 'The Menu Management workspace: a menu tree on the left and a list of items with prices beside it. Brand and staff names are blurred.', pt: 'O espaço de trabalho de Gestão de Cardápios: a árvore do cardápio à esquerda e a lista de itens com preços ao lado. Marca e nomes de pessoas estão desfocados.' },
+    },
   },
   {
     slug: 'bar-tabs-system',
@@ -111,6 +117,12 @@ export const projects: Project[] = [
     statusKind: 'locked',
     tags: [tag('POS', 'PDV'), tag('Design systems', 'Design systems')],
     cover: 'bartabs',
+    media: {
+      src: 'covers/bar-tabs.webp',
+      poster: 'covers/bar-tabs.webp',
+      type: 'image/webp',
+      alt: { en: 'The Bar Tabs screen in dark mode: a selected tab’s details on the left and open tabs as colour-coded cards.', pt: 'A tela de comandas no modo escuro: os detalhes de uma comanda à esquerda e as comandas abertas como cards coloridos.' },
+    },
   },
   {
     slug: 'systems-portal',
@@ -129,6 +141,12 @@ export const projects: Project[] = [
     statusKind: 'live',
     tags: [tag('UX/UI', 'UX/UI'), tag('Research', 'Pesquisa'), tag('Redesign', 'Redesign')],
     cover: 'portal',
+    media: {
+      src: 'covers/systems-portal.webp',
+      poster: 'covers/systems-portal.webp',
+      type: 'image/webp',
+      alt: { en: 'The redesigned Systems Portal: a search bar and a grid of the most accessed systems.', pt: 'O Portal de Sistemas redesenhado: uma busca e uma grade com os sistemas mais acessados.' },
+    },
     liveUrl: 'https://inasilva.com/works/systems-portal',
   },
   {
@@ -148,13 +166,19 @@ export const projects: Project[] = [
     statusKind: 'prototype',
     tags: [tag('UX/UI', 'UX/UI'), tag('Design systems', 'Design systems'), tag('Case study', 'Estudo de caso')],
     cover: 'bandoneon',
+    media: {
+      src: 'covers/bandoneon.webp',
+      poster: 'covers/bandoneon.webp',
+      type: 'image/webp',
+      alt: { en: 'Two phones with the Bandoneón app: the green splash screen and the recipe of the day.', pt: 'Dois celulares com o app Bandoneón: a tela de abertura verde e a receita do dia.' },
+    },
     liveUrl: 'https://inasilva.com/works/bandoneon-iniciative',
   },
   {
     slug: 'photocard-binder',
     frame: '06',
     state: 'soon',
-    title: { en: 'Photocard Binder', pt: 'Binder de Photocards' },
+    title: { en: 'Pocabin', pt: 'Pocabin' },
     line: {
       en: 'A digital binder for organizing and tracking K-pop photocard collections.',
       pt: 'Um binder digital para organizar e acompanhar coleções de photocards de K-pop.',
@@ -183,6 +207,12 @@ export const projects: Project[] = [
     statusKind: 'developing',
     tags: [tag('UX/UI research', 'Pesquisa UX/UI'), tag('Product', 'Produto'), tag('App', 'App')],
     cover: 'sabi',
+    media: {
+      src: 'covers/sabi.webp',
+      poster: 'covers/sabi.webp',
+      type: 'image/webp',
+      alt: { en: 'The Sabi mark: three rounded bars with a yellow dot in the middle.', pt: 'A marca do Sabi: três barras arredondadas com um ponto amarelo no meio.' },
+    },
   },
 ];
 

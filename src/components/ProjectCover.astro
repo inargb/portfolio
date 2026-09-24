@@ -1,8 +1,8 @@
 ---
 // A project's cover. Uploaded media (video/gif + poster) wins when present;
 // otherwise the hand-built CSS cover is used. Either way:
-//   · 4:3, plays only while on screen
-//   · with reduced motion (OS or the site's pause), only the still frame shows
+//   · 4:3; video/gif covers play only while on screen (static images just show)
+//   · with reduced motion (system setting), only the still frame shows
 import type { CoverId, CoverMedia } from '../content/projects';
 import type { Locale } from '../i18n/config';
 import { withBase } from '../i18n/config';
@@ -29,16 +29,19 @@ const Cover = map[cover];
 // An empty label means the title sits next to the cover: the media is decorative.
 const alt = label ? media?.alt[locale] ?? label : '';
 const isGif = media?.type === 'image/gif' || media?.src.endsWith('.gif');
+const isVideo = !!media && !isGif && (media.type?.startsWith('video/') ?? /\.(mp4|webm)$/.test(media.src));
 ---
 
 {media ? (
   <div class="media-cover" data-cover data-media-cover>
-    {isGif ? (
-      <img src={withBase(media.poster)} data-gif={withBase(media.src)} data-poster={withBase(media.poster)} alt={alt} loading="lazy" decoding="async" />
-    ) : (
+    {isVideo ? (
       <video muted loop playsinline preload="none" poster={withBase(media.poster)} aria-label={alt || undefined} aria-hidden={alt ? undefined : 'true'}>
         <source src={withBase(media.src)} type={media.type ?? 'video/mp4'} />
       </video>
+    ) : isGif ? (
+      <img src={withBase(media.poster)} data-gif={withBase(media.src)} data-poster={withBase(media.poster)} alt={alt} loading="lazy" decoding="async" />
+    ) : (
+      <img src={withBase(media.src)} alt={alt} width="1200" height="900" loading="lazy" decoding="async" />
     )}
   </div>
 ) : (
