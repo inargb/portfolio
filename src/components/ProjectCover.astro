@@ -1,8 +1,12 @@
 ---
-// A project's cover. Uploaded media (video/gif + poster) wins when present;
-// otherwise the hand-built CSS cover is used. Either way:
-//   · 4:3; video/gif covers play only while on screen (static images just show)
-//   · with reduced motion (system setting), only the still frame shows
+// A project's cover. Uploaded media wins when present; otherwise the
+// hand-built CSS cover is used.
+//   · the frame's shape comes from --cover-ratio (set by the context:
+//     16:10 in the desktop grid, 4:3 on tablets and phones, 16:9 on case pages)
+//   · media fills it with object-fit: cover, centred on the cover's `focus`
+//     and zoomed by `zoom`, so the subject survives every crop
+//   · stills use srcset (800w / 1600w); videos load only near the viewport,
+//     play only while visible, and show the poster with reduced motion
 import type { CoverId, CoverMedia } from '../content/projects';
 import type { Locale } from '../i18n/config';
 import { withBase } from '../i18n/config';
@@ -14,8 +18,14 @@ import CoverBandoneon from './covers/CoverBandoneon.astro';
 import CoverBinder from './covers/CoverBinder.astro';
 import CoverSabi from './covers/CoverSabi.astro';
 
-interface Props { cover: CoverId; label: string; media?: CoverMedia; locale?: Locale; }
-const { cover, label, media, locale = 'en' } = Astro.props;
+interface Props {
+  cover: CoverId;
+  label: string;          // '' when the title sits next to the cover (decorative)
+  media?: CoverMedia;
+  locale?: Locale;
+  sizes?: string;         // how wide the cover renders, for srcset
+}
+const { cover, label, media, locale = 'en', sizes = '(max-width: 40rem) 100vw, 50vw' } = Astro.props;
 const map = {
   specs: CoverSpecs,
   menu: CoverMenu,
@@ -26,47 +36,71 @@ const map = {
   sabi: CoverSabi,
 } as const;
 const Cover = map[cover];
-// An empty label means the title sits next to the cover: the media is decorative.
 const alt = label ? media?.alt[locale] ?? label : '';
-const isGif = media?.type === 'image/gif' || media?.src.endsWith('.gif');
-const isVideo = !!media && !isGif && (media.type?.startsWith('video/') ?? /\.(mp4|webm)$/.test(media.src));
+const style = media ? `--focus:${media.focus ?? '50% 50%'};--zoom:${media.zoom ?? 1}` : '';
 ---
 
 {media ? (
-  <div class="media-cover" data-cover data-media-cover>
-    {isVideo ? (
-      <video muted loop playsinline preload="none" poster={withBase(media.poster)} aria-label={alt || undefined} aria-hidden={alt ? undefined : 'true'}>
-        <source src={withBase(media.src)} type={media.type ?? 'video/mp4'} />
+  <div class="media-cover" style={style} data-cover data-media-cover>
+    {media.video ? (
+      <video muted loop playsinline preload="none" poster={media.poster && withBase(media.poster)} aria-label={alt || undefined} aria-hidden={alt ? undefined : 'true'} disablepictureinpicture>
+        <source src={withBase(media.video.webm)} type="video/webm" />
+        <source src={withBase(media.video.mp4)} type="video/mp4" />
       </video>
-    ) : isGif ? (
-      <img src={withBase(media.poster)} data-gif={withBase(media.src)} data-poster={withBase(media.poster)} alt={alt} loading="lazy" decoding="async" />
-    ) : (
-      <img src={withBase(media.src)} alt={alt} width="1200" height="900" loading="lazy" decoding="async" />
-    )}
+    ) : media.image ? (
+      <img
+        src={withBase(media.image.src)}
+        srcset={`${withBase(media.image.small)} 800w, ${withBase(media.image.src)} 1600w`}
+        sizes={sizes}
+        alt={alt}
+        width="1600"
+        height="900"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : null}
   </div>
 ) : (
   <Cover label={label} />
 )}
 
 <style>
-  .media-cover { aspect-ratio: 4 / 3; overflow: hidden; background: var(--color-paper-shade); }
-  .media-cover :is(video, img) { width: 100%; height: 100%; object-fit: cover; }
+  .media-cover {
+    position: relative;
+    aspect-ratio: var(--cover-ratio, 16 / 9);
+    overflow: hidden;
+    background: var(--color-paper-shade);
+  }
+  .media-cover :is(video, img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus);
+    transform: scale(var(--zoom));
+    transform-origin: var(--focus);
+  }
 </style>
 
 <script>
   import { motionOn } from '../scripts/prefs';
 
-  // Covers animate only while visible, and only with motion on.
+  // CSS covers animate only while visible. Videos start loading when they
+  // come near the viewport and play only while visible, with motion on.
   const covers = document.querySelectorAll<HTMLElement>('[data-cover]');
   const visible = new Set<HTMLElement>();
 
   function sync(el: HTMLElement) {
-    const play = visible.has(el) && motionOn();
     el.toggleAttribute('data-inview', visible.has(el));
     const video = el.querySelector('video');
-    if (video) { if (play) video.play().catch(() => {}); else video.pause(); }
-    const gif = el.querySelector<HTMLImageElement>('img[data-gif]');
-    if (gif) gif.src = play ? gif.dataset.gif! : gif.dataset.poster!;
+    if (!video) return;
+    if (visible.has(el) && motionOn()) {
+      if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
   }
 
   if ('IntersectionObserver' in window) {

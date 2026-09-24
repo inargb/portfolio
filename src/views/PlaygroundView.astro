@@ -230,7 +230,7 @@ const t = {
     <h2 id="pg-covers-h" class="pg__h"><SectionLabel as="span" text={L(t.covers)} frame="08" /></h2>
     <ul class="covers" role="list">
       {projects.map((p) => (
-        <li><div class="covers__frame"><ProjectCover cover={p.cover} label={p.title[locale]} /></div><p class="t-meta">FR {p.frame} · {p.title[locale]}</p></li>
+        <li><div class="covers__frame"><ProjectCover cover={p.cover} media={p.media} label={p.title[locale]} locale={locale} sizes="(max-width: 40rem) 100vw, 22rem" /></div><p class="t-meta">FR {p.frame} · {p.title[locale]}</p></li>
       ))}
     </ul>
   </section>

@@ -1,5 +1,5 @@
 ---
-// Shared shell for project covers: fixed 4:3 frame, container-query units
+// Shared shell for project covers: frame shape from --cover-ratio (4:3 by default), container-query units
 // inside so each cover scales from a thumbnail to a case-study hero.
 // Animations only run while the cover is on screen (data-inview) and
 // stop entirely when motion is off, leaving a composed still frame.
@@ -17,7 +17,7 @@ const { bg, ink, label } = Astro.props;
     --play: paused;
     position: relative;
     container-type: inline-size;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: var(--cover-ratio, 4 / 3);
     overflow: hidden;
     background: var(--cover-bg);
     color: var(--cover-ink);

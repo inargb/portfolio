@@ -29,14 +29,20 @@ export interface Project {
   liveUrl?: string;           // current case on inasilva.com (until rebuilt)
 }
 
-// Uploaded covers: 1600×1200 (4:3), MP4/WebM preferred, muted + looping,
-// with a static poster for loading and reduced motion. Put files in
-// public/covers/ and reference them without the base path, e.g. 'covers/specs.mp4'.
+// Uploaded covers live in public/covers/ (paths without the base, e.g.
+// 'covers/pocabin.mp4'). Sources are 16:9; the card frame changes shape per
+// breakpoint (16:10 desktop, 4:3 tablet and phone), so each cover says where
+// its subject is (`focus`, an object-position) and how far to zoom into it.
+// Animated covers are MP4/WebM (GIFs converted: same look, ~10× lighter)
+// with a still poster for loading and reduced motion. GIF sources are kept
+// in design/covers-src/.
 export interface CoverMedia {
-  src: string;
-  poster: string;             // same as src for a still image
-  type?: 'video/mp4' | 'video/webm' | 'image/gif' | 'image/webp' | 'image/png' | 'image/jpeg';
-  alt: L10n;                  // describes the product, not the animation
+  image?: { src: string; small: string };   // 1600w + 800w stills
+  video?: { mp4: string; webm: string };
+  poster?: string;                          // still frame for a video
+  alt: L10n;                                // describes the product, not the animation
+  focus?: string;                           // e.g. '30% 50%'
+  zoom?: number;                            // 1 = fit, >1 crops tighter around focus
 }
 
 export type CoverId =
@@ -72,6 +78,12 @@ export const projects: Project[] = [
     statusKind: 'live',
     tags: [tag('AI-driven', 'IA'), tag('Documentation', 'Documentação'), tag('Design systems', 'Design systems')],
     cover: 'specs',
+    media: {
+      video: { mp4: 'covers/specs-generator.mp4', webm: 'covers/specs-generator.webm' },
+      poster: 'covers/specs-generator-poster.webp',
+      alt: { en: 'The generator documenting a product page: panels of measurements in px and vw, with contrast warnings.', pt: 'O gerador documentando uma página de produto: painéis de medidas em px e vw, com alertas de contraste.' },
+      focus: '12% 50%',
+    },
     liveUrl: 'https://inasilva.com/works/responsive-specs-and-accessibility-generator',
   },
   {
@@ -95,10 +107,9 @@ export const projects: Project[] = [
     ],
     cover: 'menu',
     media: {
-      src: 'covers/menu-management.webp',
-      poster: 'covers/menu-management.webp',
-      type: 'image/webp',
+      image: { src: 'covers/menu-management-1600.webp', small: 'covers/menu-management-800.webp' },
       alt: { en: 'The Menu Management workspace: a menu tree on the left and a list of items with prices beside it. Brand and staff names are blurred.', pt: 'O espaço de trabalho de Gestão de Cardápios: a árvore do cardápio à esquerda e a lista de itens com preços ao lado. Marca e nomes de pessoas estão desfocados.' },
+      focus: '22% 40%',
     },
   },
   {
@@ -118,10 +129,10 @@ export const projects: Project[] = [
     tags: [tag('POS', 'PDV'), tag('Design systems', 'Design systems')],
     cover: 'bartabs',
     media: {
-      src: 'covers/bar-tabs.webp',
-      poster: 'covers/bar-tabs.webp',
-      type: 'image/webp',
+      image: { src: 'covers/bar-tabs-1600.webp', small: 'covers/bar-tabs-800.webp' },
       alt: { en: 'The Bar Tabs screen in dark mode: a selected tab’s details on the left and open tabs as colour-coded cards.', pt: 'A tela de comandas no modo escuro: os detalhes de uma comanda à esquerda e as comandas abertas como cards coloridos.' },
+      focus: '50% 50%',
+      zoom: 1.2,
     },
   },
   {
@@ -142,10 +153,10 @@ export const projects: Project[] = [
     tags: [tag('UX/UI', 'UX/UI'), tag('Research', 'Pesquisa'), tag('Redesign', 'Redesign')],
     cover: 'portal',
     media: {
-      src: 'covers/systems-portal.webp',
-      poster: 'covers/systems-portal.webp',
-      type: 'image/webp',
+      video: { mp4: 'covers/systems-portal.mp4', webm: 'covers/systems-portal.webm' },
+      poster: 'covers/systems-portal-poster.webp',
       alt: { en: 'The redesigned Systems Portal: a search bar and a grid of the most accessed systems.', pt: 'O Portal de Sistemas redesenhado: uma busca e uma grade com os sistemas mais acessados.' },
+      focus: '62% 45%',
     },
     liveUrl: 'https://inasilva.com/works/systems-portal',
   },
@@ -167,10 +178,10 @@ export const projects: Project[] = [
     tags: [tag('UX/UI', 'UX/UI'), tag('Design systems', 'Design systems'), tag('Case study', 'Estudo de caso')],
     cover: 'bandoneon',
     media: {
-      src: 'covers/bandoneon.webp',
-      poster: 'covers/bandoneon.webp',
-      type: 'image/webp',
+      image: { src: 'covers/bandoneon-1600.webp', small: 'covers/bandoneon-800.webp' },
       alt: { en: 'Two phones with the Bandoneón app: the green splash screen and the recipe of the day.', pt: 'Dois celulares com o app Bandoneón: a tela de abertura verde e a receita do dia.' },
+      focus: '52% 50%',
+      zoom: 1.1,
     },
     liveUrl: 'https://inasilva.com/works/bandoneon-iniciative',
   },
@@ -190,6 +201,13 @@ export const projects: Project[] = [
     statusKind: 'developing',
     tags: [tag('Website', 'Website'), tag('Product', 'Produto'), tag('Vibe-coding', 'Vibe-coding')],
     cover: 'binder',
+    media: {
+      video: { mp4: 'covers/pocabin.mp4', webm: 'covers/pocabin.webm' },
+      poster: 'covers/pocabin-poster.webp',
+      alt: { en: 'Pocabin: a digital binder opening to pages of photocards and a collection list.', pt: 'Pocabin: um binder digital abrindo em páginas de photocards e uma lista da coleção.' },
+      focus: '50% 45%',
+      zoom: 1.3,
+    },
   },
   {
     slug: 'sabi',
@@ -208,10 +226,10 @@ export const projects: Project[] = [
     tags: [tag('UX/UI research', 'Pesquisa UX/UI'), tag('Product', 'Produto'), tag('App', 'App')],
     cover: 'sabi',
     media: {
-      src: 'covers/sabi.webp',
-      poster: 'covers/sabi.webp',
-      type: 'image/webp',
+      image: { src: 'covers/sabi-1600.webp', small: 'covers/sabi-800.webp' },
       alt: { en: 'The Sabi mark: three rounded bars with a yellow dot in the middle.', pt: 'A marca do Sabi: três barras arredondadas com um ponto amarelo no meio.' },
+      focus: '50% 50%',
+      zoom: 1.4,
     },
   },
 ];

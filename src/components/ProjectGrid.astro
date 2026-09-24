@@ -27,7 +27,7 @@ const shape = { live: '●', prototype: '◐', developing: '○', locked: '' } a
         <Tag class="card__hit" {...linkProps} data-cursor={cursorFor[proj.state]}>
           <p class="card__edge" aria-hidden="true">▸ {proj.frame} <span>▸ {proj.frame}A</span></p>
           <div class="card__cover frame-card__cover crop">
-            <ProjectCover cover={proj.cover} media={proj.media} label="" locale={locale} />
+            <ProjectCover cover={proj.cover} media={proj.media} label="" locale={locale} sizes="(max-width: 40rem) calc(100vw - 2rem), (max-width: 84rem) 50vw, 42rem" />
             {proj.state === 'soon' && <span class="card__soon t-label">{p.soon[locale]}</span>}
           </div>
           <div class="card__body">
@@ -52,6 +52,11 @@ const shape = { live: '●', prototype: '◐', developing: '○', locked: '' } a
 </ol>
 
 <style>
+  /* Cover frame shape per breakpoint: wide and calm on desktop, taller on
+     tablets and phones so UI stays legible. Media crops around its focus. */
+  .grid-cards { --cover-ratio: 16 / 10; }
+  @media (max-width: 64rem) { .grid-cards { --cover-ratio: 4 / 3; } }
+
   .grid-cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

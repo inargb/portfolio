@@ -52,7 +52,7 @@ const locked = project.state === 'locked';
 
     <div class="case-cover container">
       <div class="case-cover__frame crop">
-        <ProjectCover cover={project.cover} label={project.title[locale]} />
+        <ProjectCover cover={project.cover} media={project.media} label={project.title[locale]} locale={locale} sizes="(max-width: 84rem) 100vw, 84rem" />
       </div>
     </div>
 
@@ -73,6 +73,7 @@ const locked = project.state === 'locked';
   .case-hero__meta div { display: grid; gap: var(--space-1); }
   .case-hero__meta dd { color: var(--color-ink); }
   .case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .case-cover__frame { border: var(--rule-ink); }
+  .case-cover__frame { --cover-ratio: 16 / 9; border: var(--rule-ink); }
+  @media (max-width: 40rem) { .case-cover__frame { --cover-ratio: 4 / 3; } }
   .case-note { display: grid; gap: var(--space-4); justify-items: start; }
 </style>
