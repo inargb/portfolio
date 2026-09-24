@@ -36,7 +36,7 @@ const icons: Record<string, string> = {
       return (
         <ul class="cb-cards cb-cards--3" role="list">
           {b.items.map((s, i) => (
-            <li class="cb-card cb-card--stat paper-card" style={`--tilt:${tilt(i + 2)}deg`} data-reveal>
+            <li class="cb-card cb-card--stat paper-card lift" style={`--tilt:${tilt(i + 2)}deg`} data-reveal>
               <span class="cb-card__no t-heading-xl">{s.value[locale]}</span>
               <span class="cb-card__body">{s.label[locale]}</span>
             </li>
@@ -74,7 +74,7 @@ const icons: Record<string, string> = {
       return (
         <ol class="cb-cards cb-cards--4" role="list">
           {b.items.map((s, i) => (
-            <li class="cb-card paper-card" style={`--tilt:${tilt(i)}deg`} data-reveal>
+            <li class="cb-card paper-card lift" style={`--tilt:${tilt(i)}deg`} data-reveal>
               <span class="cb-card__no t-heading-xl" aria-hidden="true">{two(i)}</span>
               <h3 class="cb-card__title cb-card__title--sans"><span class="visually-hidden">{two(i)}. </span>{s.title[locale]}</h3>
               <p class="cb-card__body">{s.body[locale]}</p>
@@ -89,7 +89,7 @@ const icons: Record<string, string> = {
           {b.intro && <p class="t-body">{b.intro[locale]}</p>}
           <ul class="cb-cards cb-cards--3" role="list">
             {b.items.map((d, i) => (
-              <li class="cb-card paper-card" style={`--tilt:${tilt(i + 1)}deg`} data-reveal>
+              <li class="cb-card paper-card lift" style={`--tilt:${tilt(i + 1)}deg`} data-reveal>
                 <svg class="cb-card__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[d.icon]} />
                 <h3 class="cb-card__title t-heading-m">{d.title[locale]}</h3>
                 <p class="cb-card__body">

@@ -17,6 +17,7 @@
   paper with a thin double frame, each a hair off straight. Stats: number →
   label. Steps: number → title → text. Decisions: icon → title → text
   (optional quieter note) → principle.
+  On hover they lift like the images, quieter: a 2px move and a thin shadow.
 - Images keep their own look (hairline frame, print lift on hover) and open in
   the lightbox (← → through every image in the case). The "how might we" is a
   shaded panel with crop marks. Paragraphs stay as running text.
