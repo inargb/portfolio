@@ -99,6 +99,9 @@ Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`
 | `question` | the "how might we" (or any callout with its own label), framed |
 | `figure` | one image + numbered caption (FIG. 01); lifts on hover, opens in the lightbox |
 | `gallery` | several images in a row, sized to their shape so they share one height; each opens larger |
+| `heading` | a small subhead inside a section |
+| `diamond` | the Double Diamond, drawn in on scroll |
+| `marquee` | image rows that slide on a loop (still with reduced motion) |
 | `list` | a plain numbered list (e.g. an old manual workflow) |
 | `groups` | cards that each hold a short list |
 | `swatches` | colour swatches with hex values |

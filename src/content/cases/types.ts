@@ -9,13 +9,14 @@ export interface CaseStudy {
   tools: L10n;                        // skills / tools line in the hero
   facts?: { label: L10n; value: L10n }[]; // extra hero facts (e.g. type of project)
   live?: { href: string; label: L10n };
+  intro?: CaseBlock[];                // blocks between the header and section 01
   sections: CaseSection[];
 }
 
 export interface CaseSection {
   id: string;                         // anchor: #overview, #problem…
   label: L10n;                        // "overview", "o problema"
-  title: L10n;                        // \n for a deliberate line break
+  title?: L10n;                       // \n for a line break; none → the label is the heading ("discover_")
   blocks: CaseBlock[];
 }
 
@@ -26,6 +27,12 @@ export interface CaseImage {
 
 export type CaseBlock =
   | { type: 'text'; body: L10n[] }
+  /** A small uppercase subheading inside a section, with an optional line under it. */
+  | { type: 'heading'; text: L10n; sub?: L10n }
+  /** The Double Diamond: problem → solution over four phases. */
+  | { type: 'diamond'; problem: L10n; solution: L10n; phases: { title: L10n; body: L10n }[]; note?: L10n }
+  /** Rows of images that drift sideways on a loop (pause on hover; still with reduced motion). */
+  | { type: 'marquee'; rows: CaseImage[]; height?: number; background?: string; speed?: number; caption?: L10n }
   /** Big numbers with a short label. */
   | { type: 'stats'; items: { value: L10n; label: L10n }[] }
   /** Set apart in the shaded panel: the "how might we" by default, or any

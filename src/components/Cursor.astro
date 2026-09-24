@@ -48,6 +48,7 @@ const c = ui.cursor;
   :global(.has-custom-cursor) .cursor:popover-open { display: block; }
   @supports not selector(:popover-open) { :global(.has-custom-cursor) .cursor { display: block; } }
   .cursor.is-away { opacity: 0; }
+  .cursor[data-invert] { color: var(--color-paper); }
 
   /* Default: a thin crosshair, the centre of a viewfinder. */
   .cursor__cross {

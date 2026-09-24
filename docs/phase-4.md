@@ -59,14 +59,13 @@
 
 ## Bandoneón: notes
 
-- Written in a new voice, after the reference Inaiá shared (rachelchen.tech):
-  first person, every headline states what happened or what was learned,
-  outcomes up front (overview), "key finding" / "what I learned" callouts,
-  and a closing reflection. Facts, numbers, personas and quotes are hers.
-- "AI" in the live case's process (personas → AI → wireframes) is read as
-  IA, "arquitetura da informação": written out as information architecture.
-- New blocks: `groups` (the four SMART requirement dimensions, typography and
-  components), `swatches` (the palette), a custom label for callouts, and a
-  person icon for persona cards.
-- If this voice works, Systems Portal and Specs Generator can be rewritten
-  the same way.
+- Text and structure are Inaiá's, as on the current site: the Double Diamond
+  first, then discover_ · define_ · develop_ · delivery_ · outcome_ (section
+  labels are the headings). "AI" / "IA" in the process kept as written.
+- New blocks: `diamond` (outline drawn in on scroll, four phases, problem →
+  solution), `marquee` (image rows sliding on a loop, alternate directions,
+  pause on hover, still and scrollable with reduced motion), `heading`
+  (small subheads like "Wireframes"), and `intro` blocks before section 01.
+- The design-system image is new: a preview board in the style of Rachel
+  Chen's (styles, buttons, forms, components) built from Bandoneón's palette,
+  Nunito and components. Source: design/case-src/bandoneon-design-system.html.
