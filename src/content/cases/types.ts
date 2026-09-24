@@ -22,6 +22,7 @@ export interface CaseSection {
 
 export interface CaseImage {
   src: ImageMetadata;
+  mobile?: ImageMetadata;             // a different crop/layout for phones (≤ 40rem)
   alt: L10n;                          // what the image shows, never "screenshot"
 }
 
@@ -31,7 +32,8 @@ export type CaseBlock =
   | { type: 'heading'; text: L10n; sub?: L10n }
   /** The Double Diamond: problem → solution over four phases. */
   | { type: 'diamond'; problem: L10n; solution: L10n; phases: { title: L10n; body: L10n }[]; note?: L10n }
-  /** Rows of images that drift sideways on a loop (pause on hover; still with reduced motion). */
+  /** Rows of images that drift sideways on a loop and can be dragged/scrolled by hand
+      (speed in px/s; still, but scrollable, with reduced motion). */
   | { type: 'marquee'; rows: CaseImage[]; height?: number; background?: string; speed?: number; caption?: L10n }
   /** Big numbers with a short label. */
   | { type: 'stats'; items: { value: L10n; label: L10n }[] }

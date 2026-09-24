@@ -17,6 +17,8 @@ interface Props {
 }
 const { image, locale, n, caption, sizes = '(max-width: 64rem) 100vw, 60rem', bare = false } = Astro.props;
 const full = await getImage({ src: image.src, width: Math.min(image.src.width, 2000), format: 'webp' });
+// A phone-specific version, when the case provides one (e.g. a taller diagram).
+const phone = image.mobile ? await getImage({ src: image.mobile, widths: [480, 960, Math.min(image.mobile.width, 1400)], sizes: '100vw', format: 'webp' }) : undefined;
 const alt = image.alt[locale];
 const no = `${ui.case.fig[locale]} ${String(n).padStart(2, '0')}`;
 const Wrap = bare ? 'div' : 'figure';
@@ -33,7 +35,14 @@ const Wrap = bare ? 'div' : 'figure';
     data-cursor="look"
     aria-label={`${ui.case.enlarge[locale]}: ${alt}`}
   >
-    <Image src={image.src} alt={alt} widths={[640, 1280, Math.min(image.src.width, 1920)]} sizes={sizes} data-develop />
+    {phone ? (
+      <picture data-develop>
+        <source media="(max-width: 40rem)" srcset={phone.srcSet.attribute} sizes="100vw" />
+        <Image src={image.src} alt={alt} widths={[640, 1280, Math.min(image.src.width, 1920)]} sizes={sizes} />
+      </picture>
+    ) : (
+      <Image src={image.src} alt={alt} widths={[640, 1280, Math.min(image.src.width, 1920)]} sizes={sizes} data-develop />
+    )}
   </button>
   {!bare && (
     <figcaption class="cfig__cap t-caption">
@@ -52,7 +61,7 @@ const Wrap = bare ? 'div' : 'figure';
     background: var(--color-paper-shade);
     cursor: zoom-in;
   }
-  .cfig__print :global(img) { display: block; width: 100%; height: auto; }
+  .cfig__print :global(img), .cfig__print picture { display: block; width: 100%; height: auto; }
   .cfig__print:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
   .cfig__cap { max-width: var(--layout-text); text-wrap: pretty; }
   .cfig__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
