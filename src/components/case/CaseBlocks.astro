@@ -46,7 +46,7 @@ const icons: Record<string, string> = {
 
     case 'question':
       return (
-        <div class="cb-question cb-card paper-card" style="--tilt:-0.5deg" data-reveal>
+        <div class="cb-question crop" data-reveal>
           <p class="t-label cb-question__label">{ui.case.question[locale]}</p>
           <p class="t-heading-s cb-question__text">{b.text[locale]}</p>
         </div>
@@ -60,7 +60,7 @@ const icons: Record<string, string> = {
         <figure class="cb-gallery">
           <ul class="cb-gallery__row" role="list">
             {b.images.map((img, i) => (
-              <li><CaseFigure image={img} locale={locale} n={first + i} bare tilt={tilt(i + 1) / 2} sizes="(max-width: 40rem) 100vw, 20rem" /></li>
+              <li><CaseFigure image={img} locale={locale} n={first + i} bare sizes="(max-width: 40rem) 100vw, 20rem" /></li>
             ))}
           </ul>
           <figcaption class="t-caption cb-gallery__cap">
@@ -108,7 +108,13 @@ const icons: Record<string, string> = {
   .cb-text { display: grid; gap: var(--space-4); max-width: var(--layout-text); }
   .cb-text p { text-wrap: pretty; }
 
-  .cb-card.cb-question { max-width: 48rem; min-height: 0; }
+  .cb-question {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 48rem;
+    padding: var(--space-8);
+    background: var(--color-paper-shade);
+  }
   .cb-question__label { color: var(--color-accent); }
   .cb-question__text { color: var(--color-ink); text-wrap: pretty; }
 
@@ -136,7 +142,7 @@ const icons: Record<string, string> = {
   .cb-decisions { display: grid; gap: var(--space-8); }
 
   .cb-gallery { display: grid; gap: var(--space-3); margin: 0; }
-  .cb-gallery__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); padding: var(--space-2); }
+  .cb-gallery__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
   .cb-gallery__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
 
   @media (max-width: 64rem) {
@@ -146,5 +152,6 @@ const icons: Record<string, string> = {
   @media (max-width: 40rem) {
     .cb-cards--4, .cb-cards--3, .cb-gallery__row { grid-template-columns: 1fr; }
     .cb-cards { gap: var(--space-8); padding-inline: var(--space-2); }
+    .cb-question { padding: var(--space-6); }
   }
 </style>

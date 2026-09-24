@@ -117,20 +117,13 @@
 
 /* ---- Paper card: a note on the table -------------------------------------
    The case-study surface: paper with a thin double frame, a hair off
-   straight (--tilt). Every case block uses it (cards, stats, the question,
-   figures). With .crop, the crop marks sit outside the outer frame. */
+   straight (--tilt). Case text blocks use it (stats, steps, decisions);
+   images and the "how might we" keep their own look. */
 .paper-card {
   background: var(--color-paper);
   border: var(--rule-hair);
   box-shadow: 0 0 0 7px var(--color-paper), 0 0 0 8px var(--color-rule);
   rotate: var(--tilt, 0deg);
-}
-.paper-card.crop::before { top: -1rem; left: -1rem; }
-.paper-card.crop::after { bottom: -1rem; right: -1rem; }
-/* A paper card that also lifts: keep the frame, add the hard shadow. */
-.paper-card.lift {
-  --lift-rest: var(--tilt, 0deg);
-  --lift-shadow: 0 0 0 7px var(--color-paper), 0 0 0 8px var(--color-rule), 8px 8px 0 8px var(--color-shadow);
 }
 
 /* ---- Print lift: a print picked up off the table -------------------------

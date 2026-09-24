@@ -13,13 +13,13 @@
   (Esc / click / ✕ closes, focus returns to the image).
 - Framer: one CMS collection for cases, one component per block type.
 
-- Every block sits on the same surface, the paper card (`.paper-card` in
-  `components.css`): paper with a thin double frame, each a hair off straight.
-  Stats: number → label. The question: label → text. Steps: number → title →
-  text. Decisions: icon → title → text (optional quieter note) → principle.
-  Figures and galleries are prints on a paper card with a mat; they lift on
-  hover and open in the lightbox (← → through every image in the case).
-  Plain paragraphs stay as running text.
+- Topic blocks sit on the paper card (`.paper-card` in `components.css`):
+  paper with a thin double frame, each a hair off straight. Stats: number →
+  label. Steps: number → title → text. Decisions: icon → title → text
+  (optional quieter note) → principle.
+- Images keep their own look (hairline frame, print lift on hover) and open in
+  the lightbox (← → through every image in the case). The "how might we" is a
+  shaded panel with crop marks. Paragraphs stay as running text.
 
 ## Cases
 
