@@ -212,7 +212,8 @@ const icons: Record<string, string> = {
   }
 })}
 
-<style>
+<style is:global>
+  /* Global (prefixed cb-/cfig) so sealed cases, injected after unlock, are styled. */
   .cb-heading { display: grid; gap: var(--space-2); margin-bottom: calc(-1 * var(--space-6)); }
   .cb-heading h3 { color: var(--color-graphite-soft); }
 
@@ -221,10 +222,10 @@ const icons: Record<string, string> = {
   .cb-diamond__ends { display: flex; justify-content: space-between; color: var(--color-graphite-soft); }
   .cb-diamond__svg { width: 100%; height: clamp(7rem, 14vw, 12rem); overflow: visible; }
   .cb-diamond__svg path { fill: none; stroke: var(--color-ink); stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
-  :global(.js-reveal) .cb-diamond__svg path { stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-settle); }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path { stroke-dashoffset: 0; }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(2) { transition-delay: 0.35s; }
-  :global(.js-reveal) .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(3) { transition-delay: 0.7s; }
+  .js-reveal .cb-diamond__svg path { stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-settle); }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path { stroke-dashoffset: 0; }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(2) { transition-delay: 0.35s; }
+  .js-reveal .cb-diamond.is-revealed .cb-diamond__svg path:nth-child(3) { transition-delay: 0.7s; }
   .cb-diamond__phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
   .cb-diamond__phases li { display: grid; gap: var(--space-1); align-content: start; padding-top: var(--space-3); border-top: var(--rule-hair); }
   .cb-diamond__phases h3 { font-family: var(--font-system); font-size: var(--type-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-ink); }
@@ -241,13 +242,13 @@ const icons: Record<string, string> = {
   .cb-marquee__row:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
   .cb-marquee[style*='--mq-bg'] { gap: 0; }
   .cb-marquee__track { display: flex; gap: var(--space-8); width: max-content; }
-  .cb-marquee__track :global(img) { height: var(--row-h); width: auto; flex: none; user-select: none; pointer-events: none; }
+  .cb-marquee__track img { height: var(--row-h); width: auto; flex: none; user-select: none; pointer-events: none; }
   .cb-marquee__cap { margin-top: var(--space-3); }
   @media (prefers-reduced-motion: reduce) {
-    .cb-marquee__track :global(img[aria-hidden='true']) { display: none; }
+    .cb-marquee__track img[aria-hidden='true'] { display: none; }
   }
   @media (max-width: 40rem) {
-    .cb-marquee__track :global(img) { height: calc(var(--row-h) * 0.6); }
+    .cb-marquee__track img { height: calc(var(--row-h) * 0.6); }
     .cb-diamond__phases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
@@ -348,14 +349,35 @@ const icons: Record<string, string> = {
     .cb-cards { gap: var(--space-8); padding-inline: var(--space-2); }
     .cb-question { padding: var(--space-6); }
   }
+
+  /* Figures (components/case/CaseFigure.astro) */
+  .cfig { display: grid; gap: var(--space-3); margin: 0; }
+  .cfig__print {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: var(--rule-hair);
+    background: var(--color-paper-shade);
+    cursor: zoom-in;
+  }
+  .cfig__print img, .cfig__print picture { display: block; width: 100%; height: auto; }
+  .cfig__print--video { cursor: default; }
+  .cfig__print video { display: block; width: 100%; height: auto; }
+  @media (prefers-reduced-motion: reduce) { .cfig__print video { pointer-events: auto; } }
+  .cfig__print:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+  .cfig__cap { max-width: var(--layout-text); text-wrap: pretty; }
+  .cfig__no { font-family: var(--font-system); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
 </style>
 
 <script>
   import { motionOn } from '../../scripts/prefs';
 
   // Marquee rows: drift on their own, move by hand, loop seamlessly.
+  // Runs on load and again when a sealed case is opened (ina:case-content).
   const RESUME_AFTER = 1800;
-  document.querySelectorAll<HTMLElement>('[data-mq-row]').forEach((row) => {
+  function initMarquees(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>('[data-mq-row]:not([data-mq-ready])').forEach((row) => {
+    row.dataset.mqReady = '';
     const track = row.firstElementChild as HTMLElement;
     const dir = row.dataset.dir === 'right' ? -1 : 1;
     const speed = Number(row.dataset.speed) || 35;   // px per second
@@ -415,4 +437,15 @@ const icons: Record<string, string> = {
       if (onScreen && !raf) { last = 0; raf = requestAnimationFrame(tick); }
     }).observe(row);
   });
+  }
+  initMarquees();
+  window.addEventListener('ina:case-content', (e) => initMarquees((e as CustomEvent).detail?.root ?? document));
+
+  // Videos: with reduced motion, hold the first frame (tap to play).
+  function calmVideos(root: ParentNode = document) {
+    if (motionOn()) return;
+    root.querySelectorAll<HTMLVideoElement>('.cfig__print video').forEach((v) => { v.pause(); v.removeAttribute('autoplay'); v.controls = true; });
+  }
+  calmVideos();
+  window.addEventListener('ina:case-content', (e) => calmVideos((e as CustomEvent).detail?.root ?? document));
 </script>

@@ -35,7 +35,7 @@
 | 1 | Systems Portal | built | inasilva.com case (EN + PT), images from it |
 | 2 | Responsive Specs & Accessibility Generator | built | inasilva.com case (EN + PT), images from it |
 | 3 | Bandoneón Initiative | built | inasilva.com case (EN + PT), images from it |
-| 4 | Bar Tabs System | needs the password gate | protected: never committed in plain text |
+| 4 | Bar Tabs System | built, sealed | inasilva.com case (EN + PT), sanitized media; encrypted in repo |
 | 5 | Menu Management | needs the password gate | the uploaded brief (kept out of the repo) |
 
 ## Systems Portal: notes
@@ -69,3 +69,20 @@
 - The design-system image is new: a preview board in the style of Rachel
   Chen's (styles, buttons, forms, components) built from Bandoneón's palette,
   Nunito and components. Source: design/case-src/bandoneon-design-system.html.
+
+## Bar Tabs: notes
+
+- Protected: the page shows the public header (title, line, role, period,
+  focus, tools) and a password card. The right password decrypts the body
+  and media in the browser; a wrong one shakes the card and says so. It stays
+  unlocked for the tab's session.
+- Sealing: `npm run seal` with CASE_PASSWORD, from `private/bar-tabs-system/`
+  (gitignored). Only ciphertext is committed (`src/content/cases/sealed/`,
+  `public/sealed/`). Checked: no plain text in the repo or in a CI-style build.
+- Sanitized media: a colleague's name, client location names ("… Cashier",
+  "… Default") and a real address and phone number are blurred in every
+  frame. Customer names in the demos are sample data and stay.
+- GIFs became MP4 (26 MB → 1.3 MB). Figures can now be videos (muted loop,
+  poster, still with reduced motion).
+- Case styles are global (prefixed) and page scripts re-run on the
+  `ina:case-content` event, so an injected body behaves like an open case.
