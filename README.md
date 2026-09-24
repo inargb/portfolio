@@ -83,3 +83,25 @@ media: {
   zoom: 1.2,          // optional
 },
 ```
+
+## Case studies
+
+A case is content only: `src/content/cases/<slug>.ts` exports a `CaseStudy`
+(types in `src/content/cases/types.ts`) and is listed in
+`src/content/cases/index.ts`. The page (`views/CaseView.astro`) renders a hero
+with the project's facts, the cover, a sticky index, and numbered sections.
+Each section is a list of blocks, rendered by `components/case/CaseBlocks.astro`:
+
+| Block | Use |
+|---|---|
+| `text` | paragraphs |
+| `stats` | big numbers with a short label |
+| `question` | the "how might we", framed |
+| `figure` | one image + numbered caption (FIG. 01); lifts on hover, opens in the lightbox |
+| `gallery` | several images in a row, each opens larger |
+| `steps` | numbered process steps |
+| `decisions` | design decisions, each tagged with the principle behind it |
+
+Images live in `src/assets/cases/<slug>/` and are optimised at build time.
+Alt text describes what the image shows. Projects without a case keep the
+placeholder page.

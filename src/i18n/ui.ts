@@ -61,6 +61,15 @@ export const ui = {
     status: { en: 'Status', pt: 'Status' },
   },
 
+  case: {
+    contents: { en: 'in this case', pt: 'neste case' },
+    tools: { en: 'Skills & tools', pt: 'Habilidades e ferramentas' },
+    question: { en: 'how might we', pt: 'como poderíamos' },
+    fig: { en: 'fig.', pt: 'fig.' },
+    enlarge: { en: 'See larger', pt: 'Ver maior' },
+    close: { en: 'Close', pt: 'Fechar' },
+  },
+
   shortcuts: {
     title: { en: 'Keyboard, for the curious', pt: 'Teclado, para curiosos' },
     close: { en: 'Close', pt: 'Fechar' },
