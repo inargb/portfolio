@@ -59,7 +59,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
           <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
         </form>
         <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
-        <p class="gate__note t-caption">{g.note[locale]}</p>
       </div>
     </section>
   )}
@@ -296,7 +295,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   .gate__error.is-busy { color: var(--color-graphite); }
   .gate.is-wrong .gate__card { animation: gate-shake 0.35s var(--ease-soft); }
   @keyframes gate-shake { 25% { translate: -6px 0; } 50% { translate: 5px 0; } 75% { translate: -3px 0; } }
-  .gate__note { color: var(--color-graphite-soft); }
   .case-sealed:empty { display: none; }
   @media (max-width: 40rem) { .gate__card { padding: var(--space-8) var(--space-6); } .gate__form { flex-direction: column; } }
 </style>
@@ -321,6 +319,38 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
     document.querySelectorAll('[data-case-section]').forEach((s) => io!.observe(s));
   }
   initIndex();
+
+  // ---- The index lets go at the last section --------------------------------
+  // Sticky until its last entry reaches the last section's title; from there
+  // it stays level with that title and scrolls away with the content.
+  const indexEl = document.querySelector<HTMLElement>('[data-case-index]');
+  if (indexEl) {
+    const nav: HTMLElement = indexEl;
+    let shift = 0;
+    let queued = false;
+    function release() {
+      queued = false;
+      const links = nav.querySelectorAll<HTMLElement>('[data-index-link]');
+      const sections = document.querySelectorAll<HTMLElement>('[data-case-section]');
+      const lastLink = links[links.length - 1];
+      const title = sections[sections.length - 1]?.querySelector<HTMLElement>('h2');
+      if (!lastLink || !title || !nav.offsetParent) { shift = 0; nav.style.translate = ''; return; }
+      // Where the link would be without our shift, and the title's first line.
+      const l = lastLink.getBoundingClientRect();
+      const linkMid = l.top + l.height / 2 - shift;
+      const t = title.getBoundingClientRect();
+      const titleMid = t.top + (parseFloat(getComputedStyle(title).lineHeight) || t.height) / 2;
+      const next = Math.min(0, titleMid - linkMid);
+      if (next === shift) return;
+      shift = next;
+      nav.style.translate = shift ? `0 ${shift}px` : '';
+    }
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(release); } };
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    addEventListener('ina:case-content', queue);
+    queue();
+  }
 
   // ---- Lightbox: any [data-lightbox] print opens here ---------------------
   // ← → (buttons, arrow keys or a swipe) walk through every image in the case.

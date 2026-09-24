@@ -12,6 +12,8 @@ import '../styles/components.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Cursor from '../components/Cursor.astro';
+import BackToTop from '../components/BackToTop.astro';
+import Polaroid from '../components/Polaroid.astro';
 import ShortcutsDialog from '../components/ShortcutsDialog.astro';
 import { htmlLang, type Locale, type RouteId } from '../i18n/config';
 import { ui } from '../i18n/ui';
@@ -63,8 +65,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer locale={locale} />
+    <BackToTop locale={locale} />
     <Cursor locale={locale} />
     <ShortcutsDialog locale={locale} />
+    <Polaroid locale={locale} />
     <script>
       import '../scripts/prefs';
       import '../scripts/motion';

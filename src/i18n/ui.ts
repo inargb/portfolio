@@ -5,6 +5,8 @@ import type { L10n } from './config';
 
 export const ui = {
   skip: { en: 'Skip to content', pt: 'Pular para o conteúdo' },
+  toTop: { en: 'Back to top', pt: 'Voltar ao topo' },
+  toTopCursor: { en: 'top', pt: 'topo' },
 
   nav: {
     label: { en: 'Main', pt: 'Principal' },
@@ -86,10 +88,24 @@ export const ui = {
     busy: { en: 'developing…', pt: 'revelando…' },
     wrong: { en: 'That’s not it. Try again?', pt: 'Não é essa. Tenta de novo?' },
     failed: { en: 'Something went wrong loading the case. Please try again.', pt: 'Algo deu errado ao carregar o case. Tente de novo.' },
-    note: {
-      en: 'A simple password gate to keep client work private, not bank-grade security.',
-      pt: 'Uma senha simples para manter o trabalho do cliente privado, não é segurança de banco.',
-    },
+  },
+
+  polaroid: {
+    camera: { en: 'Take a picture', pt: 'Tirar uma foto' },
+    cursor: { en: 'cheese!', pt: 'xis!' },
+    title: { en: 'A polaroid for you', pt: 'Uma polaroid pra você' },
+    caption: { en: 'Write on the polaroid', pt: 'Escreva na polaroid' },
+    placeholder: { en: 'write something…', pt: 'escreva algo…' },
+    frame: { en: 'Frame colour', pt: 'Cor da moldura' },
+    another: { en: 'another dog', pt: 'outro cachorro' },
+    save: { en: 'save to device', pt: 'salvar no aparelho' },
+    pin: { en: 'pin to the mural', pt: 'fixar no mural' },
+    pinned: { en: 'pinned ✓', pt: 'fixada ✓' },
+    pinnedSay: { en: 'Pinned! The mural opens soon in the playground.', pt: 'Fixada! O mural abre em breve no playground.' },
+    saved: { en: 'Saved. Good dog.', pt: 'Salva. Bom garoto.' },
+    close: { en: 'close', pt: 'fechar' },
+    photo: { en: 'photo', pt: 'foto' },
+    alt: { en: 'A dog taking a selfie, close to the lens', pt: 'Um cachorro tirando uma selfie, bem perto da lente' },
   },
 
   shortcuts: {

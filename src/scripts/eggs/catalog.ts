@@ -10,5 +10,5 @@ export const catalog: EggMeta[] = [
   { id: 'spec', name: { en: 'Spec mode', pt: 'Modo spec' }, hint: { en: 'press S, or the ruler in the footer', pt: 'aperte S, ou a régua no rodapé' } },
   { id: 'shelf', name: { en: 'A tidy shelf', pt: 'Uma estante arrumada' }, hint: { en: 'organize the shelf on the about page', pt: 'arrume a estante na página sobre' } },
   { id: 'stars', name: { en: 'City of stars', pt: 'Cidade das estrelas' }, hint: { en: 'a certain DVD on the shelf', pt: 'um certo DVD na estante' } },
-  { id: 'yashica', name: { en: 'Dad’s Yashica', pt: 'A Yashica do meu pai' }, hint: { en: 'type the name of a camera', pt: 'digite o nome de uma câmera' } },
+  { id: 'yashica', name: { en: 'Dad’s Yashica', pt: 'A Yashica do meu pai' }, hint: { en: 'a little camera hides at the bottom of every page (or type its name)', pt: 'uma camerazinha se esconde no pé de toda página (ou digite o nome dela)' } },
 ];
