@@ -114,3 +114,29 @@
 }
 .crop::before { top: -0.45rem; left: -0.45rem; border-width: 1px 0 0 1px; }
 .crop::after { bottom: -0.45rem; right: -0.45rem; border-width: 0 1px 1px 0; }
+
+/* ---- Print lift: a print picked up off the table -------------------------
+   The hover used by project covers, and meant for images in case studies.
+   On hover (of the image, or of the link / [data-lift-host] around it) the
+   print lifts up-left, tilts a hair, casts a hard offset shadow, and its
+   crop marks appear. Pair it with the cursor's frame state (data-cursor).
+     <figure class="lift crop" data-cursor="look">…</figure>
+   Tune per surface: --lift-mark (crop-mark colour), --lift-shadow. */
+.lift {
+  transition: translate var(--duration-settle) var(--ease-settle), rotate var(--duration-settle) var(--ease-settle),
+    box-shadow var(--duration-settle) var(--ease-settle);
+}
+.lift.crop::before,
+.lift.crop::after { opacity: 0; border-color: var(--lift-mark, var(--color-ink)); transition: opacity var(--duration-quick); }
+.lift:hover,
+a:hover .lift,
+a:focus-visible .lift,
+[data-lift-host]:hover .lift {
+  translate: -4px -4px;
+  rotate: -0.4deg;
+  box-shadow: var(--lift-shadow, var(--shadow-offset-lift));
+}
+.lift.crop:hover::before, .lift.crop:hover::after,
+a:hover .lift.crop::before, a:hover .lift.crop::after,
+a:focus-visible .lift.crop::before, a:focus-visible .lift.crop::after,
+[data-lift-host]:hover .lift.crop::before, [data-lift-host]:hover .lift.crop::after { opacity: 1; }

@@ -66,3 +66,9 @@ Marked in the code as DRAFT, or written new:
 - Home: the headline sits higher, and the first screen leaves a peek of the work (the label and the top of the first two covers) at any desktop size.
 - Phones: the bottom bar is gone. The header shows the name and a menu button that opens a full-screen overlay (home · about · resume, EN / PT-BR). It is a modal dialog: focus stays inside, Esc or ✕ closes it.
 - The "finished roll" secret (visit every page) and the footer's "frames seen" counter are removed. Five secrets remain.
+
+### Update 4 · the reel
+
+- Home: the work is one roll of film. Every project is a frame on a single vertical reel (with a cut leader at the start); its notes sit to the right, joined by a thin line. The frame in the middle of the screen is "on": notes at full strength, title in blue; the others step back to 45% (never hidden). Tablets and phones: the reel runs full width with notes under each frame, always full strength. Reduced motion: nothing fades.
+- Covers develop as they scroll in (pale print → full tone).
+- The cover hover is now a reusable pattern, the **print lift** (`.lift.crop` in `components.css`), kept for case-study images.
