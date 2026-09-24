@@ -1,6 +1,8 @@
 // Cursor behaviour. States come from the nearest [data-cursor] ancestor:
 //   data-cursor="link|project|soon|secret|look|open|drag"
 //   data-cursor-label="custom text" (optional; otherwise the localized default)
+//   A component that changes its label under the pointer dispatches
+//   'ina:cursor' on window so the cursor re-reads it.
 // Nothing here is required to use the site: it is a layer on top.
 import { motionOn } from './prefs';
 
@@ -29,7 +31,9 @@ function init(cursor: HTMLElement) {
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
 
+  let lastTarget: Element | null = null;
   function setState(target: Element | null) {
+    lastTarget = target;
     const host = target?.closest<HTMLElement>('[data-cursor]');
     let state = host?.dataset.cursor ?? 'default';
     // Anything clickable without an explicit state still reads as a link.
@@ -47,6 +51,7 @@ function init(cursor: HTMLElement) {
     kick();
   };
   const onOver = (e: PointerEvent) => { if (e.pointerType === 'mouse') setState(e.target as Element); };
+  const onRefresh = () => setState(lastTarget);
   const onDown = () => cursor.classList.add('is-down');
   const onUp = () => cursor.classList.remove('is-down');
   const onLeave = () => cursor.classList.add('is-away');
@@ -57,6 +62,7 @@ function init(cursor: HTMLElement) {
     document.documentElement.classList.add('has-custom-cursor');
     window.addEventListener('pointermove', onMove, { passive: true });
     document.addEventListener('pointerover', onOver, { passive: true });
+    window.addEventListener('ina:cursor', onRefresh);
     window.addEventListener('pointerdown', onDown);
     window.addEventListener('pointerup', onUp);
     document.documentElement.addEventListener('pointerleave', onLeave);
@@ -67,6 +73,7 @@ function init(cursor: HTMLElement) {
     document.documentElement.classList.remove('has-custom-cursor');
     window.removeEventListener('pointermove', onMove);
     document.removeEventListener('pointerover', onOver);
+    window.removeEventListener('ina:cursor', onRefresh);
     window.removeEventListener('pointerdown', onDown);
     window.removeEventListener('pointerup', onUp);
     document.documentElement.removeEventListener('pointerleave', onLeave);

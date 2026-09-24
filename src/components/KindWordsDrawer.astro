@@ -4,12 +4,13 @@
 //   1 closed → the drawer front, note tops peeking out
 //   2 open   → the drawer slides out (~400ms), notes fan out at ±2–4°
 //   3 read   → a note lifts into a dialog; arrows / swipe move, Esc puts it back
-//   4 close  → pressing the drawer front again slides it back in
+//   4 close  → pressing the drawer front again slides it back in (cursor: "close")
 // The notes are a real <ul>, readable by screen readers even when closed.
 // Reduced motion: no slide, no fan: opening shows a static grid.
 // Phone: opens into a vertical stack, no fanning.
 import type { Locale } from '../i18n/config';
 import { about } from '../content/about';
+import { ui } from '../i18n/ui';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -41,7 +42,7 @@ const n = w.items.length;
     </ul>
   </div>
 
-  <button class="drawer__front" type="button" aria-expanded="false" aria-controls="kind-words-notes" data-drawer-front data-cursor="open">
+  <button class="drawer__front" type="button" aria-expanded="false" aria-controls="kind-words-notes" data-drawer-front data-cursor="open" data-cursor-open={ui.cursor.open[locale]} data-cursor-close={ui.cursor.close[locale]}>
     <span class="drawer__label t-label">{d.front[locale]} <span class="drawer__count">({n})</span></span>
     <span class="drawer__handle" aria-hidden="true"></span>
     <span class="visually-hidden" data-front-sr data-close-label={d.close[locale]}>{d.open[locale]}</span>
@@ -221,6 +222,9 @@ const n = w.items.length;
       drawer.dataset.open = String(open);
       front.setAttribute('aria-expanded', String(open));
       frontSr.textContent = open ? closeLabel : openLabel;
+      // The cursor says what a click will do: open, or close.
+      front.dataset.cursorLabel = (open ? front.dataset.cursorClose : front.dataset.cursorOpen) ?? '';
+      window.dispatchEvent(new Event('ina:cursor'));
       reads.forEach((b) => (b.tabIndex = open ? 0 : -1));
       const animate = motionOn();
       if (open) {

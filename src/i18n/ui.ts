@@ -36,6 +36,7 @@ export const ui = {
     secret: { en: 'a little secret', pt: 'um segredinho' },
     drag: { en: 'drag', pt: 'arraste' },
     open: { en: 'open', pt: 'abrir' },
+    close: { en: 'close', pt: 'fechar' },
     look: { en: 'look', pt: 'olhar' },
   },
 
