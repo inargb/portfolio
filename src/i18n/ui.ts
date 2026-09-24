@@ -8,7 +8,7 @@ export const ui = {
 
   nav: {
     label: { en: 'Main', pt: 'Principal' },
-    work: { en: 'work', pt: 'trabalhos' },
+    work: { en: 'work', pt: 'projetos' },
     about: { en: 'about', pt: 'sobre' },
     resume: { en: 'resume', pt: 'currículo' },
     home: { en: 'Inaiá Silva, home', pt: 'Inaiá Silva, início' },
@@ -42,14 +42,10 @@ export const ui = {
   },
 
   footer: {
-    signature: { en: 'designed by me <3', pt: 'desenhado por mim <3' },
+    signature: { en: 'designed by me <3', pt: 'design feito por mim <3' },
     greeting: { en: 'nice to meet you', pt: 'prazer em te conhecer' },
     seen: { en: 'frames seen', pt: 'frames vistos' },
     secrets: { en: 'secrets found', pt: 'segredos encontrados' },
-    unremembered: {
-      en: 'a frame I don’t remember taking',
-      pt: 'um frame que eu nem lembro de ter tirado',
-    },
     elsewhere: { en: 'elsewhere', pt: 'por aí' },
     kit: { en: 'the kit', pt: 'o kit' },
     kitHint: { en: 'design system playground', pt: 'playground do design system' },
@@ -65,10 +61,10 @@ export const ui = {
     frame: { en: 'frame', pt: 'frame' },
     viewSheet: { en: 'sheet', pt: 'folha' },
     viewIndex: { en: 'index', pt: 'índice' },
-    viewLabel: { en: 'Show work as', pt: 'Ver trabalhos como' },
+    viewLabel: { en: 'Show work as', pt: 'Ver projetos como' },
     next: { en: 'next frame', pt: 'próximo frame' },
     prev: { en: 'previous frame', pt: 'frame anterior' },
-    back: { en: 'all work', pt: 'todos os trabalhos' },
+    back: { en: 'all work', pt: 'todos os projetos' },
     role: { en: 'Role', pt: 'Papel' },
     timeline: { en: 'Timeline', pt: 'Duração' },
     context: { en: 'Context', pt: 'Contexto' },

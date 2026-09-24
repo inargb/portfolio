@@ -53,16 +53,14 @@ export const about = {
       { glyph: '¶', label: l('UX writing', 'UX writing') },
       { glyph: '◐', label: l('Accessibility', 'Acessibilidade') },
       { glyph: '↻', label: l('Prototyping', 'Prototipação') },
-      { glyph: '◇', label: l('Visual design', 'Design visual') },
       { glyph: '✦', label: l('AI + design', 'IA + design') },
-      { glyph: '□', label: l('Product design', 'Product design') },
     ],
     craftLabel: l('and from graphic design', 'e do design gráfico'),
     craft: [
-      l('Brand identity', 'Identidade visual'),
-      l('Editorial design', 'Design editorial'),
-      l('Typography', 'Tipografia'),
-      l('Mixed media art', 'Arte mista'),
+      { glyph: '◎', label: l('Brand identity', 'Identidade visual') },
+      { glyph: '❡', label: l('Editorial design', 'Design editorial') },
+      { glyph: 'Aa', label: l('Typography', 'Tipografia') },
+      { glyph: '✂', label: l('Mixed media art', 'Arte mista') },
     ],
   },
 
@@ -95,9 +93,12 @@ export const about = {
         when: l('2023', '2023'),
       },
     ],
-    // From the IESB coordinator's recommendation on the current site.
-    education: { org: 'IESB', course: l('Graphic Design (CST)', 'Design Gráfico (CST)') },
-    educationLabel: l('studied', 'estudei'),
+  },
+
+  // From the IESB coordinator's recommendation on the current site.
+  education: {
+    label: l('education', 'formação'),
+    items: [{ when: l('studied', 'estudei'), course: l('Graphic Design (CST)', 'Design Gráfico (CST)'), org: 'IESB' }],
   },
 
   words: {

@@ -22,9 +22,9 @@ body {
   min-height: 100dvh;
   background: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-voice);
+  font-family: var(--font-body);
   font-size: var(--type-body);
-  font-weight: var(--weight-voice);
+  font-weight: var(--weight-body);
   line-height: var(--leading-body);
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
@@ -52,24 +52,24 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 
 /* ---- Typography roles ---------------------------------------------------- */
 .t-display {
-  font-family: var(--font-voice);
+  font-family: var(--font-title);
   font-size: var(--type-display);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-display);
-  font-weight: 340;
+  font-weight: var(--weight-title);
   text-wrap: balance;
 }
 .t-heading-xl, .t-heading-l, .t-heading-m, .t-heading-s {
-  font-family: var(--font-voice);
+  font-family: var(--font-title);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
-  font-weight: var(--weight-voice);
+  font-weight: var(--weight-title);
   text-wrap: balance;
 }
-.t-heading-xl { font-size: var(--type-heading-xl); font-weight: 350; }
+.t-heading-xl { font-size: var(--type-heading-xl); }
 .t-heading-l { font-size: var(--type-heading-l); }
 .t-heading-m { font-size: var(--type-heading-m); }
-.t-heading-s { font-size: var(--type-heading-s); font-weight: 450; }
+.t-heading-s { font-size: var(--type-heading-s); letter-spacing: -0.01em; }
 .t-body { font-size: var(--type-body); line-height: var(--leading-body); }
 .t-body-s { font-size: var(--type-body-s); line-height: var(--leading-body); }
 .t-caption, .t-label, .t-nav, .t-meta, .t-code {
