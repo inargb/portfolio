@@ -57,7 +57,7 @@ export type CaseBlock =
   | { type: 'steps'; items: { title: L10n; body: L10n }[] }
   /** Design decisions, as cards: icon → title → text → the principle behind it.
       `note` is a quieter aside after the text (e.g. "approved, not shipped"). */
-  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n }[] };
+  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n; state?: 'chosen' | 'rejected' }[] };
 
 /** A protected case as shipped: public header facts + the encrypted body.
     Written by scripts/seal.mjs; the plain source never enters the repo. */
