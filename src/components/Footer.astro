@@ -15,7 +15,7 @@ const links = [
 ];
 ---
 
-<footer class="footer" data-spec-label="footer">
+<footer class="footer" data-spec-label="footer" data-cursor-invert>
   <div class="container">
     <!-- The greeting on one end, the links on the other (stacked on phones). -->
     <div class="footer__top">
@@ -57,10 +57,22 @@ const links = [
 </footer>
 
 <style>
+  /* Inverted: the footer is the film. Its own tokens flip, so everything
+     inside (links, keycap, ruler, rules) follows without extra rules. */
   .footer {
+    --color-ink: #fbfbfd;
+    --color-paper: var(--color-film);
+    --color-graphite: #c9c4bb;
+    --color-graphite-soft: #a39d93;
+    --color-rule: #3b3833;
+    --color-accent: #8ea6ff;
+    --color-focus: #8ea6ff;
+    --rule-hair: 1px solid var(--color-rule);
+    --rule-ink: 1px solid var(--color-ink);
     margin-top: var(--section-space);
-    border-top: var(--rule-hair);
     padding-block: var(--space-16) var(--space-8);
+    background: var(--color-film);
+    color: var(--color-ink);
   }
   .footer__top {
     display: flex;
