@@ -46,8 +46,8 @@ const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[local
     align-items: end;
     padding-top: 13%;
   }
-  .shelf__img { width: 100%; height: auto; user-select: none; pointer-events: none; mix-blend-mode: multiply; }
-  :global([data-theme='darkroom']) .shelf__img { filter: invert(0.88) hue-rotate(180deg) brightness(0.9); mix-blend-mode: screen; }
+  /* The real photo in every theme: no filters, no blend modes. */
+  .shelf__img { width: 100%; height: auto; user-select: none; pointer-events: none; }
   .shelf__pile { align-self: stretch; }
 
   /* No-JS / pre-JS: a simple row of objects. */

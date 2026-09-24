@@ -1,8 +1,6 @@
 ---
 // The kit: a living reference for the design system. Everything reads the
 // real tokens at runtime, so it stays true in both themes and after edits.
-import '@fontsource/young-serif/400.css';
-import '@fontsource/gloock/400.css';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Pill from '../components/ui/Pill.astro';
@@ -75,7 +73,7 @@ const t = {
   color: { en: 'color', pt: 'cor' },
   pairs: { en: 'Text pairings, checked live against WCAG.', pt: 'Pares de texto, checados ao vivo contra a WCAG.' },
   type: { en: 'type', pt: 'tipografia' },
-  typeNote: { en: 'Two voices: a serif for people, a mono for measurements. Try another display face:', pt: 'Duas vozes: uma serifa para gente, uma mono para medidas. Teste outra fonte de display:' },
+  typeNote: { en: 'Two voices: IBM Plex Mono for the header, titles and measurements; Inter for everything you read.', pt: 'Duas vozes: IBM Plex Mono no cabeçalho, nos títulos e nas medidas; Inter em tudo que se lê.' },
   space: { en: 'space', pt: 'espaço' },
   shape: { en: 'shape & rules', pt: 'forma e linhas' },
   motion: { en: 'motion', pt: 'movimento' },
@@ -133,14 +131,7 @@ const t = {
   <!-- 02 type -->
   <section id="pg-type" class="pg container" aria-labelledby="pg-type-h">
     <h2 id="pg-type-h" class="pg__h"><SectionLabel as="span" text={L(t.type)} frame="02" /></h2>
-    <div class="pg__row">
-      <p class="t-body-s t-secondary">{L(t.typeNote)}</p>
-      <div class="font-pick" role="group" aria-label="Display typeface" data-font-pick>
-        <button type="button" aria-pressed="true" data-font="">Newsreader</button>
-        <button type="button" aria-pressed="false" data-font="'Young Serif', serif">Young Serif</button>
-        <button type="button" aria-pressed="false" data-font="'Gloock', serif">Gloock</button>
-      </div>
-    </div>
+    <p class="t-body-s t-secondary">{L(t.typeNote)}</p>
     <ul class="specimens" role="list" data-specimens>
       {type.map(([cls, name, token, sample]) => (
         <li class="specimen">
@@ -257,7 +248,6 @@ const t = {
   .pg-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-4); }
   .pg { display: grid; gap: var(--space-6); padding-block: var(--space-12); border-top: var(--rule-hair); }
   .pg__h { font-size: inherit; }
-  .pg__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
 
   .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: var(--space-6) var(--layout-gap); }
   .swatch { display: grid; gap: var(--space-1); }
@@ -267,10 +257,6 @@ const t = {
   .pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: var(--layout-gap); }
   .pair { display: grid; gap: var(--space-1); padding: var(--space-4); border: var(--rule-hair); }
 
-  .font-pick { display: flex; border: var(--rule-ink); }
-  .font-pick button { min-height: var(--tap-min); padding: 0 var(--space-4); border: 0; background: none; font-family: var(--font-system); font-size: var(--type-nav); color: var(--color-graphite); }
-  .font-pick button + button { border-left: var(--rule-hair); }
-  .font-pick button[aria-pressed='true'] { background: var(--color-highlight); color: var(--color-on-highlight); }
   .specimens { display: grid; gap: var(--space-8); }
   .specimen { display: grid; gap: var(--space-2); padding-bottom: var(--space-6); border-bottom: var(--rule-hair); }
   .specimen__meta span { color: var(--color-redline); }
@@ -372,16 +358,6 @@ const t = {
   window.addEventListener('ina:prefs', () => requestAnimationFrame(paint));
   window.addEventListener('ina:egg-found', paint);
   window.addEventListener('resize', () => requestAnimationFrame(paint));
-
-  // Display typeface picker (this page only).
-  const pick = document.querySelector<HTMLElement>('[data-font-pick]');
-  const specimens = document.querySelector<HTMLElement>('[data-specimens]');
-  pick?.addEventListener('click', (e) => {
-    const b = (e.target as Element).closest<HTMLButtonElement>('[data-font]');
-    if (!b || !specimens) return;
-    pick.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    specimens.querySelectorAll<HTMLElement>('.t-display, .t-heading-xl, .t-heading-l').forEach((el) => (el.style.fontFamily = b.dataset.font || ''));
-  });
 
   // Motion demos.
   document.querySelector('[data-play-tracks]')?.addEventListener('click', () => {

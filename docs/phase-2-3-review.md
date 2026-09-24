@@ -8,9 +8,9 @@ pages; they're Phase 4.
 
 | Route | What's there |
 |---|---|
-| `/` · `/pt-br` | Hero with the interactive word "frames", the contact sheet (sheet / index views), about teaser |
-| `/about` · `/pt-br/sobre` | The shelf (drag, or keyboard), hello, what I do, experience, kind words, film strip, contact |
-| `/playground` · `/pt-br/playground` | Live tokens, type specimens (with alternate display faces), spacing, motion demos, cursor zones, components, all 7 covers, secrets catalog |
+| `/` · `/pt-br` | Hero with the interactive word "frames", then the contact sheet (sheet / index views) |
+| `/about` · `/pt-br/sobre` | The shelf (drag, or keyboard), hello, what I do, experience, education, kind words, film strip, contact |
+| `/playground` · `/pt-br/playground` | Live tokens, type specimens, spacing, motion demos, cursor zones, components, all 7 covers, secrets catalog |
 | `/works/<slug>` | Placeholder case page: cover, facts, link to the current case, prev/next frame |
 | 404 | "This frame didn't develop." |
 
@@ -27,7 +27,6 @@ pages; they're Phase 4.
 ## Copy that needs your eyes
 
 Marked in the code as DRAFT, or written new:
-- Home hero aside and the section titles ("Seven frames from a very long roll.").
 - About bio: rewritten from your current text, keeping "3+ years".
 - Shelf notes: only facts (titles, and "dad's old Yashica"). Replace them with your own one-liners in `src/content/about.ts`.
 - Education: "Graphic Design (CST), IESB" comes from Marco Aurélio's recommendation. Confirm it.
@@ -39,3 +38,12 @@ Marked in the code as DRAFT, or written new:
 - **Project order:** Specs Generator first (the brief calls it the strongest piece), then the two protected Volanté cases, Systems Portal, Bandoneón, then the two coming-soon projects.
 - **Case URLs** keep today's `/works/<slug>` paths, including `bandoneon-iniciative`, so existing links keep working.
 - **Astro 7** (latest). Astro 5 had open security advisories.
+
+## Update 1 (24 Sep 2026, "Things to update" brief)
+
+- Type: Inter for body text; IBM Plex Mono for the header, titles and display. The serif (Newsreader) is gone.
+- Light background is #FBFBFD. Surfaces and rules were retuned to neutral greys for it. Dark mode is unchanged.
+- Home: removed the "Seven frames" heading + line, the short bio, the contact-sheet button and the About preview.
+- Footer: removed the polaroid. It changed randomly on every visit but was always visible, so it wasn't a real easter egg.
+- About: the shelf photo is unfiltered in every theme; Visual/Product design pills removed; graphic design items are pills; new 05 education_ section (06–08 renumbered).
+- PT: nav "projetos", footer "design feito por mim <3". Resume links open the file for the current language (header, footer, About contact).

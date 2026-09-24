@@ -40,7 +40,7 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
       <Image src={about.portrait} alt={about.hello.portraitAlt[locale]} widths={[360, 720]} sizes="(max-width: 40rem) 70vw, 22rem" data-develop data-cursor="look" />
     </figure>
     <div class="hello__text">
-      <SectionLabel text="hello" frame="02" />
+      <SectionLabel text={locale === 'pt' ? 'oi' : 'hello'} frame="02" />
       <h2 id="hello-title" class="t-heading-l">{about.hello.title[locale]}</h2>
       {about.hello.body.map((p) => <p class="t-body t-pretty measure" data-reveal>{p[locale]}</p>)}
     </div>
@@ -55,10 +55,12 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
     <ul class="craft__pills" role="list" data-stagger>
       {about.disciplines.items.map((d) => <li data-reveal><Pill glyph={d.glyph}>{d.label[locale]}</Pill></li>)}
     </ul>
-    <p class="craft__more t-body t-secondary">
-      <span class="t-label">{about.disciplines.craftLabel[locale]}</span>
-      {about.disciplines.craft.map((c) => c[locale]).join(' · ')}
-    </p>
+    <div class="craft__more">
+      <p class="t-label">{about.disciplines.craftLabel[locale]}</p>
+      <ul class="craft__pills" role="list" data-stagger>
+        {about.disciplines.craft.map((d) => <li data-reveal><Pill glyph={d.glyph}>{d.label[locale]}</Pill></li>)}
+      </ul>
+    </div>
     <div class="craft__tools">
       <p class="t-label">{about.tools.label[locale]}</p>
       <ul class="craft__keys" role="list">
@@ -83,18 +85,30 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
           <span class="exp__role t-body t-secondary">{x.role[locale]}</span>
         </li>
       ))}
-      <li class="exp__row exp__row--edu" data-reveal>
-        <span class="exp__when t-meta">{about.experience.educationLabel[locale]}</span>
-        <span class="exp__org t-heading-m">{about.experience.education.course[locale]}</span>
-        <span class="exp__role t-body t-secondary">{about.experience.education.org}</span>
-      </li>
     </ol>
   </section>
 
-  <!-- 05 · kind words -->
+  <!-- 05 · education -->
+  <section class="exp container section" aria-labelledby="edu-title">
+    <div class="exp__head">
+      <SectionLabel text={about.education.label[locale]} frame="05" />
+      <h2 id="edu-title" class="visually-hidden">{about.education.label[locale]}</h2>
+    </div>
+    <ol class="exp__list" role="list">
+      {about.education.items.map((x) => (
+        <li class="exp__row exp__row--edu" data-reveal>
+          <span class="exp__when t-meta">{x.when[locale]}</span>
+          <span class="exp__org t-heading-m">{x.course[locale]}</span>
+          <span class="exp__role t-body t-secondary">{x.org}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- 06 · kind words -->
   <section class="words container section" aria-labelledby="words-title">
     <div class="words__head">
-      <SectionLabel text={about.words.label[locale]} frame="05" />
+      <SectionLabel text={about.words.label[locale]} frame="06" />
       <h2 id="words-title" class="t-heading-l">{about.words.title[locale]}</h2>
     </div>
     <ul class="words__cards" role="list">
@@ -109,11 +123,11 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
     </ul>
   </section>
 
-  <!-- 06 · love for art -->
+  <!-- 07 · love for art -->
   <section class="art section" aria-labelledby="art-title">
     <div class="art__text container">
       <div>
-        <SectionLabel text={about.art.label[locale]} frame="06" />
+        <SectionLabel text={about.art.label[locale]} frame="07" />
         <h2 id="art-title" class="t-heading-l">{about.art.title[locale]}</h2>
       </div>
       <div class="art__body">
@@ -133,15 +147,15 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
     <p class="container t-caption strip__hint" aria-hidden="true">← {about.art.drag[locale]} →</p>
   </section>
 
-  <!-- 07 · contact -->
+  <!-- 08 · contact -->
   <section class="contact container section" aria-labelledby="contact-title">
     <div class="contact__doodle"><Doodle locale={locale} variant="happy" /></div>
     <div>
-      <SectionLabel text={about.contact.label[locale]} frame="07" />
+      <SectionLabel text={about.contact.label[locale]} frame="08" />
       <h2 id="contact-title" class="t-heading-xl">{about.contact.title[locale]}</h2>
       <p class="contact__links">
         <a class="link t-heading-s" href={site.links.linkedin} target="_blank" rel="noopener">{about.contact.linkedin[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span></a>
-        <a class="link t-nav" href={site.links.resume} target="_blank" rel="noopener">{about.contact.resume[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span></a>
+        <a class="link t-nav" href={site.links.resume[locale]} target="_blank" rel="noopener">{about.contact.resume[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span></a>
       </p>
     </div>
   </section>
@@ -170,7 +184,7 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
   /* 03 */
   .craft { display: grid; gap: var(--space-8); }
   .craft__pills { display: flex; flex-wrap: wrap; gap: var(--space-3); max-width: 56rem; }
-  .craft__more { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: baseline; }
+  .craft__more { display: grid; gap: var(--space-3); }
   .craft__tools { display: grid; gap: var(--space-3); }
   .craft__keys { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
   .craft__keys li { display: inline-flex; align-items: center; gap: var(--space-2); }
@@ -225,8 +239,8 @@ const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
     scrollbar-width: none;
     /* sprocket holes */
     background-image:
-      radial-gradient(circle at 50% 50%, #f3efe6 0 3px, transparent 3.5px),
-      radial-gradient(circle at 50% 50%, #f3efe6 0 3px, transparent 3.5px);
+      radial-gradient(circle at 50% 50%, #fbfbfd 0 3px, transparent 3.5px),
+      radial-gradient(circle at 50% 50%, #fbfbfd 0 3px, transparent 3.5px);
     background-size: 22px 22px, 22px 22px;
     background-position: 0 4px, 0 calc(100% - 4px);
     background-repeat: repeat-x;
