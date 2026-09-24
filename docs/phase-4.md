@@ -17,6 +17,7 @@
   paper with a thin double frame, each a hair off straight. Stats: number →
   label. Steps: number → title → text. Decisions: icon → title → text
   (optional quieter note) → principle.
+  On hover they lift like the images, quieter: a 2px move and a thin shadow.
 - Images keep their own look (hairline frame, print lift on hover) and open in
   the lightbox (← → through every image in the case). The "how might we" is a
   shaded panel with crop marks. Paragraphs stay as running text.
@@ -26,7 +27,7 @@
 | # | Case | Status | Source |
 |---|---|---|---|
 | 1 | Systems Portal | built | inasilva.com case (EN + PT), images from it |
-| 2 | Responsive Specs & Accessibility Generator | next | inasilva.com case |
+| 2 | Responsive Specs & Accessibility Generator | built | inasilva.com case (EN + PT), images from it |
 | 3 | Bandoneón Initiative | next | inasilva.com case |
 | 4 | Bar Tabs System | needs the password gate | protected: never committed in plain text |
 | 5 | Menu Management | needs the password gate | the uploaded brief (kept out of the repo) |
@@ -40,3 +41,12 @@
 - The three extra interface screens from the live case sit in the solution
   section as a gallery (FIG. 03–05). They had no caption on the live site, so
   they have none here; alt text describes each.
+
+## Specs Generator: notes
+
+- Text is Inaiá's own, from the current case in both languages, lightly edited
+  (a few Portuguese sentences smoothed; "proccess" fixed).
+- New blocks for it: `list` (the old manual workflow), `compare` (before /
+  after), extra hero facts (Type), and icons for its four decision cards. No
+  Nielsen tags here: the live case has none.
+- The three "tool in action" images share one caption and one height.

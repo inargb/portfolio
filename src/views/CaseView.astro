@@ -41,6 +41,7 @@ const sections = study.sections.map((s) => {
         <div><dt class="t-label">{p.role[locale]}</dt><dd class="t-meta">{project.role[locale]}</dd></div>
         {project.duration && <div><dt class="t-label">{p.timeline[locale]}</dt><dd class="t-meta">{project.duration[locale]}</dd></div>}
         <div><dt class="t-label">{p.period[locale]}</dt><dd class="t-meta">{project.period[locale]}</dd></div>
+        {study.facts?.map((f) => <div><dt class="t-label">{f.label[locale]}</dt><dd class="t-meta">{f.value[locale]}</dd></div>)}
         <div class="case-hero__tools"><dt class="t-label">{c.tools[locale]}</dt><dd class="t-meta">{study.tools[locale]}</dd></div>
       </dl>
       <div class="case-hero__foot">
@@ -141,7 +142,7 @@ const sections = study.sections.map((s) => {
   .case-sec { padding-block: var(--space-12) var(--space-16); border-top: var(--rule-hair); scroll-margin-top: var(--nav-height); }
   .case-sec:first-child { border-top: 0; padding-top: 0; }
   .case-sec__head { display: grid; gap: var(--space-3); margin-bottom: var(--space-8); }
-  .case-sec__head h2 { max-width: 24ch; text-wrap: balance; }
+  .case-sec__head h2 { max-width: 24ch; text-wrap: balance; white-space: pre-line; }
   .case-sec__blocks { display: grid; gap: var(--space-12); }
 
   @media (max-width: 64rem) {

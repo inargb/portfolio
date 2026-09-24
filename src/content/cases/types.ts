@@ -7,6 +7,7 @@ import type { L10n } from '../../i18n/config';
 export interface CaseStudy {
   slug: string;                       // matches projects.ts
   tools: L10n;                        // skills / tools line in the hero
+  facts?: { label: L10n; value: L10n }[]; // extra hero facts (e.g. type of project)
   live?: { href: string; label: L10n };
   sections: CaseSection[];
 }
@@ -14,7 +15,7 @@ export interface CaseStudy {
 export interface CaseSection {
   id: string;                         // anchor: #overview, #problem…
   label: L10n;                        // "overview", "o problema"
-  title: L10n;
+  title: L10n;                        // \n for a deliberate line break
   blocks: CaseBlock[];
 }
 
@@ -33,11 +34,17 @@ export type CaseBlock =
   | { type: 'figure'; image: CaseImage; caption?: L10n }
   /** Several images in a row (a contact strip); each opens larger. */
   | { type: 'gallery'; images: CaseImage[]; caption?: L10n }
+  /** A plain numbered list (e.g. the steps of an old manual workflow). */
+  | { type: 'list'; intro?: L10n; items: L10n[] }
+  /** Before / after, side by side: the same rows, then vs now. */
+  | { type: 'compare'; before: CompareSide; after: CompareSide }
   /** Numbered process steps, as a row of cards: number → title → text. */
   | { type: 'steps'; items: { title: L10n; body: L10n }[] }
   /** Design decisions, as cards: icon → title → text → the principle behind it.
       `note` is a quieter aside after the text (e.g. "approved, not shipped"). */
-  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag: L10n }[] };
+  | { type: 'decisions'; intro?: L10n; items: { icon: CaseIcon; title: L10n; body: L10n; note?: L10n; tag?: L10n }[] };
+
+export interface CompareSide { label: L10n; rows: { key: L10n; value: L10n }[] }
 
 /** Line icons for decision cards (drawn in components/case/CaseBlocks.astro). */
-export type CaseIcon = 'layout' | 'search' | 'star';
+export type CaseIcon = 'layout' | 'search' | 'star' | 'frame' | 'contrast' | 'ruler' | 'doc';
