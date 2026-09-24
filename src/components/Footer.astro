@@ -94,7 +94,8 @@ const links = [
     border-top: var(--rule-hair);
   }
   .footer__sig { color: var(--color-ink); font-weight: 500; }
-  .footer__controls { display: flex; gap: var(--space-1); margin-left: auto; }
+  /* Flush right: the ? key lines up with the end of the links above. */
+  .footer__controls { display: flex; gap: var(--space-1); margin-left: auto; margin-right: calc(-1 * var(--space-3)); }
   .footer__ctl {
     display: inline-flex;
     align-items: center;
