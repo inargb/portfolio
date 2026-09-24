@@ -116,8 +116,7 @@ export const projects: Project[] = [
       pt: 'Um ano redesenhando o módulo de back-office por trás de cada cardápio de PDV e totem, repensando a arquitetura da informação de uma ferramenta enterprise.',
     },
     context: { en: 'Enterprise · Back office', pt: 'Enterprise · Back office' },
-    // From the case-study brief, where it is marked as still to be confirmed.
-    role: { en: 'Product designer', pt: 'Product designer' },
+    role: { en: 'UX/UI designer', pt: 'UX/UI designer' },
     period: { en: '2025 — ongoing', pt: '2025 — em andamento' },
     status: { en: 'protected case', pt: 'case protegido' },
     statusKind: 'locked',
