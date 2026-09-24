@@ -234,7 +234,7 @@ export const shelf = {
     { id: 'amelie', src: amelie, size: 0.16, home: 5, pile: [0.24, 0.7, 3], name: l('Amélie', 'O Fabuloso Destino de Amélie Poulain'), note: l('Amélie (2001)', 'O Fabuloso Destino de Amélie Poulain (2001)') },
     { id: 'popeye', src: popeye, size: 0.17, home: 6, pile: [0.5, 0.64, -4], name: l('Popeye magazine', 'Revista Popeye'), note: l('Popeye magazine', 'revista Popeye') },
     { id: 'ipod', src: ipod, size: 0.13, home: 1, pile: [0.76, 0.66, 6], name: l('iPod classic', 'iPod clássico'), note: l('iPod classic', 'iPod clássico') },
-    { id: 'sneakers', src: sneakers, size: 0.25, home: 8, pile: [0.3, 0.98, -2], name: l('Sneakers', 'Tênis'), note: l('Onitsuka Tiger sneakers', 'tênis Onitsuka Tiger') },
+    { id: 'sneakers', src: sneakers, size: 0.25, home: 8, pile: [0.3, 0.98, -2], name: l('Shoes', 'Sapatos'), note: l('Onitsuka Tiger shoes', 'sapatos Onitsuka Tiger') },
     { id: 'plant', src: plant, size: 0.23, home: 0, pile: [0.72, 0.99, 0], name: l('A plant', 'Uma planta'), note: l('a plant', 'uma planta') },
   ] as ShelfObject[],
   ui: {
