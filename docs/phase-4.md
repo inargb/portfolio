@@ -21,12 +21,12 @@
   the lightbox (← → through every image in the case). The "how might we" is a
   shaded panel with crop marks. Paragraphs stay as running text.
 
-- Hero hierarchy: eyebrow (frame no. · context, small caps) → title (the only
-  heading-sized text, mono) → intro in the reading face one step up
-  (`--type-lede`) → "see it live". Facts sit in their own column on the right:
-  small uppercase labels over plain values, hairline between each; Focus (the
-  tags as text) and Skills & tools span the full width. Empty facts ("—") are
-  hidden. Stacks on tablets and phones.
+- Header, after the reference portfolios (Rachel Chen, Emmi Wu, Eem Monroy):
+  the section index is a left sidebar from the top of the page, with
+  "← all work" above it; the header sits in the content column. Eyebrow
+  (frame · context · type/method) → title → one sentence → facts in four
+  equal columns (Role, Timeline, Focus, Skills & tools), one value per line,
+  labels in small blue caps → "see it live". Two columns on phones.
 
 ## Cases
 

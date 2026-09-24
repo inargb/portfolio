@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
 import CaseNav from '../components/CaseNav.astro';
 import CaseBlocks from '../components/case/CaseBlocks.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
-import { caseHref, type Locale } from '../i18n/config';
+import { caseHref, href, type Locale } from '../i18n/config';
 import { ui } from '../i18n/ui';
 import type { Project } from '../content/projects';
 import type { CaseStudy } from '../content/cases/types';
@@ -28,36 +28,33 @@ const sections = study.sections.map((s) => {
   }
   return { s, figStart };
 });
+
+// Header facts: four equal columns, one value per line (never a run-on line).
+const home = href('home', locale);
+const split = (v: string) => v.split(/,\s*/).map((x) => x.charAt(0).toUpperCase() + x.slice(1));
+const timeline = [project.duration?.[locale], project.period[locale] !== '—' ? project.period[locale] : undefined].filter(Boolean) as string[];
+const facts = [
+  { label: p.role[locale], values: [project.role[locale]] },
+  { label: p.timeline[locale], values: timeline.length ? timeline : ['—'] },
+  { label: c.focus[locale], values: project.tags.map((tg) => tg[locale]) },
+  { label: c.tools[locale], values: split(study.tools[locale]) },
+];
+// Eyebrow: frame no. · context · any extra facts (Type, Method), without repeats.
+const eyebrowParts = [`${p.frame[locale]} ${project.frame}`, ...project.context[locale].split(' · ')];
+for (const f of study.facts ?? []) if (!eyebrowParts.some((x) => x.toLowerCase() === f.value[locale].toLowerCase())) eyebrowParts.push(f.value[locale]);
+const eyebrow = eyebrowParts.join(' · ');
 ---
 
 <Base locale={locale} altHref={caseHref(project.slug, other)} pageId={project.slug} title={project.title[locale]} description={project.line[locale]}>
   <article class="case">
-    <!-- Hero, by hierarchy: eyebrow (where it sits) → title → intro in the
-         reading face → the facts in their own quiet column. -->
-    <header class="case-hero container">
-      <div class="case-hero__main">
-        <p class="case-hero__eyebrow t-label"><span class="case-hero__no">{p.frame[locale]} {project.frame}</span> · {project.context[locale]}</p>
-        <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
-        <p class="case-hero__lede">{project.line[locale]}</p>
-        {study.live && (
-          <a class="case-hero__live link t-nav" href={study.live.href} target="_blank" rel="noopener">
-            {study.live.label[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span>
-          </a>
-        )}
-      </div>
-      <dl class="case-hero__facts">
-        <div><dt>{p.role[locale]}</dt><dd>{project.role[locale]}</dd></div>
-        {project.duration && <div><dt>{p.timeline[locale]}</dt><dd>{project.duration[locale]}</dd></div>}
-        {project.period[locale] !== '—' && <div><dt>{p.period[locale]}</dt><dd>{project.period[locale]}</dd></div>}
-        {study.facts?.map((f) => <div><dt>{f.label[locale]}</dt><dd>{f.value[locale]}</dd></div>)}
-        <div class="case-hero__wide"><dt>{c.focus[locale]}</dt><dd>{project.tags.map((tg) => tg[locale]).join(' · ')}</dd></div>
-        <div class="case-hero__wide"><dt>{c.tools[locale]}</dt><dd>{study.tools[locale]}</dd></div>
-      </dl>
-    </header>
-
+    <!-- Layout after the reference portfolios (Rachel Chen, Emmi Wu): the
+         index is a left sidebar from the very top, with the way back above
+         it; the header sits in the same column as the content. Header:
+         eyebrow → title → one sentence → facts in equal columns, one value
+         per line. -->
     <div class="case-body container">
       <nav class="case-index" aria-label={c.contents[locale]} data-case-index>
-        <p class="t-label case-index__title">{c.contents[locale]}</p>
+        <a class="case-index__back t-label" href={`${home}${home.endsWith('/') ? '' : '/'}#work`}>← {p.back[locale]}</a>
         <ol role="list">
           {study.sections.map((s, i) => (
             <li><a href={`#${s.id}`} data-index-link={s.id}><span class="case-index__no">{two(i)}</span> {s.label[locale]}</a></li>
@@ -66,6 +63,25 @@ const sections = study.sections.map((s) => {
       </nav>
 
       <div class="case-main">
+        <header class="case-hero">
+          <p class="case-hero__eyebrow t-label">{eyebrow}</p>
+          <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
+          <p class="case-hero__line">{project.line[locale]}</p>
+          <dl class="case-hero__facts">
+            {facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                {f.values.map((v) => <dd>{v}</dd>)}
+              </div>
+            ))}
+          </dl>
+          {study.live && (
+            <a class="case-hero__live link t-nav" href={study.live.href} target="_blank" rel="noopener">
+              {study.live.label[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span>
+            </a>
+          )}
+        </header>
+
         {sections.map(({ s, figStart }, i) => (
           <section class="case-sec" id={s.id} aria-labelledby={`${s.id}-title`} data-case-section>
             <header class="case-sec__head">
@@ -95,51 +111,38 @@ const sections = study.sections.map((s) => {
 </Base>
 
 <style>
-  /* Hero: title and intro on the left (the read), facts on the right (the
-     scan). Title is the only heading-sized text; the intro is the reading
-     face one step up; facts are small labels over plain values. */
-  .case-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.7fr) minmax(16rem, 1fr);
-    gap: var(--space-8) var(--space-16);
-    align-items: end;
-    padding-block: var(--space-16) var(--space-12);
-    border-bottom: var(--rule-hair);
-  }
-  .case-hero__main { display: grid; justify-items: start; gap: var(--space-4); }
+  /* Header, in the content column. */
+  .case-hero { display: grid; justify-items: start; gap: var(--space-4); padding-bottom: var(--space-12); }
   .case-hero__eyebrow { color: var(--color-graphite-soft); }
-  .case-hero__no { color: var(--color-accent); }
-  .case-hero__title { max-width: 18ch; text-wrap: balance; }
-  .case-hero__lede {
-    max-width: 34rem;
-    margin-top: var(--space-2);
-    font-size: var(--type-lede);
-    line-height: 1.5;
+  .case-hero__title { max-width: 20ch; text-wrap: balance; }
+  .case-hero__line {
+    max-width: 40rem;
+    font-size: var(--type-heading-m);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
     color: var(--color-graphite);
     text-wrap: pretty;
   }
-  .case-hero__live { margin-top: var(--space-2); }
-
   .case-hero__facts {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4) var(--space-6);
-    align-content: end;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-6);
+    width: 100%;
+    margin-top: var(--space-8);
   }
-  .case-hero__facts div { display: grid; gap: var(--space-1); padding-top: var(--space-3); border-top: var(--rule-hair); }
-  .case-hero__wide { grid-column: 1 / -1; }
+  .case-hero__facts div { display: grid; align-content: start; gap: 2px; }
   .case-hero__facts dt {
+    margin-bottom: var(--space-2);
     font-family: var(--font-system);
     font-size: var(--type-label);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-graphite-soft);
+    color: var(--color-accent);
   }
-  .case-hero__facts dd { font-size: var(--type-body-s); line-height: 1.45; color: var(--color-ink); }
-
-  @media (max-width: 64rem) {
-    .case-hero { grid-template-columns: 1fr; padding-block: var(--space-12) var(--space-8); }
-    .case-hero__facts { max-width: 36rem; }
+  .case-hero__facts dd { font-size: var(--type-body-s); line-height: 1.5; color: var(--color-graphite); }
+  .case-hero__live { margin-top: var(--space-4); }
+  @media (max-width: 40rem) {
+    .case-hero__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-4); }
   }
 
   /* Body: index on the left (sticky), sections on the right. */
@@ -150,7 +153,8 @@ const sections = study.sections.map((s) => {
     padding-top: var(--space-12);
   }
   .case-index { position: sticky; top: calc(var(--nav-height) + var(--space-8)); align-self: start; display: grid; gap: var(--space-3); }
-  .case-index__title { color: var(--color-graphite-soft); }
+  .case-index__back { display: inline-flex; align-items: center; min-height: var(--tap-min); margin-bottom: var(--space-2); color: var(--color-graphite); text-decoration: none; }
+  .case-index__back:hover { color: var(--color-ink); }
   .case-index ol { display: grid; gap: var(--space-1); }
   .case-index a {
     display: inline-flex;

@@ -13,7 +13,6 @@ export const specsGenerator: CaseStudy = {
     'Figma Make, design-oriented prompting, prototyping, design systems, documentation',
     'Figma Make, prompt orientado por design, protótipo, design systems, documentação',
   ),
-  facts: [{ label: l('Type', 'Tipo'), value: l('Internal tool, used every sprint', 'Ferramenta interna de uso recorrente') }],
   sections: [
     {
       id: 'overview',
