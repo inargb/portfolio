@@ -213,6 +213,7 @@ export interface ShelfObject {
   name: L10n;
   note: L10n;
   size: number;            // width as a fraction of the shelf photo width
+  home: number;            // the slot "tidy up for me" puts it in (0–8, top-left → bottom-right)
   pile: [number, number, number]; // x, y (centre-bottom, fraction of pile) + rotation
 }
 
@@ -226,15 +227,15 @@ export const shelf = {
     [0.27, 0.84], [0.52, 0.84], [0.76, 0.84],
   ] as [number, number][],
   objects: [
-    { id: 'lalaland', src: lalaland, size: 0.17, pile: [0.14, 0.34, -6], name: l('La La Land', 'La La Land'), note: l('La La Land (2016)', 'La La Land (2016)') },
-    { id: 'harry', src: harry, size: 0.17, pile: [0.38, 0.3, 4], name: l('When Harry Met Sally…', 'Harry & Sally'), note: l('When Harry Met Sally… (1989)', 'Harry & Sally: Feitos um para o Outro (1989)') },
-    { id: 'camera', src: camera, size: 0.23, pile: [0.66, 0.22, -3], name: l('Yashica camera', 'Câmera Yashica'), note: l('dad’s old Yashica. always in my bag.', 'a Yashica antiga do meu pai. sempre na bolsa.') },
-    { id: 'vogue', src: vogue, size: 0.17, pile: [0.85, 0.38, 5], name: l('Vogue', 'Vogue'), note: l('Vogue', 'Vogue') },
-    { id: 'amelie', src: amelie, size: 0.16, pile: [0.24, 0.7, 3], name: l('Amélie', 'O Fabuloso Destino de Amélie Poulain'), note: l('Amélie (2001)', 'O Fabuloso Destino de Amélie Poulain (2001)') },
-    { id: 'popeye', src: popeye, size: 0.17, pile: [0.5, 0.64, -4], name: l('Popeye magazine', 'Revista Popeye'), note: l('Popeye magazine', 'revista Popeye') },
-    { id: 'ipod', src: ipod, size: 0.13, pile: [0.76, 0.66, 6], name: l('iPod classic', 'iPod clássico'), note: l('iPod classic', 'iPod clássico') },
-    { id: 'sneakers', src: sneakers, size: 0.25, pile: [0.3, 0.98, -2], name: l('Sneakers', 'Tênis'), note: l('Onitsuka Tiger sneakers', 'tênis Onitsuka Tiger') },
-    { id: 'plant', src: plant, size: 0.19, pile: [0.72, 0.99, 0], name: l('A plant', 'Uma planta'), note: l('a plant', 'uma planta') },
+    { id: 'lalaland', src: lalaland, size: 0.17, home: 4, pile: [0.14, 0.34, -6], name: l('La La Land', 'La La Land'), note: l('La La Land (2016)', 'La La Land (2016)') },
+    { id: 'harry', src: harry, size: 0.17, home: 3, pile: [0.38, 0.3, 4], name: l('When Harry Met Sally…', 'Harry & Sally'), note: l('When Harry Met Sally… (1989)', 'Harry & Sally: Feitos um para o Outro (1989)') },
+    { id: 'camera', src: camera, size: 0.23, home: 2, pile: [0.66, 0.22, -3], name: l('Yashica camera', 'Câmera Yashica'), note: l('dad’s old Yashica. always in my bag.', 'a Yashica antiga do meu pai. sempre na bolsa.') },
+    { id: 'vogue', src: vogue, size: 0.17, home: 7, pile: [0.85, 0.38, 5], name: l('Vogue', 'Vogue'), note: l('Vogue', 'Vogue') },
+    { id: 'amelie', src: amelie, size: 0.16, home: 5, pile: [0.24, 0.7, 3], name: l('Amélie', 'O Fabuloso Destino de Amélie Poulain'), note: l('Amélie (2001)', 'O Fabuloso Destino de Amélie Poulain (2001)') },
+    { id: 'popeye', src: popeye, size: 0.17, home: 6, pile: [0.5, 0.64, -4], name: l('Popeye magazine', 'Revista Popeye'), note: l('Popeye magazine', 'revista Popeye') },
+    { id: 'ipod', src: ipod, size: 0.13, home: 1, pile: [0.76, 0.66, 6], name: l('iPod classic', 'iPod clássico'), note: l('iPod classic', 'iPod clássico') },
+    { id: 'sneakers', src: sneakers, size: 0.25, home: 8, pile: [0.3, 0.98, -2], name: l('Sneakers', 'Tênis'), note: l('Onitsuka Tiger sneakers', 'tênis Onitsuka Tiger') },
+    { id: 'plant', src: plant, size: 0.23, home: 0, pile: [0.72, 0.99, 0], name: l('A plant', 'Uma planta'), note: l('a plant', 'uma planta') },
   ] as ShelfObject[],
   ui: {
     help: l(
