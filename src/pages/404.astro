@@ -1,0 +1,32 @@
+---
+// One 404 for both languages: GitHub Pages serves a single 404.html.
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import { href } from '../i18n/config';
+import { ui } from '../i18n/ui';
+const n = ui.notFound;
+---
+
+<Base locale="en" altHref={href('home', 'pt')} pageId="404" title="404">
+  <section class="nf container">
+    <div class="nf__frame crop" aria-hidden="true"><Doodle locale="en" variant="wonder" /></div>
+    <div class="nf__text">
+      <p class="t-meta">FR ?? · 404</p>
+      <h1 class="t-heading-xl">{n.title.en}</h1>
+      <p class="t-body t-secondary">{n.body.en}</p>
+      <p class="t-body t-secondary" lang="pt-BR"><em>{n.title.pt}</em> {n.body.pt}</p>
+      <p class="nf__links">
+        <a class="link t-nav" href={href('home', 'en')}>← {n.home.en}</a>
+        <a class="link t-nav" href={href('home', 'pt')} lang="pt-BR">← {n.home.pt}</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { display: grid; grid-template-columns: minmax(8rem, 16rem) 1fr; gap: var(--space-12); align-items: center; min-height: 70svh; padding-block: var(--space-16); }
+  .nf__frame { padding: var(--space-6); background: var(--color-paper-shade); filter: blur(0.6px) contrast(0.6); opacity: 0.7; rotate: -3deg; }
+  .nf__text { display: grid; gap: var(--space-4); max-width: 40rem; }
+  .nf__links { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+  @media (max-width: 40rem) { .nf { grid-template-columns: 1fr; } .nf__frame { width: 8rem; } }
+</style>

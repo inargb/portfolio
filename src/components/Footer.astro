@@ -1,0 +1,187 @@
+---
+import { Image } from 'astro:assets';
+import { href, type Locale } from '../i18n/config';
+import { ui } from '../i18n/ui';
+import { site } from '../content/site';
+import { photos } from '../content/photos';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const f = ui.footer;
+const c = ui.controls;
+const links = [
+  { label: 'linkedin', href: site.links.linkedin },
+  { label: 'instagram', href: site.links.instagram },
+  { label: ui.nav.resume[locale], href: site.links.resume },
+  { label: 'design', href: site.links.design },
+];
+---
+
+<footer class="footer" data-spec-label="footer">
+  <div class="container">
+    <div class="footer__top">
+      <p class="footer__hello t-heading-xl">
+        {f.greeting[locale]}<span class="caret" aria-hidden="true"></span>
+      </p>
+
+      <figure class="footer__photo" data-unremembered>
+        {photos.map((p, i) => (
+          <Image
+            src={p.src}
+            alt={p.alt[locale]}
+            widths={[240, 480]}
+            sizes="240px"
+            loading="lazy"
+            data-photo
+            hidden={i !== 0}
+          />
+        ))}
+        <figcaption class="t-caption">{f.unremembered[locale]}</figcaption>
+      </figure>
+    </div>
+
+    <div class="footer__mid">
+      <p class="t-label t-secondary">{f.elsewhere[locale]}</p>
+      <ul class="footer__links" role="list">
+        {links.map((l) => (
+          <li>
+            <a class="footer__link t-nav" href={l.href} target="_blank" rel="noopener">
+              {l.label}<span aria-hidden="true"> ↗</span>
+              <span class="visually-hidden">{ui.nav.newTab[locale]}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer__base t-meta">
+      <p class="footer__sig">{f.signature[locale]}</p>
+
+      <p class="footer__roll">
+        <span class="visually-hidden">{f.seen[locale]}:</span>
+        <span aria-hidden="true">exp.</span> <span data-roll-count>01</span>/<span data-roll-total>08</span>
+        <span class="footer__roll-label" aria-hidden="true">{f.seen[locale]}</span>
+        <span class="footer__roll-done">· {f.rollDone[locale]}</span>
+      </p>
+
+      <p class="footer__secrets" data-secrets hidden>
+        {f.secrets[locale]} <span data-secrets-count></span>
+      </p>
+
+      <div class="footer__controls" role="group" aria-label={c.group[locale]}>
+        <button
+          class="footer__ctl"
+          type="button"
+          aria-pressed="false"
+          data-motion-toggle
+          data-label-pause={c.motionPause[locale]}
+          data-label-play={c.motionPlay[locale]}
+        >
+          <span class="footer__ico" aria-hidden="true">❙❙</span>
+          <span data-motion-label>{c.motionPause[locale]}</span>
+        </button>
+        <button class="footer__ctl" type="button" aria-pressed="false" data-spec-toggle>
+          <svg class="footer__ico footer__ruler" viewBox="0 0 24 8" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="23" height="7" fill="none" stroke="currentColor" />
+            <path d="M4 1v3M8 1v4M12 1v3M16 1v4M20 1v3" stroke="currentColor" />
+          </svg>
+          <span>{c.spec[locale]}</span>
+        </button>
+        <button class="footer__ctl" type="button" data-shortcuts-open aria-label={ui.shortcuts.title[locale]}>
+          <kbd class="keycap" aria-hidden="true">?</kbd>
+        </button>
+      </div>
+
+      <a class="footer__kit link" href={href('playground', locale)} title={f.kitHint[locale]}>{f.kit[locale]}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--section-space);
+    border-top: var(--rule-ink);
+    padding-block: var(--space-16) var(--space-8);
+  }
+  .footer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .footer__hello { max-width: 12ch; }
+  .footer__photo { width: 10.5rem; rotate: 2.5deg; }
+  .footer__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    padding: 0.35rem 0.35rem 0;
+    background: var(--color-paper-shade);
+    border: var(--rule-hair);
+    border-bottom: 0;
+  }
+  .footer__photo figcaption {
+    padding: 0.35rem 0.5rem 0.5rem;
+    background: var(--color-paper-shade);
+    border: var(--rule-hair);
+    border-top: 0;
+    font-size: 0.6875rem;
+    line-height: 1.35;
+  }
+  .footer__mid {
+    display: flex;
+    gap: var(--space-6);
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-top: var(--space-12);
+    padding-top: var(--space-4);
+    border-top: var(--rule-hair);
+  }
+  .footer__links { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .footer__link:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-6);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: var(--rule-hair);
+  }
+  .footer__sig { color: var(--color-ink); font-weight: 500; }
+  .footer__roll-label { margin-left: 0.25em; }
+  .footer__roll-done { display: none; }
+  :global([data-roll-done]) .footer__roll-done { display: inline; color: var(--color-ink); }
+  .footer__controls { display: flex; gap: var(--space-1); margin-left: auto; }
+  .footer__ctl {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-min);
+    padding: 0 var(--space-3);
+    border: 0;
+    background: none;
+    color: var(--color-graphite);
+    font-family: var(--font-system);
+    font-size: var(--type-meta);
+  }
+  .footer__ctl:hover, .footer__ctl[aria-pressed='true'] { color: var(--color-ink); }
+  .footer__ctl[aria-pressed='true'] .footer__ico { color: var(--color-redline); }
+  .footer__ico { font-size: 0.6rem; letter-spacing: -0.1em; }
+  .footer__ruler { width: 1.5rem; }
+  .footer__kit { font-family: var(--font-system); font-size: var(--type-meta); color: var(--color-graphite); }
+
+  @media (max-width: 40rem) {
+    .footer { padding-bottom: calc(var(--space-24) + env(safe-area-inset-bottom)); }
+    .footer__controls { margin-left: 0; width: 100%; }
+    .footer__photo { width: 8.5rem; }
+  }
+</style>

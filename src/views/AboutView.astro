@@ -1,0 +1,266 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Shelf from '../components/Shelf.astro';
+import Pill from '../components/ui/Pill.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import Doodle from '../components/Doodle.astro';
+import { href, type L10n, type Locale } from '../i18n/config';
+import { about } from '../content/about';
+import { photos } from '../content/photos';
+import { site } from '../content/site';
+import { ui } from '../i18n/ui';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const other: Locale = locale === 'en' ? 'pt' : 'en';
+const tr = (v: L10n | string) => (typeof v === 'string' ? v : v[locale]);
+// [[phrase]] in quotes becomes a highlighter mark.
+const marked = (s: string) => s.replace(/\[\[(.+?)\]\]/g, '<mark class="mark">$1</mark>');
+const tilts = [-2.2, 1.6, -0.8, 2.4, -1.4];
+---
+
+<Base locale={locale} route="about" altHref={href('about', other)} pageId="about" title={about.intro.label[locale]}>
+  <!-- 01 · intro + shelf -->
+  <section class="intro container" aria-labelledby="about-title">
+    <div class="intro__text">
+      <SectionLabel text={about.intro.label[locale]} frame="01" />
+      <h1 id="about-title" class="t-heading-xl">{about.intro.title[locale]}</h1>
+      <p class="t-body t-secondary t-pretty">{about.intro.body[locale]}</p>
+      <p class="intro__ask t-heading-s"><span class="mark">{about.intro.ask[locale]}</span></p>
+    </div>
+    <div class="intro__shelf">
+      <Shelf locale={locale} />
+    </div>
+  </section>
+
+  <!-- 02 · hello -->
+  <section class="hello container section" aria-labelledby="hello-title">
+    <figure class="hello__portrait crop" data-reveal>
+      <Image src={about.portrait} alt={about.hello.portraitAlt[locale]} widths={[360, 720]} sizes="(max-width: 40rem) 70vw, 22rem" data-develop data-cursor="look" />
+    </figure>
+    <div class="hello__text">
+      <SectionLabel text="hello" frame="02" />
+      <h2 id="hello-title" class="t-heading-l">{about.hello.title[locale]}</h2>
+      {about.hello.body.map((p) => <p class="t-body t-pretty measure" data-reveal>{p[locale]}</p>)}
+    </div>
+  </section>
+
+  <!-- 03 · what I do -->
+  <section class="craft container section" aria-labelledby="craft-title">
+    <div class="craft__head">
+      <SectionLabel text={about.disciplines.label[locale]} frame="03" />
+      <h2 id="craft-title" class="visually-hidden">{about.disciplines.label[locale]}</h2>
+    </div>
+    <ul class="craft__pills" role="list" data-stagger>
+      {about.disciplines.items.map((d) => <li data-reveal><Pill glyph={d.glyph}>{d.label[locale]}</Pill></li>)}
+    </ul>
+    <p class="craft__more t-body t-secondary">
+      <span class="t-label">{about.disciplines.craftLabel[locale]}</span>
+      {about.disciplines.craft.map((c) => c[locale]).join(' · ')}
+    </p>
+    <div class="craft__tools">
+      <p class="t-label">{about.tools.label[locale]}</p>
+      <ul class="craft__keys" role="list">
+        {about.tools.items.map((tool) => (
+          <li><kbd class="keycap" aria-hidden="true">{tool.key}</kbd> <span class="t-caption">{tool.name}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 · experience -->
+  <section class="exp container section" aria-labelledby="exp-title">
+    <div class="exp__head">
+      <SectionLabel text={about.experience.label[locale]} frame="04" />
+      <h2 id="exp-title" class="visually-hidden">{about.experience.label[locale]}</h2>
+    </div>
+    <ol class="exp__list" role="list">
+      {about.experience.items.map((x) => (
+        <li class="exp__row" data-reveal>
+          <span class="exp__when t-meta">{x.when[locale]}</span>
+          <span class="exp__org t-heading-m">{tr(x.org)}</span>
+          <span class="exp__role t-body t-secondary">{x.role[locale]}</span>
+        </li>
+      ))}
+      <li class="exp__row exp__row--edu" data-reveal>
+        <span class="exp__when t-meta">{about.experience.educationLabel[locale]}</span>
+        <span class="exp__org t-heading-m">{about.experience.education.course[locale]}</span>
+        <span class="exp__role t-body t-secondary">{about.experience.education.org}</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 05 · kind words -->
+  <section class="words container section" aria-labelledby="words-title">
+    <div class="words__head">
+      <SectionLabel text={about.words.label[locale]} frame="05" />
+      <h2 id="words-title" class="t-heading-l">{about.words.title[locale]}</h2>
+    </div>
+    <ul class="words__cards" role="list">
+      {about.words.items.map((w, i) => (
+        <li class="words__card" style={`--tilt:${tilts[i % tilts.length]}deg`} data-reveal>
+          <blockquote class="t-body-s">
+            <p set:html={marked(w.quote[locale])} />
+          </blockquote>
+          <p class="words__who"><span class="t-caption words__name">{w.name}</span><span class="t-caption">{w.role[locale]}</span></p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- 06 · love for art -->
+  <section class="art section" aria-labelledby="art-title">
+    <div class="art__text container">
+      <div>
+        <SectionLabel text={about.art.label[locale]} frame="06" />
+        <h2 id="art-title" class="t-heading-l">{about.art.title[locale]}</h2>
+      </div>
+      <div class="art__body">
+        {about.art.body.map((p) => <p class="t-body t-pretty" data-reveal>{p[locale]}</p>)}
+      </div>
+    </div>
+    <div class="strip" data-strip tabindex="0" role="region" aria-label={about.art.drag[locale]} data-cursor="drag">
+      <ol class="strip__frames" role="list">
+        {photos.map((ph, i) => (
+          <li class="strip__frame">
+            <Image src={ph.src} alt={ph.alt[locale]} widths={[420, 840]} sizes="(max-width: 40rem) 70vw, 26rem" loading="lazy" data-develop />
+            <span class="strip__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}A</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <p class="container t-caption strip__hint" aria-hidden="true">← {about.art.drag[locale]} →</p>
+  </section>
+
+  <!-- 07 · contact -->
+  <section class="contact container section" aria-labelledby="contact-title">
+    <div class="contact__doodle"><Doodle locale={locale} variant="happy" /></div>
+    <div>
+      <SectionLabel text={about.contact.label[locale]} frame="07" />
+      <h2 id="contact-title" class="t-heading-xl">{about.contact.title[locale]}</h2>
+      <p class="contact__links">
+        <a class="link t-heading-s" href={site.links.linkedin} target="_blank" rel="noopener">{about.contact.linkedin[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span></a>
+        <a class="link t-nav" href={site.links.resume} target="_blank" rel="noopener">{about.contact.resume[locale]} ↗<span class="visually-hidden"> {ui.nav.newTab[locale]}</span></a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* 01 */
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--space-12);
+    align-items: center;
+    padding-block: var(--space-12) var(--space-8);
+  }
+  .intro__text { display: grid; gap: var(--space-4); }
+  .intro__ask { font-family: var(--font-system); font-size: var(--type-body); margin-top: var(--space-2); }
+  @media (max-width: 56rem) { .intro { grid-template-columns: 1fr; } }
+
+  /* 02 */
+  .hello { display: grid; grid-template-columns: minmax(10rem, 22rem) 1fr; gap: var(--space-12); align-items: start; }
+  .hello__portrait { rotate: -1.5deg; padding: var(--space-2); background: var(--color-paper-shade); border: var(--rule-hair); }
+  .hello__portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .hello__text { display: grid; gap: var(--space-4); }
+  @media (max-width: 40rem) { .hello { grid-template-columns: 1fr; } .hello__portrait { width: 70%; } }
+
+  /* 03 */
+  .craft { display: grid; gap: var(--space-8); }
+  .craft__pills { display: flex; flex-wrap: wrap; gap: var(--space-3); max-width: 56rem; }
+  .craft__more { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); align-items: baseline; }
+  .craft__tools { display: grid; gap: var(--space-3); }
+  .craft__keys { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
+  .craft__keys li { display: inline-flex; align-items: center; gap: var(--space-2); }
+
+  /* 04 */
+  .exp { display: grid; gap: var(--space-6); }
+  .exp__list { border-top: var(--rule-ink); }
+  .exp__row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-2) var(--layout-gap);
+    align-items: baseline;
+    padding-block: var(--space-6);
+    border-bottom: var(--rule-hair);
+  }
+  .exp__row--edu .exp__org { font-style: italic; }
+  @media (max-width: 48rem) {
+    .exp__row { grid-template-columns: 1fr; gap: var(--space-1); }
+  }
+
+  /* 05 */
+  .words__head { display: grid; gap: var(--space-4); margin-bottom: var(--space-12); max-width: 40rem; }
+  .words__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: var(--space-8) var(--layout-gap); align-items: start; }
+  .words__card {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--color-paper);
+    border: var(--rule-ink);
+    box-shadow: 0 0 0 5px var(--color-paper), 0 0 0 6px var(--color-rule);
+    rotate: var(--tilt);
+    transition: rotate var(--duration-settle) var(--ease-settle), translate var(--duration-settle) var(--ease-settle),
+      box-shadow var(--duration-settle);
+  }
+  .words__card:nth-child(even) { margin-top: var(--space-8); }
+  .words__card:hover { rotate: 0deg; translate: 0 -4px; box-shadow: 0 0 0 5px var(--color-paper), 0 0 0 6px var(--color-rule), var(--shadow-offset-lift); }
+  .words__card blockquote { margin: 0; }
+  .words__who { display: grid; gap: 2px; }
+  .words__name { color: var(--color-ink); font-weight: 500; }
+  @media (max-width: 40rem) { .words__card:nth-child(even) { margin-top: 0; } }
+
+  /* 06 */
+  .art__text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8) var(--space-12); margin-bottom: var(--space-12); }
+  .art__body { display: grid; gap: var(--space-4); }
+  @media (max-width: 48rem) { .art__text { grid-template-columns: 1fr; } }
+  .strip {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    padding: var(--space-6) var(--layout-gutter);
+    background: #141210;
+    scrollbar-width: none;
+    /* sprocket holes */
+    background-image:
+      radial-gradient(circle at 50% 50%, #f3efe6 0 3px, transparent 3.5px),
+      radial-gradient(circle at 50% 50%, #f3efe6 0 3px, transparent 3.5px);
+    background-size: 22px 22px, 22px 22px;
+    background-position: 0 4px, 0 calc(100% - 4px);
+    background-repeat: repeat-x;
+    cursor: grab;
+  }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip.is-grabbing { cursor: grabbing; scroll-snap-type: none; }
+  .strip__frames { display: flex; gap: var(--space-4); width: max-content; }
+  .strip__frame { position: relative; width: clamp(15rem, 60vw, 26rem); scroll-snap-align: center; }
+  .strip__frame :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; pointer-events: none; user-select: none; }
+  .strip__no { position: absolute; left: var(--space-2); bottom: calc(-1 * var(--space-6) + 4px); font-family: var(--font-system); font-size: 0.625rem; color: #f3cf1c; letter-spacing: 0.1em; }
+  .strip__hint { margin-top: var(--space-3); text-align: right; }
+
+  /* 07 */
+  .contact { display: grid; grid-template-columns: minmax(5rem, 10rem) 1fr; gap: var(--space-12); align-items: center; }
+  .contact__doodle { rotate: 10deg; }
+  .contact__links { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-8); align-items: baseline; margin-top: var(--space-6); }
+  @media (max-width: 40rem) { .contact { grid-template-columns: 1fr; } .contact__doodle { width: 5rem; } }
+</style>
+
+<script>
+  // Drag-to-scroll for the film strip (mouse only; touch scrolls natively).
+  const strip = document.querySelector<HTMLElement>('[data-strip]');
+  if (strip) {
+    let down = false, sx = 0, sl = 0;
+    strip.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      down = true; sx = e.clientX; sl = strip.scrollLeft;
+      strip.classList.add('is-grabbing');
+      strip.setPointerCapture(e.pointerId);
+    });
+    strip.addEventListener('pointermove', (e) => { if (down) strip.scrollLeft = sl - (e.clientX - sx); });
+    const up = () => { down = false; strip.classList.remove('is-grabbing'); };
+    strip.addEventListener('pointerup', up);
+    strip.addEventListener('pointercancel', up);
+  }
+</script>

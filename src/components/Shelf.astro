@@ -1,0 +1,121 @@
+---
+// "Can you organize my shelf for me?" Drag with a pointer, or use the
+// keyboard (Enter/Space puts an item away or takes it back). Without JS,
+// the objects simply sit in a row next to the shelf.
+import { Image } from 'astro:assets';
+import type { Locale } from '../i18n/config';
+import { shelf } from '../content/about';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const u = shelf.ui;
+const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[locale]]));
+---
+
+<div class="shelf" data-shelf data-slots={JSON.stringify(shelf.slots)} data-strings={JSON.stringify(strings)}>
+  <p id="shelf-help" class="visually-hidden">{u.help[locale]}</p>
+  <div class="shelf__stage" data-stage>
+    <Image class="shelf__img" src={shelf.image} alt={shelf.imageAlt[locale]} widths={[500, 1000]} sizes="(max-width: 40rem) 100vw, 45vw" data-shelf-img />
+    <div class="shelf__pile" data-pile></div>
+    <ul class="shelf__objects" role="list" aria-describedby="shelf-help">
+      {shelf.objects.map((o) => (
+        <li class="shelf__item" data-id={o.id} data-size={o.size} data-pile={JSON.stringify(o.pile)} data-ratio={o.src.height / o.src.width}>
+          <button type="button" class="shelf__obj" data-obj aria-label={o.name[locale]} data-cursor="drag" data-note={o.note[locale]}>
+            <Image src={o.src} alt="" widths={[160, 320]} sizes="160px" draggable="false" />
+          </button>
+        </li>
+      ))}
+    </ul>
+    <p class="shelf__note t-caption" data-note-bubble aria-hidden="true"></p>
+    <div class="shelf__stars" data-stars aria-hidden="true"></div>
+  </div>
+  <div class="shelf__bar">
+    <button type="button" class="shelf__btn t-nav" data-tidy>{u.tidy[locale]}</button>
+    <button type="button" class="shelf__btn t-nav" data-mess hidden>{u.mess[locale]}</button>
+    <p class="shelf__count t-meta" aria-hidden="true"><span data-count>0</span>/{shelf.objects.length}</p>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-shelf-live></p>
+</div>
+
+<style>
+  .shelf { display: grid; gap: var(--space-4); }
+  .shelf__stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 52fr 48fr;
+    align-items: end;
+    padding-top: 13%;
+  }
+  .shelf__img { width: 100%; height: auto; user-select: none; pointer-events: none; mix-blend-mode: multiply; }
+  :global([data-theme='darkroom']) .shelf__img { filter: invert(0.88) hue-rotate(180deg) brightness(0.9); mix-blend-mode: screen; }
+  .shelf__pile { align-self: stretch; }
+
+  /* No-JS / pre-JS: a simple row of objects. */
+  .shelf__objects { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-4); }
+  .shelf__obj { width: 5rem; padding: 0; border: 0; background: none; touch-action: none; }
+  .shelf__obj :global(img) { width: 100%; height: auto; pointer-events: none; user-select: none; }
+
+  /* JS on: objects float over the stage, positioned by the script. */
+  .shelf.is-live .shelf__objects { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; }
+  .shelf.is-live .shelf__item { position: absolute; left: 0; top: 0; pointer-events: auto; }
+  .shelf.is-live .shelf__obj {
+    display: block;
+    width: var(--w);
+    transform: translate(var(--x), var(--y)) rotate(var(--r, 0deg));
+    transform-origin: 50% 100%;
+    transition: transform var(--duration-slow) var(--ease-settle);
+    filter: drop-shadow(2px 3px 0 rgb(28 26 23 / 0.18));
+  }
+  .shelf.is-live .shelf__item.is-dragging .shelf__obj { transition: none; filter: drop-shadow(6px 10px 0 rgb(28 26 23 / 0.22)); z-index: 5; }
+  .shelf.is-live .shelf__item.is-dragging { z-index: 10; }
+  .shelf__obj:focus-visible { outline-offset: 4px; }
+
+  .shelf__note {
+    position: absolute;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    max-width: 16rem;
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    pointer-events: none;
+    opacity: 0;
+    translate: -50% -100%;
+    transition: opacity var(--duration-quick);
+  }
+  .shelf__note.is-on { opacity: 1; }
+
+  .shelf__bar { display: flex; gap: var(--space-4); align-items: center; }
+  .shelf__btn {
+    min-height: var(--tap-min);
+    padding: 0 var(--space-4);
+    border: var(--rule-ink);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-shadow);
+    transition: translate var(--duration-quick), box-shadow var(--duration-quick);
+  }
+  .shelf__btn:hover { translate: -1px -1px; box-shadow: 4px 4px 0 var(--color-shadow); }
+  .shelf__btn:active { translate: 2px 2px; box-shadow: 1px 1px 0 var(--color-shadow); }
+  .shelf__count { margin-left: auto; }
+
+  .shelf__stars { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .shelf__stars :global(i) {
+    position: absolute;
+    font-style: normal;
+    color: var(--color-highlight);
+    text-shadow: 0 0 6px rgb(243 207 28 / 0.8);
+    animation: twinkle 2.6s var(--ease-soft) forwards;
+  }
+  @keyframes twinkle { 0% { opacity: 0; scale: 0.3; } 25% { opacity: 1; scale: 1; } 100% { opacity: 0; translate: 0 -30px; } }
+
+  @media (max-width: 40rem) {
+    .shelf__stage { grid-template-columns: 1fr; padding-top: 24%; }
+    .shelf__pile { min-height: 70vw; }
+  }
+</style>
+
+<script>
+  import '../scripts/shelf';
+</script>
