@@ -189,7 +189,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   .case-sec__head h2 { max-width: 34ch; text-wrap: balance; white-space: pre-line; }
   .case-sec__blocks { display: grid; gap: var(--space-12); }
   .case-sec__no { color: var(--color-accent); font-size: 0.55em; vertical-align: 0.35em; margin-right: 0.35em; }
-  .case-intro { padding-bottom: var(--space-12); }
+  .case-intro { display: grid; gap: var(--space-8); padding-bottom: var(--space-12); }
 
   @media (max-width: 64rem) {
     .case-body { grid-template-columns: 1fr; gap: 0; }

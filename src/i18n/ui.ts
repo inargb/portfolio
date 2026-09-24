@@ -64,6 +64,7 @@ export const ui = {
   },
 
   case: {
+    slot: { en: 'image to come', pt: 'imagem em breve' },
     contents: { en: 'in this case', pt: 'neste case' },
     tools: { en: 'Skills & tools', pt: 'Habilidades e ferramentas' },
     focus: { en: 'Focus', pt: 'Foco' },
