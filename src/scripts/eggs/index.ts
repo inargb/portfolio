@@ -4,6 +4,5 @@ import './console';
 import './spec-mode';
 import './doodle';
 import './shutter';
-import './roll';
 import './shortcuts';
 import './footer-status';

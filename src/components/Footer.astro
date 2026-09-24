@@ -38,13 +38,6 @@ const links = [
     <div class="footer__base t-meta">
       <p class="footer__sig">{f.signature[locale]}</p>
 
-      <p class="footer__roll">
-        <span class="visually-hidden">{f.seen[locale]}:</span>
-        <span aria-hidden="true">exp.</span> <span data-roll-count>01</span>/<span data-roll-total>08</span>
-        <span class="footer__roll-label" aria-hidden="true">{f.seen[locale]}</span>
-        <span class="footer__roll-done">· {f.rollDone[locale]}</span>
-      </p>
-
       <p class="footer__secrets" data-secrets hidden>
         {f.secrets[locale]} <span data-secrets-count></span>
       </p>
@@ -102,9 +95,6 @@ const links = [
     border-top: var(--rule-hair);
   }
   .footer__sig { color: var(--color-ink); font-weight: 500; }
-  .footer__roll-label { margin-left: 0.25em; }
-  .footer__roll-done { display: none; }
-  :global([data-roll-done]) .footer__roll-done { display: inline; color: var(--color-ink); }
   .footer__controls { display: flex; gap: var(--space-1); margin-left: auto; }
   .footer__ctl {
     display: inline-flex;

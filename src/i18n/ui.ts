@@ -43,15 +43,10 @@ export const ui = {
   footer: {
     signature: { en: 'designed by me <3', pt: 'design feito por mim <3' },
     greeting: { en: 'nice to meet you', pt: 'prazer em te conhecer' },
-    seen: { en: 'frames seen', pt: 'frames vistos' },
     secrets: { en: 'secrets found', pt: 'segredos encontrados' },
     elsewhere: { en: 'elsewhere', pt: 'por aí' },
     kit: { en: 'the kit', pt: 'o kit' },
     kitHint: { en: 'design system playground', pt: 'playground do design system' },
-    rollDone: {
-      en: 'roll finished. thanks for looking around :)',
-      pt: 'filme terminado. obrigada por explorar :)',
-    },
   },
 
   project: {
