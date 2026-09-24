@@ -5,6 +5,8 @@ import type { L10n } from './config';
 
 export const ui = {
   skip: { en: 'Skip to content', pt: 'Pular para o conteúdo' },
+  toTop: { en: 'Back to top', pt: 'Voltar ao topo' },
+  toTopCursor: { en: 'top', pt: 'topo' },
 
   nav: {
     label: { en: 'Main', pt: 'Principal' },
