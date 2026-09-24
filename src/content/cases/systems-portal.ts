@@ -115,18 +115,22 @@ export const systemsPortal: CaseStudy = {
           intro: l('Every design decision was made to reduce user effort.', 'Cada decisão de design foi tomada para reduzir o esforço do usuário.'),
           items: [
             {
+              icon: 'layout',
               title: l('Category-based information architecture', 'Arquitetura por categorias'),
               body: l('More than 100 systems organized into eight thematic categories, defined together with teams from each department.', 'Mais de 100 sistemas organizados em 8 categorias temáticas, definidas em conjunto com as equipes de cada setor.'),
               tag: nielsen6,
             },
             {
+              icon: 'search',
               title: l('Persistent search', 'Barra de busca persistente'),
               body: l('For users who already know what they are looking for, search removes the need for Ctrl+F (a shortcut not everyone knows) or prior knowledge of the portal’s structure.', 'Para quem já sabe o que quer, a busca elimina a necessidade do Ctrl+F (atalho que nem todo usuário conhece) ou de conhecer a estrutura do portal.'),
               tag: l('Nielsen #7 · efficiency', 'Nielsen #7 · eficiência'),
             },
             {
+              icon: 'star',
               title: l('“Most accessed” section', 'Seção “Mais acessados”'),
-              body: l('A dynamic section designed to update monthly from usage data, so the interface follows seasonal demand (fishing systems rise during the fishing season). The proposal was approved during the project but was not implemented in the final version.', 'Seção dinâmica atualizada mensalmente com dados de uso, adaptando a interface à sazonalidade (sistemas de pesca em alta durante a temporada). Proposta aprovada no projeto, mas não implementada na versão final.'),
+              body: l('A dynamic section designed to update monthly from usage data, so the interface follows seasonal demand (fishing systems rise during the fishing season).', 'Seção dinâmica atualizada mensalmente com dados de uso, adaptando a interface à sazonalidade (sistemas de pesca em alta durante a temporada).'),
+              note: l('The proposal was approved during the project but was not implemented in the final version.', 'Proposta aprovada no projeto, mas não implementada na versão final.'),
               tag: nielsen6,
             },
           ],

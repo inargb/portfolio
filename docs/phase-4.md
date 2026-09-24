@@ -13,6 +13,10 @@
   (Esc / click / ✕ closes, focus returns to the image).
 - Framer: one CMS collection for cases, one component per block type.
 
+- Process steps and design decisions are cards: paper notes with a double frame,
+  each a hair off straight. Steps: number → title → text. Decisions: icon →
+  title → text (with an optional quieter note) → principle.
+
 ## Cases
 
 | # | Case | Status | Source |
