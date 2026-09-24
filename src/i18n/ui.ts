@@ -12,6 +12,9 @@ export const ui = {
     about: { en: 'about', pt: 'sobre' },
     resume: { en: 'resume', pt: 'currículo' },
     home: { en: 'Inaiá Silva, home', pt: 'Inaiá Silva, início' },
+    homeShort: { en: 'home', pt: 'início' },
+    menuOpen: { en: 'Open menu', pt: 'Abrir menu' },
+    menuClose: { en: 'Close menu', pt: 'Fechar menu' },
     newTab: { en: '(opens in a new tab)', pt: '(abre em outra aba)' },
   },
 
@@ -40,15 +43,10 @@ export const ui = {
   footer: {
     signature: { en: 'designed by me <3', pt: 'design feito por mim <3' },
     greeting: { en: 'nice to meet you', pt: 'prazer em te conhecer' },
-    seen: { en: 'frames seen', pt: 'frames vistos' },
     secrets: { en: 'secrets found', pt: 'segredos encontrados' },
     elsewhere: { en: 'elsewhere', pt: 'por aí' },
     kit: { en: 'the kit', pt: 'o kit' },
     kitHint: { en: 'design system playground', pt: 'playground do design system' },
-    rollDone: {
-      en: 'roll finished. thanks for looking around :)',
-      pt: 'filme terminado. obrigada por explorar :)',
-    },
   },
 
   project: {
