@@ -82,11 +82,19 @@ const eyebrow = eyebrowParts.join(' · ');
           )}
         </header>
 
+        {study.intro && <div class="case-intro"><CaseBlocks blocks={study.intro} locale={locale} figStart={0} /></div>}
+
         {sections.map(({ s, figStart }, i) => (
           <section class="case-sec" id={s.id} aria-labelledby={`${s.id}-title`} data-case-section>
             <header class="case-sec__head">
-              <SectionLabel text={s.label[locale]} frame={two(i)} />
-              <h2 id={`${s.id}-title`} class="t-heading-l">{s.title[locale]}</h2>
+              {s.title ? (
+                <>
+                  <SectionLabel text={s.label[locale]} frame={two(i)} />
+                  <h2 id={`${s.id}-title`} class="t-heading-l">{s.title[locale]}</h2>
+                </>
+              ) : (
+                <h2 id={`${s.id}-title`} class="case-sec__label t-heading-l"><span class="case-sec__no">{two(i)}</span> {s.label[locale]}<span class="caret" aria-hidden="true"></span></h2>
+              )}
             </header>
             <div class="case-sec__blocks">
               <CaseBlocks blocks={s.blocks} locale={locale} figStart={figStart} />
@@ -178,6 +186,8 @@ const eyebrow = eyebrowParts.join(' · ');
   .case-sec__head { display: grid; gap: var(--space-3); margin-bottom: var(--space-8); }
   .case-sec__head h2 { max-width: 34ch; text-wrap: balance; white-space: pre-line; }
   .case-sec__blocks { display: grid; gap: var(--space-12); }
+  .case-sec__no { color: var(--color-accent); font-size: 0.55em; vertical-align: 0.35em; margin-right: 0.35em; }
+  .case-intro { padding-bottom: var(--space-12); }
 
   @media (max-width: 64rem) {
     .case-body { grid-template-columns: 1fr; gap: 0; }
