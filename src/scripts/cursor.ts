@@ -39,6 +39,8 @@ function init(cursor: HTMLElement) {
     // Anything clickable without an explicit state still reads as a link.
     if (!host && target?.closest('a, button, [role="button"], summary, label[for]')) state = 'link';
     cursor.dataset.state = state;
+    // In a text field the native I-beam does the job; the crosshair steps aside.
+    cursor.classList.toggle('is-typing', !!target?.closest('input:not([type="checkbox"]):not([type="radio"]), textarea'));
     // Over dark surfaces (the footer) the crosshair turns light.
     cursor.toggleAttribute('data-invert', !!target?.closest('[data-cursor-invert]'));
     const key = LABELS[state];

@@ -10,16 +10,24 @@ const i = caseProjects.findIndex((p) => p.slug === slug);
 const prev = caseProjects[(i - 1 + caseProjects.length) % caseProjects.length];
 const next = caseProjects[(i + 1) % caseProjects.length];
 const p = ui.project;
+// A peek of each neighbour's cover (its still), shown as a film frame on hover.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const still = (proj: typeof prev) => {
+  const src = proj.media?.image?.small ?? proj.media?.poster;
+  return src ? `${base}/${src}` : undefined;
+};
 ---
 
 <nav class="case-nav container" aria-label={`${p.prev[locale]} / ${p.next[locale]}`}>
   <a class="case-nav__link case-nav__link--prev" href={caseHref(prev.slug, locale)} rel="prev" data-cursor={prev.state === 'locked' ? 'secret' : 'project'}>
+    {still(prev) && <span class="case-nav__peek" aria-hidden="true"><img src={still(prev)} alt="" loading="lazy" decoding="async" /></span>}
     <span class="t-meta">← {p.prev[locale]} · FR {prev.frame}</span>
-    <span class="t-heading-m">{prev.title[locale]}</span>
+    <span class="t-heading-m" style={`view-transition-name:pt-${prev.slug}`}>{prev.title[locale]}</span>
   </a>
   <a class="case-nav__link case-nav__link--next" href={caseHref(next.slug, locale)} rel="next" data-cursor={next.state === 'locked' ? 'secret' : 'project'}>
+    {still(next) && <span class="case-nav__peek" aria-hidden="true"><img src={still(next)} alt="" loading="lazy" decoding="async" /></span>}
     <span class="t-meta">{p.next[locale]} · FR {next.frame} →</span>
-    <span class="t-heading-l">{next.title[locale]}</span>
+    <span class="t-heading-l" style={`view-transition-name:pt-${next.slug}`}>{next.title[locale]}</span>
   </a>
 </nav>
 
@@ -32,8 +40,35 @@ const p = ui.project;
     padding-block: var(--space-12);
     border-top: var(--rule-hair);
   }
-  .case-nav__link { display: grid; gap: var(--space-2); color: inherit; text-decoration: none; }
+  .case-nav__link { position: relative; display: grid; gap: var(--space-2); color: inherit; text-decoration: none; }
+  /* The neighbour's cover peeks up out of the roll: a small film frame that
+     rises and settles, a hair off straight. Fine pointers only. */
+  .case-nav__peek {
+    position: absolute;
+    bottom: calc(100% + var(--space-3));
+    width: 13rem;
+    aspect-ratio: 16 / 10;
+    padding: 6px;
+    background: var(--color-film);
+    box-shadow: var(--shadow-offset);
+    opacity: 0;
+    translate: 0 0.75rem;
+    rotate: var(--peek-tilt, -2deg);
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity var(--duration-quick) var(--ease-soft), translate var(--duration-settle) var(--ease-settle);
+  }
+  .case-nav__peek img { width: 100%; height: 100%; object-fit: cover; }
+  .case-nav__link--prev .case-nav__peek { left: 0; }
+  .case-nav__link--next .case-nav__peek { right: 0; --peek-tilt: 2deg; }
+  @media (hover: hover) and (pointer: fine) {
+    .case-nav__link:hover .case-nav__peek, .case-nav__link:focus-visible .case-nav__peek { opacity: 1; translate: 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .case-nav__peek { transition: opacity 120ms linear; translate: none; } }
   .case-nav__link--next { text-align: right; }
+  /* Titles hug their text: they travel into the next case's header. */
+  .case-nav__link > span:last-child { width: fit-content; }
+  .case-nav__link--next > span:last-child { justify-self: end; }
   .case-nav__link .t-heading-m, .case-nav__link .t-heading-l { transition: translate var(--duration-settle) var(--ease-settle); }
   .case-nav__link--next:hover .t-heading-l { translate: -6px 0; }
   .case-nav__link--prev:hover .t-heading-m { translate: 6px 0; }
@@ -41,5 +76,6 @@ const p = ui.project;
   @media (max-width: 48rem) {
     .case-nav { grid-template-columns: 1fr; }
     .case-nav__link--next { text-align: left; order: -1; }
+    .case-nav__link--next > span:last-child { justify-self: start; }
   }
 </style>
