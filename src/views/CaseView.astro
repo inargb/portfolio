@@ -249,7 +249,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
     position: relative;
     display: grid;
     place-items: center;
-    min-height: calc(100svh - var(--nav-height));
+    min-height: 100svh;
     padding: var(--space-16) var(--space-4);
   }
   .gate__top { position: absolute; top: var(--space-6); left: 0; right: 0; }
@@ -278,8 +278,9 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   .gate__resume .t-meta { color: var(--color-graphite); }
   .gate.is-resuming .gate__resume { display: grid; }
   @media (prefers-reduced-motion: reduce) { .gate__strip { animation: none; } }
-  /* Locked: nothing else on the page, not even the footer. */
-  body:has(.gate) .footer { display: none; }
+  /* Locked: nothing else on the page, not the site header, not the footer;
+     only the way back. Both return once the case opens. */
+  body:has(.gate) .footer, body:has(.gate) .nav { display: none; }
   .gate__lock i { position: relative; display: block; width: 1.5rem; height: 1.2rem; margin-top: 0.8rem; border: 1.5px solid var(--color-ink); border-radius: 2px; }
   .gate__lock i::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 0.95rem; height: 0.8rem; translate: -50% 0; border: 1.5px solid var(--color-ink); border-bottom: 0; border-radius: 0.6rem 0.6rem 0 0; transition: translate var(--duration-settle) var(--ease-settle); }
   .gate.is-opening .gate__lock i::before { translate: -20% -0.3rem; }
