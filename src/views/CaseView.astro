@@ -58,8 +58,10 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
           <input id="gate-pw" class="gate__input" type="password" name="password" autocomplete="current-password" placeholder={g.field[locale]} required data-gate-input />
           <button class="gate__btn" type="submit" data-gate-btn>{g.unlock[locale]}</button>
         </form>
+        <span class="gate__strip" aria-hidden="true"></span>
         <p class="gate__error t-caption" role="alert" aria-live="assertive" data-gate-error data-wrong={g.wrong[locale]} data-busy={g.busy[locale]} data-failed={g.failed[locale]}></p>
       </div>
+      <p class="gate__resume" aria-hidden="true"><span class="gate__strip"></span><span class="t-meta">{g.busy[locale]}</span></p>
     </section>
   )}
 
@@ -76,7 +78,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
       <div class="case-main">
         <header class="case-hero">
           <p class="case-hero__eyebrow t-label">{eyebrow}</p>
-          <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
+          <h1 class="case-hero__title t-heading-xl" style={`view-transition-name:pt-${project.slug}`}>{project.title[locale]}</h1>
           <p class="case-hero__line">{project.line[locale]}</p>
           <dl class="case-hero__facts">
             {facts.map((f) => (
@@ -124,7 +126,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   /* Header, in the content column. */
   .case-hero { display: grid; justify-items: start; gap: var(--space-4); padding-bottom: var(--space-12); }
   .case-hero__eyebrow { color: var(--color-graphite-soft); }
-  .case-hero__title { max-width: 20ch; text-wrap: balance; }
+  .case-hero__title { width: fit-content; max-width: 20ch; text-wrap: balance; }
   .case-hero__line {
     max-width: 40rem;
     font-size: var(--type-heading-m);
@@ -255,7 +257,27 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   .gate__back:hover { color: var(--color-ink); }
   .gate__card { display: grid; justify-items: start; gap: var(--space-4); width: 100%; max-width: 36rem; padding: var(--space-12) var(--space-8); --tilt: -0.4deg; }
   /* Already opened in this tab: skip straight to the case, no flash of the form. */
-  .gate.is-resuming .gate__card { visibility: hidden; }
+  .gate.is-resuming .gate__card { display: none; }
+  /* Developing: a strip of film running through, while the case decrypts. */
+  .gate__strip {
+    --film-step: 42px;
+    display: none;
+    width: 100%;
+    height: 1.75rem;
+    background:
+      radial-gradient(circle, var(--color-paper) 0 2px, transparent 2.5px) 0 3px / 14px 7px repeat-x,
+      radial-gradient(circle, var(--color-paper) 0 2px, transparent 2.5px) 0 calc(100% - 3px) / 14px 7px repeat-x,
+      linear-gradient(90deg, #4a453e 0 34px, transparent 34px) 4px 50% / var(--film-step) 42% repeat-x,
+      var(--color-film);
+    animation: film-run 0.9s linear infinite;
+  }
+  @keyframes film-run { to { background-position-x: calc(-1 * var(--film-step)), calc(-1 * var(--film-step)), calc(4px - var(--film-step)), 0; } }
+  .gate.is-busy .gate__card .gate__strip { display: block; }
+  .gate__resume { display: none; justify-items: center; gap: var(--space-3); width: min(16rem, 70vw); }
+  .gate__resume .gate__strip { display: block; }
+  .gate__resume .t-meta { color: var(--color-graphite); }
+  .gate.is-resuming .gate__resume { display: grid; }
+  @media (prefers-reduced-motion: reduce) { .gate__strip { animation: none; } }
   /* Locked: nothing else on the page, not even the footer. */
   body:has(.gate) .footer { display: none; }
   .gate__lock i { position: relative; display: block; width: 1.5rem; height: 1.2rem; margin-top: 0.8rem; border: 1.5px solid var(--color-ink); border-radius: 2px; }
@@ -414,6 +436,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
 
     async function open(password: string, remembered = false) {
       btn.disabled = true;
+      gate.classList.add('is-busy');
       err.classList.add('is-busy');
       err.textContent = err.dataset.busy ?? '';
       try {
@@ -447,6 +470,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
         err.textContent = err.dataset.failed ?? '';
       } finally {
         btn.disabled = false;
+        gate.classList.remove('is-busy');
       }
     }
     form.addEventListener('submit', (e) => { e.preventDefault(); if (input.value) open(input.value); });

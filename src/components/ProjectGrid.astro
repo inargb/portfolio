@@ -47,7 +47,7 @@ const total = String(projects.length).padStart(2, '0');
           <div class="shot__notes">
             <p class="shot__no t-label"><span>{p.frame[locale]}</span> {proj.frame}</p>
             <div class="shot__top">
-              <h3 class="shot__title t-heading-m">{proj.title[locale]}</h3>
+              <h3 class="shot__title t-heading-m" style={`view-transition-name:pt-${proj.slug}`}>{proj.title[locale]}</h3>
               <p class="shot__period t-meta"><span class="visually-hidden">{p.period[locale]}: </span>{proj.period[locale]}</p>
             </div>
             <p class="shot__line t-body">{proj.line[locale]}</p>
@@ -190,7 +190,7 @@ const total = String(projects.length).padStart(2, '0');
   }
   .shot__no { color: var(--color-graphite-soft); }
   .shot__top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); }
-  .shot__title { transition: color var(--duration-quick); }
+  .shot__title { width: fit-content; transition: color var(--duration-quick); }
   .shot__period { flex: none; color: var(--color-ink); white-space: nowrap; }
   .shot__line { margin-block: var(--space-1) var(--space-2); color: var(--color-graphite); max-width: 36rem; text-wrap: pretty; }
   .shot__status { display: flex; align-items: center; gap: 0.45em; margin-top: var(--space-1); color: var(--color-ink); }

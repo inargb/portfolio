@@ -197,6 +197,10 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 }
 
 /* ---- Page transitions (cross-document View Transitions) ------------------ */
+/* The page advances like the next frame on a roll: the old one slides up and
+   dims, the new one rolls in from below. The nav stays put, and a project's
+   title (named pt-<slug> on its card, its case header and the case nav)
+   travels from where you clicked to where it lands. */
 @view-transition { navigation: auto; }
 ::view-transition-old(root) {
   animation: vt-out var(--duration-page) var(--ease-soft) both;
@@ -204,10 +208,12 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 ::view-transition-new(root) {
   animation: vt-in var(--duration-page) var(--ease-settle) both;
 }
-@keyframes vt-out { to { opacity: 0; transform: translateY(-0.5rem); } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(0.75rem); } }
+@keyframes vt-out { to { opacity: 0.2; transform: translateY(-4vh); } }
+@keyframes vt-in { from { clip-path: inset(100% 0 0 0); transform: translateY(6vh); } to { clip-path: inset(0); transform: none; } }
+/* Travelling titles: size and place morph; the text snapshot scales with it. */
+::view-transition-group(*) { animation-duration: calc(var(--duration-page) * 1.2); animation-timing-function: var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
 
 /* ---- Overlays: while any dialog is open, the page behind stays put ------- */
