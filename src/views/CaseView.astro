@@ -45,8 +45,8 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
   <!-- Protected: the whole page is the gate. The case (and its way on)
        appears only once the password opens it. -->
   {sealed && (
-    <section class="gate" data-gate data-payload={payload} aria-labelledby="gate-title">
-      <script is:inline>try{if(sessionStorage.getItem('ina:gate'))document.currentScript.parentElement.classList.add('is-resuming')}catch(e){}</script>
+    <section class="gate" data-gate data-slug={project.slug} data-payload={payload} aria-labelledby="gate-title">
+      <script is:inline>(function(g){try{if(sessionStorage.getItem('ina:gate:'+g.dataset.slug))g.classList.add('is-resuming')}catch(e){}})(document.currentScript.parentElement)</script>
       <div class="gate__top container"><a class="gate__back t-label" href={`${home}${home.endsWith('/') ? '' : '/'}#work`}>← {p.back[locale]}</a></div>
       <div class="gate__card paper-card">
         <p class="gate__lock" aria-hidden="true"><i></i></p>
@@ -407,7 +407,10 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
     const input = gate.querySelector<HTMLInputElement>('[data-gate-input]')!;
     const btn = gate.querySelector<HTMLButtonElement>('[data-gate-btn]')!;
     const err = gate.querySelector<HTMLElement>('[data-gate-error]')!;
-    const KEY = 'ina:gate';
+    // Each case remembers its own unlock (this tab only): opening one
+    // protected case never opens another.
+    const KEY = `ina:gate:${payload.slug}`;
+    try { sessionStorage.removeItem('ina:gate'); } catch { /* ignore */ } // shared key from an earlier version
 
     async function open(password: string, remembered = false) {
       btn.disabled = true;
