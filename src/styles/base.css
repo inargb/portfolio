@@ -196,24 +196,33 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
   .caret::after { animation: none; }
 }
 
-/* ---- Page transitions (cross-document View Transitions) ------------------ */
-/* The page advances like the next frame on a roll: the old one slides up and
-   dims, the new one rolls in from below. The nav stays put, and a project's
-   title (named pt-<slug> on its card, its case header and the case nav)
-   travels from where you clicked to where it lands. */
+/* ---- Page transitions ---------------------------------------------------
+   The page advances like the next frame on a roll: the old one rolls up and
+   out, the next one rolls up from below, and the film between them (dark,
+   with sprocket holes) passes by. The nav stays put, and a project's title
+   (named pt-<slug> on its card, its case header and the case nav) travels
+   from where you clicked to where it lands.
+   Browsers without cross-document view transitions get a simpler arrival
+   (html.is-arriving, set in layouts/Base.astro). */
 @view-transition { navigation: auto; }
-::view-transition-old(root) {
-  animation: vt-out var(--duration-page) var(--ease-soft) both;
+::view-transition {
+  background:
+    radial-gradient(circle, var(--color-film-hole) 0 4px, transparent 4.5px) 10px 0 / 20px 22px repeat-y,
+    radial-gradient(circle, var(--color-film-hole) 0 4px, transparent 4.5px) calc(100% - 10px) 0 / 20px 22px repeat-y,
+    var(--color-film);
 }
-::view-transition-new(root) {
-  animation: vt-in var(--duration-page) var(--ease-settle) both;
-}
-@keyframes vt-out { to { opacity: 0.2; transform: translateY(-4vh); } }
-@keyframes vt-in { from { clip-path: inset(100% 0 0 0); transform: translateY(6vh); } to { clip-path: inset(0); transform: none; } }
-/* Travelling titles: size and place morph; the text snapshot scales with it. */
-::view-transition-group(*) { animation-duration: calc(var(--duration-page) * 1.2); animation-timing-function: var(--ease-settle); }
+::view-transition-old(root) { animation: vt-out var(--duration-page) var(--ease-page) both; }
+::view-transition-new(root) { animation: vt-in var(--duration-page) var(--ease-page) both; }
+@keyframes vt-out { to { transform: translateY(calc(-100% - 2.5rem)); } }
+@keyframes vt-in { from { transform: translateY(calc(100% + 2.5rem)); } }
+::view-transition-group(*) { animation-duration: var(--duration-page); animation-timing-function: var(--ease-page); }
+
+html.is-arriving body { animation: arrive var(--duration-page) var(--ease-page) both; }
+@keyframes arrive { from { opacity: 0; transform: translateY(3rem); } }
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  html.is-arriving body { animation: none; }
 }
 
 /* ---- Overlays: while any dialog is open, the page behind stays put ------- */
