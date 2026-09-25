@@ -47,7 +47,7 @@ const total = String(projects.length).padStart(2, '0');
           <div class="shot__notes">
             <p class="shot__no t-label"><span>{p.frame[locale]}</span> {proj.frame}</p>
             <div class="shot__top">
-              <h3 class="shot__title t-heading-m" style={`view-transition-name:pt-${proj.slug}`}>{proj.title[locale]}</h3>
+              <h3 class="shot__title t-heading-m">{proj.title[locale]}</h3>
               <p class="shot__period t-meta"><span class="visually-hidden">{p.period[locale]}: </span>{proj.period[locale]}</p>
             </div>
             <p class="shot__line t-body">{proj.line[locale]}</p>

@@ -199,9 +199,7 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 /* ---- Page transitions ---------------------------------------------------
    The page advances like the next frame on a roll: the old one rolls up and
    out, the next one rolls up from below, and the film between them (dark,
-   with sprocket holes) passes by. The nav stays put, and a project's title
-   (named pt-<slug> on its card, its case header and the case nav) travels
-   from where you clicked to where it lands.
+   with sprocket holes) passes by. The nav stays put.
    Browsers without cross-document view transitions get a simpler arrival
    (html.is-arriving, set in layouts/Base.astro). */
 @view-transition { navigation: auto; }

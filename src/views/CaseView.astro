@@ -78,7 +78,7 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
       <div class="case-main">
         <header class="case-hero">
           <p class="case-hero__eyebrow t-label">{eyebrow}</p>
-          <h1 class="case-hero__title t-heading-xl" style={`view-transition-name:pt-${project.slug}`}>{project.title[locale]}</h1>
+          <h1 class="case-hero__title t-heading-xl">{project.title[locale]}</h1>
           <p class="case-hero__line">{project.line[locale]}</p>
           <dl class="case-hero__facts">
             {facts.map((f) => (
