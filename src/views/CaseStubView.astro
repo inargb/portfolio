@@ -4,7 +4,6 @@
 // that the gate is coming. Replaced by real case studies in Phase 4.
 import Base from '../layouts/Base.astro';
 import ProjectCover from '../components/ProjectCover.astro';
-import CaseNav from '../components/CaseNav.astro';
 import Pill from '../components/ui/Pill.astro';
 import SectionLabel from '../components/ui/SectionLabel.astro';
 import { caseHref, type Locale } from '../i18n/config';
@@ -64,7 +63,6 @@ const locked = project.state === 'locked';
       )}
     </section>
   </article>
-  <CaseNav locale={locale} slug={project.slug} />
 </Base>
 
 <style>

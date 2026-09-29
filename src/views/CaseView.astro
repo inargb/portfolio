@@ -7,7 +7,6 @@
 // (see scripts/seal.mjs and the gate below). A portfolio-level gate for
 // client confidentiality, not bank-grade security.
 import Base from '../layouts/Base.astro';
-import CaseNav from '../components/CaseNav.astro';
 import CaseBlocks from '../components/case/CaseBlocks.astro';
 import CaseIndex from '../components/case/CaseIndex.astro';
 import CaseSections from '../components/case/CaseSections.astro';
@@ -107,7 +106,6 @@ const payload = sealed ? JSON.stringify({ ...sealed.crypto, body: sealed.body[lo
     </div>
   </article>
 
-  <div hidden={sealed ? true : undefined} data-case><CaseNav locale={locale} slug={project.slug} /></div>
 
   <dialog class="lightbox" data-lightbox-dialog aria-label={c.enlarge[locale]}>
     <button class="lightbox__close t-nav" type="button" data-lightbox-close>{c.close[locale]} ✕</button>
