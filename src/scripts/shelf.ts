@@ -33,7 +33,9 @@ function init(root: HTMLElement) {
     state.set(it, w && (w.kind !== 'slot' || w.slot < slots.length) ? w : { kind: 'pile' });
   });
 
-  root.classList.add('is-live');
+  // First placement happens out of sight (no gliding in from the corner);
+  // then the objects just fade in. See .is-settling in Shelf.astro.
+  root.classList.add('is-live', 'is-settling');
 
   const occupied = (except?: HTMLElement) =>
     new Set(items.filter((i) => i !== except).map((i) => state.get(i)!).filter((w): w is { kind: 'slot'; slot: number } => w.kind === 'slot').map((w) => w.slot));
@@ -244,7 +246,12 @@ function init(root: HTMLElement) {
 
   const ro = new ResizeObserver(layout);
   ro.observe(stage);
-  if (!img.complete) img.addEventListener('load', layout, { once: true });
+  const settle = () => requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-settling')));
   layout();
+  if (img.complete) settle();
+  else {
+    img.addEventListener('load', () => { layout(); settle(); }, { once: true });
+    window.setTimeout(settle, 2500); // never stay hidden if the image fails
+  }
   refresh(undefined, false);
 }

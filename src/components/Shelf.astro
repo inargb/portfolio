@@ -64,9 +64,11 @@ const strings = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v[local
     width: var(--w);
     transform: translate(var(--x), var(--y)) rotate(var(--r, 0deg));
     transform-origin: 50% 100%;
-    transition: transform var(--duration-slow) var(--ease-settle);
+    transition: transform var(--duration-slow) var(--ease-settle), opacity var(--duration-settle) var(--ease-soft);
     filter: drop-shadow(2px 3px 0 rgb(28 26 23 / 0.18));
   }
+  /* Arriving: already in place, invisible; then a quick fade in. */
+  .shelf.is-settling .shelf__obj { transition: none; opacity: 0; }
   .shelf.is-live .shelf__item.is-dragging .shelf__obj { transition: none; filter: drop-shadow(6px 10px 0 rgb(28 26 23 / 0.22)); z-index: 5; }
   .shelf.is-live .shelf__item.is-dragging { z-index: 10; }
   .shelf__obj:focus-visible { outline-offset: 4px; }
