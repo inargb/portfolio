@@ -29,6 +29,10 @@ interface Props {
 }
 
 const { locale, title, description, route, altHref, pageId } = Astro.props;
+// The tab always reads the same, on every page (and it never names a
+// protected case). `title` still labels the page for sharing previews.
+const tabTitle = 'inaiá silva_portfolio';
+const root = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const fullTitle = title ? `${title} · ${site.name}` : site.title[locale];
 const desc = description ?? site.description[locale];
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -39,7 +43,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{fullTitle}</title>
+    <title>{tabTitle}</title>
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={locale === 'en' ? 'pt-BR' : 'en'} href={new URL(altHref, Astro.site)} />
@@ -47,7 +51,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={desc} />
     <meta name="theme-color" content="#fbfbfd" />
     <meta name="color-scheme" content="light" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <!-- Favicon: the doodle face (source: design/favicon-source.png). -->
+    <link rel="icon" href={`${root}favicon.ico`} sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${root}favicon-32.png`} />
+    <link rel="icon" type="image/png" sizes="48x48" href={`${root}favicon-48.png`} />
+    <link rel="apple-touch-icon" href={`${root}apple-touch-icon.png`} />
     <script is:inline>
       (function () {
         var d = document.documentElement;
