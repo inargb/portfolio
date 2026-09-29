@@ -55,7 +55,7 @@ export const ui = {
     frame: { en: 'frame', pt: 'frame' },
     next: { en: 'next frame', pt: 'próximo frame' },
     prev: { en: 'previous frame', pt: 'frame anterior' },
-    back: { en: 'all work', pt: 'todos os projetos' },
+    back: { en: 'back to main screen', pt: 'voltar à página inicial' },
     role: { en: 'Role', pt: 'Papel' },
     timeline: { en: 'Duration', pt: 'Duração' },
     period: { en: 'Period', pt: 'Período' },
