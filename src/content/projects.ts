@@ -143,7 +143,7 @@ export const projects: Project[] = [
       en: 'A Figma Make tool that turned a week of handoff documentation into two days, generating responsive specs and accessibility notes every sprint.',
       pt: 'Uma ferramenta no Figma Make que transformou uma semana de documentação de handoff em dois dias, gerando specs responsivas e notas de acessibilidade a cada sprint.',
     },
-    context: { en: 'Internal tool · Volanté', pt: 'Ferramenta interna · Volanté' },
+    context: { en: 'Internal tool · Handoff', pt: 'Ferramenta interna · Handoff' },
     role: { en: 'Design lead', pt: 'Líder de design' },
     period: unknown,
     duration: { en: '2 months', pt: '2 meses' },

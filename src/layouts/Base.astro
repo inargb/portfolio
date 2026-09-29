@@ -54,6 +54,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         // Light only: forget a theme saved by an earlier version.
         try { localStorage.removeItem('ina:theme'); } catch (e) {}
         d.classList.add('js');
+        // Arriving from another page of the site, in a browser without
+        // cross-document view transitions: rise in instead (see base.css).
+        try {
+          if (!('PageRevealEvent' in window) && sessionStorage.getItem('ina:nav')) {
+            d.classList.add('is-arriving');
+            setTimeout(function () { d.classList.remove('is-arriving'); }, 900);
+          }
+          sessionStorage.removeItem('ina:nav');
+          addEventListener('click', function (e) {
+            var a = e.target.closest && e.target.closest('a[href]');
+            if (!a || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey || a.origin !== location.origin || a.hash && a.pathname === location.pathname) return;
+            try { sessionStorage.setItem('ina:nav', '1'); } catch (x) {}
+          }, true);
+        } catch (e) {}
         if ('IntersectionObserver' in window) d.classList.add('js-reveal');
       })();
     </script>
