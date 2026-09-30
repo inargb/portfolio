@@ -152,6 +152,3 @@ Credits (also printed on each polaroid, and in `src/content/dogs.ts`):
 | dog-06 | [rawpixel](https://www.rawpixel.com/image/3338447/free-photo-image-animal-canine-cc0) | CC0 |
 | dog-07 | [kevinpoh](https://www.flickr.com/photos/7679455@N03/3781461111) | CC BY 2.0 |
 | dog-08 | [_tar0_](https://www.flickr.com/photos/49946687@N05/7390121066) | CC BY 2.0 |
-
-Pinned polaroids are stored in this browser (`localStorage` key `ina:mural`)
-until the playground mural exists.

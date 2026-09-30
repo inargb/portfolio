@@ -1,11 +1,10 @@
 // The polaroid (see components/Polaroid.astro): flash, a dog selfie develops,
-// write on it, pick a frame, then save it or pin it to the mural.
+// write on it, pick a frame, then save it.
 import { motionOn } from './prefs';
-import { pinToMural } from './mural';
 
 interface Dog { src: string; by: string; license: string; href: string; }
 interface Frame { id: string; hex: string; ink: string; }
-interface Data { dogs: Dog[]; frames: Frame[]; photo: string; pinnedSay: string; saved: string; }
+interface Data { dogs: Dog[]; frames: Frame[]; photo: string; saved: string; }
 
 const dialog = document.querySelector<HTMLDialogElement>('[data-polaroid]');
 const data: Data | null = dialog ? JSON.parse(dialog.dataset.polaroid!) : null;
@@ -61,18 +60,11 @@ function shoot() {
   img.src = dog.src;
   credit.href = dog.href;
   credit.textContent = `${data!.photo}: ${dog.by} · ${dog.license}`;
-  resetPin();
 }
 
 function frame(): Frame {
   const id = dialog!.querySelector<HTMLInputElement>('[data-polaroid-frame]:checked')?.value;
   return data!.frames.find((f) => f.id === id) ?? data!.frames[0];
-}
-
-function resetPin() {
-  const pin = $<HTMLButtonElement>('[data-polaroid-pin]');
-  pin.disabled = false;
-  pin.textContent = pin.dataset.pin!;
 }
 
 // ---- The print, as a PNG --------------------------------------------------
@@ -138,23 +130,9 @@ if (dialog && data) {
       const f = frame();
       card.style.setProperty('--frame', f.hex);
       card.style.setProperty('--frame-ink', f.ink);
-      resetPin();
     });
   });
-  $<HTMLInputElement>('[data-polaroid-caption]').addEventListener('input', resetPin);
   $('[data-polaroid-close]').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
   $('[data-polaroid-save]').addEventListener('click', () => { save(); });
-  $<HTMLButtonElement>('[data-polaroid-pin]').addEventListener('click', (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const ok = pinToMural({
-      dog: data.dogs[current].src.split('/').pop()!,
-      caption: $<HTMLInputElement>('[data-polaroid-caption]').value.trim(),
-      frame: frame().id,
-    });
-    if (!ok) return;
-    btn.disabled = true;
-    btn.textContent = btn.dataset.pinned!;
-    say(data.pinnedSay);
-  });
 }
