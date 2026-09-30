@@ -1,12 +1,13 @@
 ---
 // One 404 for both languages: GitHub Pages serves a single 404.html.
 // Like the password page: no site header or footer, only the way back
-// (in Portuguese for visitors whose browser is set to it).
+// (in Portuguese for visitors whose browser is set to it): back to the
+// previous page of the site, or home.
 import Base from '../layouts/Base.astro';
 import { href } from '../i18n/config';
 import { ui } from '../i18n/ui';
 const n = ui.notFound;
-const back = ui.project.back;
+const back = { en: 'back', pt: 'voltar' };
 ---
 
 <Base locale="en" altHref={href('home', 'pt')} pageId="404" title="404">
@@ -30,6 +31,16 @@ const back = ui.project.back;
     a.textContent = a.dataset.ptLabel!;
     a.lang = 'pt-BR';
   }
+  // Came here from another page of the site: "back" goes back to it.
+  // Otherwise (a stale link from outside) it leads home.
+  a?.addEventListener('click', (e) => {
+    try {
+      if (history.length > 1 && document.referrer && new URL(document.referrer).origin === location.origin) {
+        e.preventDefault();
+        history.back();
+      }
+    } catch { /* follow the link */ }
+  });
 </script>
 
 <style>
