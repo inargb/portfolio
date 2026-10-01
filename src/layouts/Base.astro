@@ -65,6 +65,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         if ('IntersectionObserver' in window) d.classList.add('js-reveal');
       })();
     </script>
+    {import.meta.env.PROD && (
+      // Cloudflare Web Analytics: page views only, no cookies. The token is public.
+      <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "c3432185dbb8418e86c8ba7076023b80"}'></script>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">{ui.skip[locale]}</a>
