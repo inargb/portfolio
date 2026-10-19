@@ -59,33 +59,8 @@ const unknown: L10n = { en: '—', pt: '—' };
 
 export const projects: Project[] = [
   {
-    slug: 'systems-portal',
-    frame: '01',
-    state: 'open',
-    title: { en: 'Systems Portal', pt: 'Portal de Sistemas' },
-    line: {
-      en: 'Making 100+ government systems findable, for a fisherman in Pará and a ministry clerk alike, through user research and a full redesign.',
-      pt: 'Tornando 100+ sistemas do governo fáceis de achar, para um pescador no Pará e para um servidor do ministério, com pesquisa e um redesign completo.',
-    },
-    context: { en: 'Ministry of Agriculture and Livestock', pt: 'Ministério da Agricultura e Pecuária' },
-    role: { en: 'UX/UI designer intern', pt: 'Estagiária de UX/UI' },
-    period: { en: '2023', pt: '2023' },
-    duration: { en: '4 months', pt: '4 meses' },
-    status: { en: 'live', pt: 'no ar' },
-    statusKind: 'live',
-    tags: [tag('UX/UI', 'UX/UI'), tag('Research', 'Pesquisa'), tag('Redesign', 'Redesign')],
-    cover: 'portal',
-    media: {
-      video: { mp4: 'covers/systems-portal.mp4', webm: 'covers/systems-portal.webm' },
-      poster: 'covers/systems-portal-poster.webp',
-      alt: { en: 'The redesigned Systems Portal: a search bar and a grid of the most accessed systems.', pt: 'O Portal de Sistemas redesenhado: uma busca e uma grade com os sistemas mais acessados.' },
-      focus: '62% 45%',
-    },
-    liveUrl: 'https://inasilva.com/works/systems-portal',
-  },
-  {
     slug: 'bar-tabs-system',
-    frame: '02',
+    frame: '01',
     state: 'locked',
     title: { en: 'Bar Tabs System', pt: 'Sistema de Comandas' },
     line: {
@@ -108,7 +83,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'menu-management',
-    frame: '03',
+    frame: '02',
     state: 'locked',
     title: { en: 'Menu Management', pt: 'Gestão de Cardápios' },
     line: {
@@ -133,7 +108,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'responsive-specs-and-accessibility-generator',
-    frame: '04',
+    frame: '03',
     state: 'open',
     title: {
       en: 'Responsive Specs & Accessibility Generator',
@@ -158,6 +133,31 @@ export const projects: Project[] = [
       focus: '12% 50%',
     },
     liveUrl: 'https://inasilva.com/works/responsive-specs-and-accessibility-generator',
+  },
+  {
+    slug: 'systems-portal',
+    frame: '04',
+    state: 'open',
+    title: { en: 'Systems Portal', pt: 'Portal de Sistemas' },
+    line: {
+      en: 'Making 100+ government systems findable, for a fisherman in Pará and a ministry clerk alike, through user research and a full redesign.',
+      pt: 'Tornando 100+ sistemas do governo fáceis de achar, para um pescador no Pará e para um servidor do ministério, com pesquisa e um redesign completo.',
+    },
+    context: { en: 'Ministry of Agriculture and Livestock', pt: 'Ministério da Agricultura e Pecuária' },
+    role: { en: 'UX/UI designer intern', pt: 'Estagiária de UX/UI' },
+    period: { en: '2023', pt: '2023' },
+    duration: { en: '4 months', pt: '4 meses' },
+    status: { en: 'live', pt: 'no ar' },
+    statusKind: 'live',
+    tags: [tag('UX/UI', 'UX/UI'), tag('Research', 'Pesquisa'), tag('Redesign', 'Redesign')],
+    cover: 'portal',
+    media: {
+      video: { mp4: 'covers/systems-portal.mp4', webm: 'covers/systems-portal.webm' },
+      poster: 'covers/systems-portal-poster.webp',
+      alt: { en: 'The redesigned Systems Portal: a search bar and a grid of the most accessed systems.', pt: 'O Portal de Sistemas redesenhado: uma busca e uma grade com os sistemas mais acessados.' },
+      focus: '62% 45%',
+    },
+    liveUrl: 'https://inasilva.com/works/systems-portal',
   },
   {
     slug: 'bandoneon-iniciative',
